@@ -1,16 +1,21 @@
-ŞARJ BUL - İKON DÜZELTME PAKETİ
+ŞARJ BUL - CANLI VERİ V3
 
-Bu pakette ikon dosya isimleri değiştirildi ve cache yenilendi.
+Bu sürüm Open Charge Map canlı veri bağlantısına hazırdır.
 
-GitHub'a şu dosyaları ana dizine yükle:
+Yüklenecek dosyalar:
 - index.html
+- config.js
 - manifest.json
 - sw.js
 - sarjbul-icon-192.png
 - sarjbul-icon-512.png
 
-Sonra eski Şarj Bul kısayolunu telefondan sil.
-Chrome'da linki tekrar aç:
-https://ufukcicek81.github.io/Sarjbul/?v=2
+ÖNEMLİ:
+Canlı veri için config.js içinde:
+OCM_API_KEY: "BURAYA_OPEN_CHARGE_MAP_API_KEY_YAZ"
+satırına Open Charge Map API key yazılmalıdır.
 
-Ardından tekrar Ana ekrana ekle.
+API key yoksa uygulama demo veri gösterir.
+
+Test linki:
+https://ufukcicek81.github.io/Sarjbul/?v=3

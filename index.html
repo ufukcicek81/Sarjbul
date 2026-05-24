@@ -4,49 +4,176 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
   <title>Şarj Bul</title>
-  <meta name="description" content="Elektrikli araçlar için en yakın, en uygun ve en hızlı şarj istasyonlarını bul." />
+  <meta name="description" content="Elektrikli araçlar için en yakın şarj istasyonlarını canlı veriden bul." />
   <meta name="theme-color" content="#08111d" />
-  <link rel="manifest" href="./manifest.json?v=2">
-  <link rel="icon" type="image/png" sizes="192x192" href="./sarjbul-icon-192.png?v=2">
-  <link rel="apple-touch-icon" href="./sarjbul-icon-192.png?v=2">
+  <link rel="manifest" href="./manifest.json?v=3">
+  <link rel="icon" type="image/png" sizes="192x192" href="./sarjbul-icon-192.png?v=3">
+  <link rel="apple-touch-icon" href="./sarjbul-icon-192.png?v=3">
   <style>
-    :root{--bg:#07111d;--card:#0d1a2b;--line:rgba(255,255,255,.08);--text:#f4f8ff;--muted:#9bb0c9;--green:#41f08f;--green2:#2ed17b;--blue:#35a9ff;--shadow:0 20px 45px rgba(0,0,0,.35)}
+    :root{--bg:#07111d;--line:rgba(255,255,255,.08);--text:#f4f8ff;--muted:#9bb0c9;--green:#41f08f;--green2:#2ed17b;--blue:#35a9ff;--yellow:#ffd166;--red:#ff6b7a;--shadow:0 20px 45px rgba(0,0,0,.35)}
     *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
     body{margin:0;font-family:Arial,Helvetica,sans-serif;background:radial-gradient(circle at top right, rgba(53,169,255,.18), transparent 24%),radial-gradient(circle at top left, rgba(65,240,143,.14), transparent 25%),linear-gradient(180deg,#07111d 0%, #081420 100%);color:var(--text);min-height:100vh}
     button,input,select,textarea{font-family:inherit}.app{max-width:430px;margin:0 auto;min-height:100vh;padding:12px 14px 98px;position:relative}
     .header{display:flex;align-items:center;justify-content:space-between;padding:8px 2px 12px}.brand{display:flex;align-items:center;gap:10px}.logo{width:44px;height:44px;border-radius:15px;display:grid;place-items:center;background:linear-gradient(135deg, rgba(65,240,143,.18), rgba(53,169,255,.22));border:1px solid rgba(255,255,255,.09);box-shadow:var(--shadow);overflow:hidden}.logo img{width:42px;height:42px}.brand h1{margin:0;font-size:28px;line-height:1}.brand h1 span{color:var(--green)}.brand p{margin:4px 0 0;color:var(--muted);font-size:12px}.iconBtn{width:42px;height:42px;border-radius:14px;border:1px solid var(--line);background:rgba(255,255,255,.03);color:white;font-size:18px}
+    .status{margin:4px 0 12px;border:1px solid rgba(65,240,143,.16);background:rgba(65,240,143,.08);border-radius:18px;padding:11px 12px;color:#bfffd8;font-size:13px;display:none}.status.show{display:block}.status.warn{border-color:rgba(255,209,102,.25);background:rgba(255,209,102,.1);color:#ffe39a}.status.err{border-color:rgba(255,107,122,.25);background:rgba(255,107,122,.1);color:#ffb7c0}
     .searchWrap{display:flex;gap:10px;align-items:center;background:rgba(255,255,255,.04);border:1px solid var(--line);border-radius:18px;padding:12px 14px;box-shadow:var(--shadow)}.searchWrap input{flex:1;background:transparent;border:0;outline:0;color:white;font-size:15px}.searchWrap input::placeholder{color:#8aa2be}
     .chips,.sorts{display:flex;gap:8px;overflow:auto;scrollbar-width:none}.chips{padding:12px 0 4px}.sorts{padding-bottom:3px;margin-bottom:10px}.chips::-webkit-scrollbar,.sorts::-webkit-scrollbar{display:none}
     .chip,.sort{border:1px solid var(--line);background:rgba(255,255,255,.03);color:white;border-radius:999px;white-space:nowrap;font-size:14px}.chip{padding:10px 14px}.sort{padding:10px 14px;border-radius:16px}.chip.active,.sort.active{background:linear-gradient(135deg,var(--green2),var(--green));color:#062012;border-color:transparent}
-    .hero{margin-top:12px;background:linear-gradient(180deg, rgba(20,43,70,.88), rgba(9,20,33,.96));border:1px solid var(--line);border-radius:30px;padding:14px;box-shadow:var(--shadow);position:relative;overflow:hidden}.hero:before{content:"";position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.06) 1px, transparent 1px),linear-gradient(90deg, rgba(255,255,255,.06) 1px, transparent 1px);background-size:40px 40px;opacity:.22;pointer-events:none}.hero h2{margin:0;font-size:16px}.hero p{margin:4px 0 12px;color:var(--muted);font-size:12px}.map{height:260px;border-radius:22px;position:relative;overflow:hidden;background:radial-gradient(circle at 70% 30%, rgba(53,169,255,.18), transparent 18%),radial-gradient(circle at 20% 80%, rgba(65,240,143,.14), transparent 20%),linear-gradient(180deg,#0c1a2d,#091421);border:1px solid rgba(255,255,255,.05)}.pin{position:absolute;width:28px;height:28px;border-radius:50%;display:grid;place-items:center;font-size:15px;background:rgba(65,240,143,.16);border:1px solid rgba(65,240,143,.45);color:#8cffbd;box-shadow:0 0 18px rgba(65,240,143,.22)}.pin.big{width:34px;height:34px;background:rgba(53,169,255,.18);color:#80caff;border-color:rgba(53,169,255,.5)}
+    .hero{margin-top:12px;background:linear-gradient(180deg, rgba(20,43,70,.88), rgba(9,20,33,.96));border:1px solid var(--line);border-radius:30px;padding:14px;box-shadow:var(--shadow);position:relative;overflow:hidden}.hero:before{content:"";position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.06) 1px, transparent 1px),linear-gradient(90deg, rgba(255,255,255,.06) 1px, transparent 1px);background-size:40px 40px;opacity:.22;pointer-events:none}.hero h2{margin:0;font-size:16px}.hero p{margin:4px 0 12px;color:var(--muted);font-size:12px}.map{height:260px;border-radius:22px;position:relative;overflow:hidden;background:radial-gradient(circle at 70% 30%, rgba(53,169,255,.18), transparent 18%),radial-gradient(circle at 20% 80%, rgba(65,240,143,.14), transparent 20%),linear-gradient(180deg,#0c1a2d,#091421);border:1px solid rgba(255,255,255,.05)}.pin{position:absolute;width:30px;height:30px;border-radius:50%;display:grid;place-items:center;font-size:15px;background:rgba(65,240,143,.16);border:1px solid rgba(65,240,143,.45);color:#8cffbd;box-shadow:0 0 18px rgba(65,240,143,.22)}.pin.you{background:rgba(53,169,255,.18);color:#80caff;border-color:rgba(53,169,255,.5)}
     .floatingCard{margin-top:-52px;position:relative;z-index:3;background:#0b1726;border:1px solid var(--line);border-radius:24px;padding:14px;box-shadow:var(--shadow)}.miniTop{display:flex;justify-content:space-between;gap:12px}.badge{display:inline-flex;align-items:center;gap:6px;border-radius:999px;padding:6px 10px;font-size:12px;background:rgba(65,240,143,.12);color:#8cffbd;border:1px solid rgba(65,240,143,.2)}.muted{color:var(--muted)}.priceStrong{font-size:22px;font-weight:700}
     .section{margin-top:18px}.sectionTitle{display:flex;justify-content:space-between;align-items:end;margin-bottom:10px}.sectionTitle h3{margin:0;font-size:24px}.sectionTitle p{margin:4px 0 0;color:var(--muted);font-size:13px}.cards{display:flex;flex-direction:column;gap:12px}.station,.panel{background:rgba(255,255,255,.03);border:1px solid var(--line);border-radius:24px;padding:14px;box-shadow:var(--shadow)}.stationTop{display:flex;justify-content:space-between;gap:12px}.station h4{margin:8px 0 4px;font-size:18px}.station p{margin:0;color:var(--muted);font-size:13px}.tags{display:flex;flex-wrap:wrap;gap:6px}.tag{font-size:12px;padding:5px 9px;border-radius:999px;background:rgba(255,255,255,.05);border:1px solid var(--line);color:#d8e3f0}.tag.green{background:rgba(65,240,143,.14);border-color:rgba(65,240,143,.22);color:#95ffc4}.tag.blue{background:rgba(53,169,255,.14);border-color:rgba(53,169,255,.22);color:#9bd1ff}.metrics{display:flex;justify-content:space-between;gap:8px;margin-top:12px;font-size:13px;color:#cfe0f4}
     .detailGrid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}.detailBox{background:#0a1524;border:1px solid var(--line);border-radius:18px;padding:12px}.actions{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:14px}.action{border-radius:16px;padding:12px 8px;border:0;font-weight:700}.greenBtn{background:linear-gradient(135deg,var(--green2),var(--green));color:#052112}.darkBtn{background:#101d2e;color:white;border:1px solid var(--line)}
     .bottomNav{position:fixed;left:50%;transform:translateX(-50%);bottom:12px;width:min(402px,calc(100% - 24px));background:rgba(9,19,32,.92);backdrop-filter:blur(12px);border:1px solid var(--line);border-radius:24px;padding:10px 8px;display:grid;grid-template-columns:repeat(5,1fr);gap:4px;z-index:20;box-shadow:var(--shadow)}.navItem{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;border-radius:16px;color:#9bb0c9;padding:8px 4px;font-size:11px;background:transparent;border:0}.navItem.active{color:var(--green);background:rgba(65,240,143,.08)}
     .tab{display:none}.tab.active{display:block}.reportForm select,.reportForm textarea,.adminForm input,.adminForm select,.adminForm textarea{width:100%;background:#0a1524;border:1px solid var(--line);color:white;border-radius:16px;padding:12px;margin-top:10px;outline:0}.reportForm textarea,.adminForm textarea{min-height:100px;resize:vertical}.submitBtn{width:100%;margin-top:12px;border-radius:16px;padding:14px 16px;border:0;background:linear-gradient(135deg,var(--green2),var(--green));color:#052112;font-weight:700}.profileHead{display:flex;align-items:center;gap:12px}.avatar{width:54px;height:54px;border-radius:18px;display:grid;place-items:center;background:linear-gradient(135deg, rgba(53,169,255,.18), rgba(65,240,143,.16));border:1px solid var(--line);font-size:22px}.listMini{display:flex;flex-direction:column;gap:10px;margin-top:12px}.listMini .row{display:flex;justify-content:space-between;align-items:center;padding:14px;border-radius:18px;background:#0a1524;border:1px solid var(--line)}
-    .installBox{margin-top:12px;background:rgba(53,169,255,.08);border:1px solid rgba(53,169,255,.2);border-radius:20px;padding:12px;display:none}.installBox.show{display:block}
   </style>
 </head>
 <body>
 <div class="app">
-  <div class="header"><div class="brand"><div class="logo"><img src="./sarjbul-icon-192.png?v=2" alt=""></div><div><h1>Şarj <span>Bul</span></h1><p>Yakındaki istasyonlar</p></div></div><button class="iconBtn" id="installBtn">⬇️</button></div>
-  <div class="installBox" id="installBox"><b>Uygulama hazır</b><div class="muted" style="margin-top:5px;font-size:13px">Chrome menüsünden “Ana ekrana ekle” diyerek uygulama gibi kullanabilirsin.</div></div>
-  <div id="tab-home" class="tab active"><div class="searchWrap"><span>🔎</span><input placeholder="Konum veya istasyon ara"><span>☰</span></div><div class="chips"><button class="chip active">Tümü</button><button class="chip">ZES</button><button class="chip">Trugo</button><button class="chip">Eşarj</button><button class="chip">Voltrun</button></div><div class="hero"><h2>Canlı harita</h2><p>Düzce çevresi · Demo harita görünümü</p><div class="map"><div class="pin" style="top:22%;left:17%">⚡</div><div class="pin big" style="top:28%;left:59%">⚡</div><div class="pin" style="top:63%;left:22%">⚡</div><div class="pin" style="top:70%;left:76%">⚡</div><div class="pin big" style="top:52%;left:45%">📍</div><div class="pin" style="top:41%;left:78%">⚡</div></div></div><div class="floatingCard"><div class="miniTop"><div><div class="badge">⚡ 4/6 müsait</div><h3 style="margin:10px 0 4px">ZES Levent</h3><div class="muted" style="font-size:13px">Büyükdere Cd. No:175</div></div><div style="text-align:right"><div class="priceStrong">150 kW</div><div style="margin-top:6px;color:#8cffbd;font-weight:700">₺6,49/kWh</div></div></div></div><div class="section"><div class="sectionTitle"><div><h3>Yakındaki istasyonlar</h3><p>Fiyat, mesafe ve hız karşılaştırması</p></div></div><div class="sorts"><button class="sort active">En yakın</button><button class="sort">En ucuz</button><button class="sort">En hızlı</button></div><div class="cards" id="homeCards"></div></div></div>
-  <div id="tab-stations" class="tab"><div class="sectionTitle"><div><h3>İstasyonlar</h3><p>En yakın, en ucuz veya en hızlı istasyonu seç.</p></div></div><div class="sorts"><button class="sort active">En Yakın</button><button class="sort">En Ucuz</button><button class="sort">En Hızlı</button></div><div class="cards" id="stationCards"></div><div class="panel" style="margin-top:12px"><h4>İstasyon Detayı</h4><div class="badge">4/6 müsait</div><div class="detailGrid"><div class="detailBox"><div class="muted">Maks. Güç</div><strong>150 kW</strong></div><div class="detailBox"><div class="muted">Soket</div><strong>CCS2</strong></div><div class="detailBox"><div class="muted">Mesafe</div><strong>450 m</strong></div><div class="detailBox"><div class="muted">Puan</div><strong>4.6</strong></div></div><div class="actions"><button class="action greenBtn" onclick="window.open('https://www.google.com/maps/search/ZES+Levent','_blank')">Yol Tarifi</button><button class="action darkBtn">Bozuk Bildir</button><button class="action darkBtn">Favori</button></div></div></div>
-  <div id="tab-fav" class="tab"><div class="sectionTitle"><div><h3>Favoriler</h3><p>Sık kullandığın istasyonları burada gör.</p></div></div><div class="cards"><div class="station"><div class="stationTop"><div><div class="tags"><span class="tag">ZES</span><span class="tag green">DC</span></div><h4>ZES Levent</h4><p>Levent Mah. Büyükdere Cd. No:175</p></div><div style="text-align:right"><div class="priceStrong">₺6,49</div><div class="muted" style="font-size:12px">/kWh</div></div></div><div class="metrics"><span>📍 450 m</span><span>⚡ 150 kW</span><span>⭐ 4.6</span></div></div></div></div>
-  <div id="tab-report" class="tab"><div class="sectionTitle"><div><h3>Bildirim</h3><p>Bozuk, yoğun veya hatalı fiyat bildirimlerini gönder.</p></div></div><div class="panel reportForm"><label>İstasyon</label><select><option>ZES Levent</option><option>Trugo Zincirlikuyu</option><option>Eşarj Gayrettepe</option></select><label style="display:block;margin-top:12px">Bildirim tipi</label><select><option>İstasyon arızalı</option><option>Yoğunluk bilgisi yanlış</option><option>Fiyat hatalı</option></select><label style="display:block;margin-top:12px">Not</label><textarea placeholder="Kısa açıklama yaz"></textarea><button class="submitBtn" onclick="alert('Demo bildirim gönderildi.')">Bildirim Gönder</button></div></div>
-  <div id="tab-profile" class="tab"><div class="sectionTitle"><div><h3>Profil</h3><p>Uygulama ayarları ve hesap bilgileri</p></div></div><div class="panel"><div class="profileHead"><div class="avatar">👤</div><div><strong>Ufuk</strong><div class="muted" style="margin-top:4px">Şarj Bul demo kullanıcı</div></div></div><div class="listMini"><div class="row"><span>Favori istasyonlar</span><strong>3</strong></div><div class="row"><span>Son bildirimler</span><strong>1</strong></div><div class="row"><span>Bildirim ayarları</span><strong>›</strong></div><div class="row"><span>Admin girişi</span><strong>›</strong></div></div></div><div class="panel adminForm" style="margin-top:12px"><h4>Admin Demo</h4><input placeholder="İstasyon adı"><input placeholder="Firma"><input placeholder="Fiyat"><select><option>DC</option><option>AC</option></select><textarea placeholder="Not"></textarea><button class="submitBtn" onclick="alert('Admin kaydı demo olarak alındı. Firebase aşamasında kalıcı olacak.')">Kaydet</button></div></div>
+  <div class="header"><div class="brand"><div class="logo"><img src="./sarjbul-icon-192.png?v=3" alt=""></div><div><h1>Şarj <span>Bul</span></h1><p id="subTitle">Canlı veri hazırlanıyor</p></div></div><button class="iconBtn" id="refreshBtn">↻</button></div>
+  <div class="status" id="statusBox"></div>
+
+  <div id="tab-home" class="tab active">
+    <div class="searchWrap"><span>🔎</span><input id="searchInput" placeholder="Konum veya istasyon ara"><span>☰</span></div>
+    <div class="chips" id="brandChips"><button class="chip active" data-brand="Tümü">Tümü</button></div>
+    <div class="hero"><h2>Canlı harita</h2><p id="mapText">Konum alınıyor · Yakındaki istasyonlar aranıyor</p><div class="map" id="mapBox"></div></div>
+    <div class="floatingCard" id="featuredCard"></div>
+    <div class="section"><div class="sectionTitle"><div><h3>Yakındaki istasyonlar</h3><p id="countText">Canlı istasyon verisi yükleniyor</p></div></div><div class="sorts"><button class="sort active" data-sort="near">En yakın</button><button class="sort" data-sort="power">En hızlı</button><button class="sort" data-sort="name">A-Z</button></div><div class="cards" id="homeCards"></div></div>
+  </div>
+
+  <div id="tab-stations" class="tab"><div class="sectionTitle"><div><h3>İstasyonlar</h3><p>Canlı veriden gelen tüm sonuçlar.</p></div></div><div class="cards" id="stationCards"></div></div>
+  <div id="tab-fav" class="tab"><div class="sectionTitle"><div><h3>Favoriler</h3><p>Favoriler ikinci aşamada kalıcı olacak.</p></div></div><div class="panel">Şimdilik demo. Firebase bağlanınca favoriler kaydedilecek.</div></div>
+  <div id="tab-report" class="tab"><div class="sectionTitle"><div><h3>Bildirim</h3><p>Bozuk, yoğun veya hatalı fiyat bildirimlerini gönder.</p></div></div><div class="panel reportForm"><label>İstasyon</label><select id="reportStation"></select><label style="display:block;margin-top:12px">Bildirim tipi</label><select><option>İstasyon arızalı</option><option>Yoğunluk bilgisi yanlış</option><option>Fiyat hatalı</option></select><label style="display:block;margin-top:12px">Not</label><textarea placeholder="Kısa açıklama yaz"></textarea><button class="submitBtn" onclick="alert('Demo bildirim gönderildi. Firebase aşamasında kaydedilecek.')">Bildirim Gönder</button></div></div>
+  <div id="tab-profile" class="tab"><div class="sectionTitle"><div><h3>Profil</h3><p>Uygulama ayarları ve admin</p></div></div><div class="panel"><div class="profileHead"><div class="avatar">👤</div><div><strong>Ufuk</strong><div class="muted" style="margin-top:4px">Şarj Bul canlı veri test sürümü</div></div></div><div class="listMini"><div class="row"><span>Veri kaynağı</span><strong>Open Charge Map</strong></div><div class="row"><span>Yakınlık yarıçapı</span><strong id="distanceInfo">35 km</strong></div><div class="row"><span>Sonuç limiti</span><strong id="resultInfo">40</strong></div><div class="row"><span>Admin girişi</span><strong>Sonraki adım</strong></div></div></div></div>
 </div>
+
 <div class="bottomNav"><button class="navItem active" data-tab="home"><span>🏠</span><span>Ana Sayfa</span></button><button class="navItem" data-tab="stations"><span>📍</span><span>İstasyonlar</span></button><button class="navItem" data-tab="fav"><span>♡</span><span>Favoriler</span></button><button class="navItem" data-tab="report"><span>🔔</span><span>Bildir</span></button><button class="navItem" data-tab="profile"><span>👤</span><span>Profil</span></button></div>
+
+<script src="./config.js?v=3"></script>
 <script>
-const data=[["ZES","DC","4/6 müsait","ZES Levent","Levent Mah. Büyükdere Cd. No:175","₺6,49","450 m","150 kW","4.6"],["Trugo","DC","2/4 müsait","Trugo Zincirlikuyu","Zincirlikuyu Mah. 7/1","₺6,79","1,2 km","180 kW","4.5"],["Eşarj","AC","3/6 müsait","Eşarj Gayrettepe","Gayrettepe Mah. 2/1","₺6,19","1,6 km","120 kW","4.4"],["Voltrun","AC","1/2 müsait","Voltrun Levent","Levent çevresi","₺6,29","2,1 km","22 kW","4.2"]];
-function card(s){return `<div class="station"><div class="stationTop"><div><div class="tags"><span class="tag">${s[0]}</span><span class="tag ${s[1]=='DC'?'green':'blue'}">${s[1]}</span><span class="tag">${s[2]}</span></div><h4>${s[3]}</h4><p>${s[4]}</p></div><div style="text-align:right"><div class="priceStrong">${s[5]}</div><div class="muted" style="font-size:12px">/kWh</div></div></div><div class="metrics"><span>📍 ${s[6]}</span><span>⚡ ${s[7]}</span><span>⭐ ${s[8]}</span></div></div>`}
-document.getElementById("homeCards").innerHTML=data.slice(0,3).map(card).join("");document.getElementById("stationCards").innerHTML=data.map(card).join("");
+const CFG = window.SARJ_BUL_CONFIG || {};
+let stations = [];
+let filtered = [];
+let currentBrand = "Tümü";
+let currentSort = "near";
+let userPos = {lat: CFG.DEFAULT_LAT || 40.8438, lon: CFG.DEFAULT_LON || 31.1565};
+const demoStations = [
+ {name:"ZES Düzce Merkez",brand:"ZES",type:"DC",status:"Demo",address:"Düzce Merkez",distance:1.2,power:150,lat:40.8438,lon:31.1565,sockets:"CCS2",price:"Fiyat bilgisi yok"},
+ {name:"Trugo Otoyol Şarj",brand:"Trugo",type:"DC",status:"Demo",address:"D-100 Karayolu",distance:5.8,power:180,lat:40.86,lon:31.18,sockets:"CCS2",price:"Fiyat bilgisi yok"},
+ {name:"Eşarj Cumayeri",brand:"Eşarj",type:"AC",status:"Demo",address:"Cumayeri Merkez",distance:14.3,power:22,lat:40.88,lon:30.95,sockets:"Type 2",price:"Fiyat bilgisi yok"}
+];
+
+function setStatus(text, type="ok"){
+ const el=document.getElementById("statusBox");
+ el.textContent=text; el.className="status show"+(type==="warn"?" warn":type==="err"?" err":"");
+}
+function km(lat1, lon1, lat2, lon2){
+ const R=6371, dLat=(lat2-lat1)*Math.PI/180, dLon=(lon2-lon1)*Math.PI/180;
+ const a=Math.sin(dLat/2)**2+Math.cos(lat1*Math.PI/180)*Math.cos(lat2*Math.PI/180)*Math.sin(dLon/2)**2;
+ return R*2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a));
+}
+function normalize(item){
+ const ai=item.AddressInfo||{};
+ const con=(item.Connections||[])[0]||{};
+ const op=item.OperatorInfo||{};
+ const usage=item.UsageType||{};
+ const brand=(op.Title||"Bilinmeyen").replace("Unknown Operator","Bilinmeyen");
+ const power=con.PowerKW?Math.round(con.PowerKW):0;
+ const type=power>=40?"DC":"AC";
+ return {
+   name: ai.Title || "İsimsiz şarj noktası",
+   brand,
+   type,
+   status: usage.Title || "Bilgi yok",
+   address: [ai.AddressLine1, ai.Town, ai.StateOrProvince].filter(Boolean).join(", ") || "Adres bilgisi yok",
+   distance: ai.Distance ? Number(ai.Distance) : km(userPos.lat,userPos.lon,ai.Latitude,ai.Longitude),
+   power,
+   lat: ai.Latitude,
+   lon: ai.Longitude,
+   sockets: con.ConnectionType?.Title || "Soket bilgisi yok",
+   price: item.UsageCost || "Fiyat bilgisi yok"
+ };
+}
+function renderBrands(){
+ const set=new Set(stations.map(s=>s.brand).filter(Boolean));
+ const html=['<button class="chip active" data-brand="Tümü">Tümü</button>',...Array.from(set).slice(0,8).map(b=>`<button class="chip" data-brand="${escapeHtml(b)}">${escapeHtml(b)}</button>`)].join("");
+ document.getElementById("brandChips").innerHTML=html;
+ document.querySelectorAll('.chip').forEach(chip=>chip.addEventListener('click',()=>{document.querySelectorAll('.chip').forEach(c=>c.classList.remove('active'));chip.classList.add('active');currentBrand=chip.dataset.brand;applyFilters();}));
+}
+function applyFilters(){
+ const q=document.getElementById("searchInput").value.toLowerCase().trim();
+ filtered=stations.filter(s=>(currentBrand==="Tümü"||s.brand===currentBrand) && (`${s.name} ${s.brand} ${s.address}`.toLowerCase().includes(q)));
+ if(currentSort==="near") filtered.sort((a,b)=>a.distance-b.distance);
+ if(currentSort==="power") filtered.sort((a,b)=>b.power-a.power);
+ if(currentSort==="name") filtered.sort((a,b)=>a.name.localeCompare(b.name,"tr"));
+ renderAll();
+}
+function renderMap(){
+ const box=document.getElementById("mapBox");
+ const arr=filtered.slice(0,8);
+ let pins='<div class="pin you" style="top:52%;left:45%">📍</div>';
+ arr.forEach((s,i)=>{
+   const left=15+((i*23)%70), top=18+((i*17)%62);
+   pins+=`<button class="pin" title="${escapeHtml(s.name)}" style="left:${left}%;top:${top}%">⚡</button>`;
+ });
+ box.innerHTML=pins;
+}
+function renderFeatured(){
+ const s=filtered[0]||stations[0];
+ if(!s){document.getElementById("featuredCard").innerHTML="";return;}
+ document.getElementById("featuredCard").innerHTML=`<div class="miniTop"><div><div class="badge">⚡ ${escapeHtml(s.type)} · ${Number(s.distance).toFixed(1)} km</div><h3 style="margin:10px 0 4px">${escapeHtml(s.name)}</h3><div class="muted" style="font-size:13px">${escapeHtml(s.address)}</div></div><div style="text-align:right"><div class="priceStrong">${s.power||"-"} kW</div><div style="margin-top:6px;color:#8cffbd;font-weight:700">${escapeHtml(s.price)}</div></div></div>`;
+}
+function card(s){
+ return `<div class="station"><div class="stationTop"><div><div class="tags"><span class="tag">${escapeHtml(s.brand)}</span><span class="tag ${s.type==="DC"?"green":"blue"}">${s.type}</span><span class="tag">${escapeHtml(s.status)}</span></div><h4>${escapeHtml(s.name)}</h4><p>${escapeHtml(s.address)}</p></div><div style="text-align:right"><div class="priceStrong">${s.power||"-"} kW</div><div class="muted" style="font-size:12px">${escapeHtml(s.price)}</div></div></div><div class="metrics"><span>📍 ${Number(s.distance).toFixed(1)} km</span><span>🔌 ${escapeHtml(s.sockets)}</span><span><button class="action greenBtn" style="padding:7px 9px" onclick="routeTo(${s.lat},${s.lon})">Yol</button></span></div></div>`;
+}
+function renderAll(){
+ renderMap(); renderFeatured();
+ document.getElementById("homeCards").innerHTML=filtered.slice(0,12).map(card).join("") || '<div class="panel">Sonuç bulunamadı.</div>';
+ document.getElementById("stationCards").innerHTML=filtered.map(card).join("") || '<div class="panel">Sonuç bulunamadı.</div>';
+ document.getElementById("countText").textContent=`${filtered.length} istasyon gösteriliyor`;
+ document.getElementById("subTitle").textContent=stations.length?`${stations.length} canlı sonuç`:"Canlı veri hazırlanıyor";
+ document.getElementById("reportStation").innerHTML=stations.slice(0,30).map(s=>`<option>${escapeHtml(s.name)}</option>`).join("");
+ document.getElementById("distanceInfo").textContent=(CFG.DISTANCE_KM||35)+" km";
+ document.getElementById("resultInfo").textContent=CFG.MAX_RESULTS||40;
+}
+function routeTo(lat,lon){ window.open(`https://www.google.com/maps/search/?api=1&query=${lat},${lon}`,"_blank"); }
+function escapeHtml(t){return String(t||"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]));}
+
+async function loadOCM(){
+ const key=CFG.OCM_API_KEY||"";
+ const missing=!key || key.includes("BURAYA_");
+ if(missing){
+   stations=demoStations;
+   setStatus("API key henüz girilmemiş. Şu an demo veri gösteriliyor. config.js içine Open Charge Map API key yazınca canlı veri gelir.","warn");
+   applyFilters(); return;
+ }
+ setStatus("Konum alınıyor ve canlı istasyonlar çekiliyor...");
+ const url=`https://api.openchargemap.io/v3/poi/?output=json&latitude=${userPos.lat}&longitude=${userPos.lon}&distance=${CFG.DISTANCE_KM||35}&distanceunit=KM&maxresults=${CFG.MAX_RESULTS||40}&compact=false&verbose=false&key=${encodeURIComponent(key)}`;
+ try{
+   const res=await fetch(url);
+   if(!res.ok) throw new Error("API yanıtı başarısız: "+res.status);
+   const json=await res.json();
+   stations=json.map(normalize).filter(s=>s.lat&&s.lon);
+   if(!stations.length) throw new Error("Yakında istasyon bulunamadı");
+   setStatus(`${stations.length} canlı istasyon yüklendi.`);
+   renderBrands(); applyFilters();
+ }catch(e){
+   stations=demoStations;
+   setStatus("Canlı veri çekilemedi. Demo veriye geçildi. Hata: "+e.message,"err");
+   renderBrands(); applyFilters();
+ }
+}
+function start(){
+ renderBrands();
+ if(navigator.geolocation){
+   navigator.geolocation.getCurrentPosition(pos=>{userPos={lat:pos.coords.latitude,lon:pos.coords.longitude};document.getElementById("mapText").textContent="Konumun çevresi · Canlı veri";loadOCM();},()=>{document.getElementById("mapText").textContent="Düzce çevresi · Varsayılan konum";loadOCM();},{enableHighAccuracy:true,timeout:7000});
+ } else loadOCM();
+}
+document.getElementById("searchInput").addEventListener("input",applyFilters);
+document.getElementById("refreshBtn").addEventListener("click",loadOCM);
+document.querySelectorAll('.sort').forEach(sort=>sort.addEventListener('click',()=>{const p=sort.parentElement;p.querySelectorAll('.sort').forEach(s=>s.classList.remove('active'));sort.classList.add('active');currentSort=sort.dataset.sort||"near";applyFilters();}));
 document.querySelectorAll('.navItem').forEach(btn=>btn.addEventListener('click',()=>{document.querySelectorAll('.navItem').forEach(b=>b.classList.remove('active'));btn.classList.add('active');document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));document.getElementById('tab-'+btn.dataset.tab).classList.add('active');window.scrollTo({top:0,behavior:'smooth'});}));
-document.querySelectorAll('.chip').forEach(chip=>chip.addEventListener('click',()=>{document.querySelectorAll('.chip').forEach(c=>c.classList.remove('active'));chip.classList.add('active');}));
-document.querySelectorAll('.sort').forEach(sort=>sort.addEventListener('click',()=>{const p=sort.parentElement;p.querySelectorAll('.sort').forEach(s=>s.classList.remove('active'));sort.classList.add('active');}));
-document.getElementById("installBtn").addEventListener("click",()=>document.getElementById("installBox").classList.toggle("show"));
-if("serviceWorker" in navigator){window.addEventListener("load",()=>navigator.serviceWorker.register("./sw.js?v=2").catch(()=>{}));}
+if("serviceWorker" in navigator){window.addEventListener("load",()=>navigator.serviceWorker.register("./sw.js?v=3").catch(()=>{}));}
+start();
 </script>
 </body>
 </html>
