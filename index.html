@@ -6,15 +6,14 @@
   <title>Şarj Bul</title>
   <meta name="description" content="Elektrikli araçlar için en yakın, en uygun ve en hızlı şarj istasyonlarını bul." />
   <meta name="theme-color" content="#08111d" />
-  <link rel="manifest" href="manifest.json">
-  <link rel="icon" href="icon-192.png">
-  <link rel="apple-touch-icon" href="icon-192.png">
+  <link rel="manifest" href="./manifest.json?v=2">
+  <link rel="icon" type="image/png" sizes="192x192" href="./sarjbul-icon-192.png?v=2">
+  <link rel="apple-touch-icon" href="./sarjbul-icon-192.png?v=2">
   <style>
-    :root{--bg:#07111d;--card:#0d1a2b;--line:rgba(255,255,255,.08);--text:#f4f8ff;--muted:#9bb0c9;--green:#41f08f;--green2:#2ed17b;--blue:#35a9ff;--danger:#ff6b7a;--shadow:0 20px 45px rgba(0,0,0,.35)}
+    :root{--bg:#07111d;--card:#0d1a2b;--line:rgba(255,255,255,.08);--text:#f4f8ff;--muted:#9bb0c9;--green:#41f08f;--green2:#2ed17b;--blue:#35a9ff;--shadow:0 20px 45px rgba(0,0,0,.35)}
     *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
     body{margin:0;font-family:Arial,Helvetica,sans-serif;background:radial-gradient(circle at top right, rgba(53,169,255,.18), transparent 24%),radial-gradient(circle at top left, rgba(65,240,143,.14), transparent 25%),linear-gradient(180deg,#07111d 0%, #081420 100%);color:var(--text);min-height:100vh}
-    button,input,select,textarea{font-family:inherit}
-    .app{max-width:430px;margin:0 auto;min-height:100vh;padding:12px 14px 98px;position:relative}
+    button,input,select,textarea{font-family:inherit}.app{max-width:430px;margin:0 auto;min-height:100vh;padding:12px 14px 98px;position:relative}
     .header{display:flex;align-items:center;justify-content:space-between;padding:8px 2px 12px}.brand{display:flex;align-items:center;gap:10px}.logo{width:44px;height:44px;border-radius:15px;display:grid;place-items:center;background:linear-gradient(135deg, rgba(65,240,143,.18), rgba(53,169,255,.22));border:1px solid rgba(255,255,255,.09);box-shadow:var(--shadow);overflow:hidden}.logo img{width:42px;height:42px}.brand h1{margin:0;font-size:28px;line-height:1}.brand h1 span{color:var(--green)}.brand p{margin:4px 0 0;color:var(--muted);font-size:12px}.iconBtn{width:42px;height:42px;border-radius:14px;border:1px solid var(--line);background:rgba(255,255,255,.03);color:white;font-size:18px}
     .searchWrap{display:flex;gap:10px;align-items:center;background:rgba(255,255,255,.04);border:1px solid var(--line);border-radius:18px;padding:12px 14px;box-shadow:var(--shadow)}.searchWrap input{flex:1;background:transparent;border:0;outline:0;color:white;font-size:15px}.searchWrap input::placeholder{color:#8aa2be}
     .chips,.sorts{display:flex;gap:8px;overflow:auto;scrollbar-width:none}.chips{padding:12px 0 4px}.sorts{padding-bottom:3px;margin-bottom:10px}.chips::-webkit-scrollbar,.sorts::-webkit-scrollbar{display:none}
@@ -30,40 +29,24 @@
 </head>
 <body>
 <div class="app">
-  <div class="header"><div class="brand"><div class="logo"><img src="icon-192.png" alt=""></div><div><h1>Şarj <span>Bul</span></h1><p>Yakındaki istasyonlar</p></div></div><button class="iconBtn" id="installBtn">⬇️</button></div>
+  <div class="header"><div class="brand"><div class="logo"><img src="./sarjbul-icon-192.png?v=2" alt=""></div><div><h1>Şarj <span>Bul</span></h1><p>Yakındaki istasyonlar</p></div></div><button class="iconBtn" id="installBtn">⬇️</button></div>
   <div class="installBox" id="installBox"><b>Uygulama hazır</b><div class="muted" style="margin-top:5px;font-size:13px">Chrome menüsünden “Ana ekrana ekle” diyerek uygulama gibi kullanabilirsin.</div></div>
-
-  <div id="tab-home" class="tab active">
-    <div class="searchWrap"><span>🔎</span><input placeholder="Konum veya istasyon ara"><span>☰</span></div>
-    <div class="chips"><button class="chip active">Tümü</button><button class="chip">ZES</button><button class="chip">Trugo</button><button class="chip">Eşarj</button><button class="chip">Voltrun</button></div>
-    <div class="hero"><h2>Canlı harita</h2><p>Düzce çevresi · Demo harita görünümü</p><div class="map"><div class="pin" style="top:22%;left:17%">⚡</div><div class="pin big" style="top:28%;left:59%">⚡</div><div class="pin" style="top:63%;left:22%">⚡</div><div class="pin" style="top:70%;left:76%">⚡</div><div class="pin big" style="top:52%;left:45%">📍</div><div class="pin" style="top:41%;left:78%">⚡</div></div></div>
-    <div class="floatingCard"><div class="miniTop"><div><div class="badge">⚡ 4/6 müsait</div><h3 style="margin:10px 0 4px">ZES Levent</h3><div class="muted" style="font-size:13px">Büyükdere Cd. No:175</div></div><div style="text-align:right"><div class="priceStrong">150 kW</div><div style="margin-top:6px;color:#8cffbd;font-weight:700">₺6,49/kWh</div></div></div></div>
-    <div class="section"><div class="sectionTitle"><div><h3>Yakındaki istasyonlar</h3><p>Fiyat, mesafe ve hız karşılaştırması</p></div></div><div class="sorts"><button class="sort active">En yakın</button><button class="sort">En ucuz</button><button class="sort">En hızlı</button></div><div class="cards" id="homeCards"></div></div>
-  </div>
-
+  <div id="tab-home" class="tab active"><div class="searchWrap"><span>🔎</span><input placeholder="Konum veya istasyon ara"><span>☰</span></div><div class="chips"><button class="chip active">Tümü</button><button class="chip">ZES</button><button class="chip">Trugo</button><button class="chip">Eşarj</button><button class="chip">Voltrun</button></div><div class="hero"><h2>Canlı harita</h2><p>Düzce çevresi · Demo harita görünümü</p><div class="map"><div class="pin" style="top:22%;left:17%">⚡</div><div class="pin big" style="top:28%;left:59%">⚡</div><div class="pin" style="top:63%;left:22%">⚡</div><div class="pin" style="top:70%;left:76%">⚡</div><div class="pin big" style="top:52%;left:45%">📍</div><div class="pin" style="top:41%;left:78%">⚡</div></div></div><div class="floatingCard"><div class="miniTop"><div><div class="badge">⚡ 4/6 müsait</div><h3 style="margin:10px 0 4px">ZES Levent</h3><div class="muted" style="font-size:13px">Büyükdere Cd. No:175</div></div><div style="text-align:right"><div class="priceStrong">150 kW</div><div style="margin-top:6px;color:#8cffbd;font-weight:700">₺6,49/kWh</div></div></div></div><div class="section"><div class="sectionTitle"><div><h3>Yakındaki istasyonlar</h3><p>Fiyat, mesafe ve hız karşılaştırması</p></div></div><div class="sorts"><button class="sort active">En yakın</button><button class="sort">En ucuz</button><button class="sort">En hızlı</button></div><div class="cards" id="homeCards"></div></div></div>
   <div id="tab-stations" class="tab"><div class="sectionTitle"><div><h3>İstasyonlar</h3><p>En yakın, en ucuz veya en hızlı istasyonu seç.</p></div></div><div class="sorts"><button class="sort active">En Yakın</button><button class="sort">En Ucuz</button><button class="sort">En Hızlı</button></div><div class="cards" id="stationCards"></div><div class="panel" style="margin-top:12px"><h4>İstasyon Detayı</h4><div class="badge">4/6 müsait</div><div class="detailGrid"><div class="detailBox"><div class="muted">Maks. Güç</div><strong>150 kW</strong></div><div class="detailBox"><div class="muted">Soket</div><strong>CCS2</strong></div><div class="detailBox"><div class="muted">Mesafe</div><strong>450 m</strong></div><div class="detailBox"><div class="muted">Puan</div><strong>4.6</strong></div></div><div class="actions"><button class="action greenBtn" onclick="window.open('https://www.google.com/maps/search/ZES+Levent','_blank')">Yol Tarifi</button><button class="action darkBtn">Bozuk Bildir</button><button class="action darkBtn">Favori</button></div></div></div>
   <div id="tab-fav" class="tab"><div class="sectionTitle"><div><h3>Favoriler</h3><p>Sık kullandığın istasyonları burada gör.</p></div></div><div class="cards"><div class="station"><div class="stationTop"><div><div class="tags"><span class="tag">ZES</span><span class="tag green">DC</span></div><h4>ZES Levent</h4><p>Levent Mah. Büyükdere Cd. No:175</p></div><div style="text-align:right"><div class="priceStrong">₺6,49</div><div class="muted" style="font-size:12px">/kWh</div></div></div><div class="metrics"><span>📍 450 m</span><span>⚡ 150 kW</span><span>⭐ 4.6</span></div></div></div></div>
   <div id="tab-report" class="tab"><div class="sectionTitle"><div><h3>Bildirim</h3><p>Bozuk, yoğun veya hatalı fiyat bildirimlerini gönder.</p></div></div><div class="panel reportForm"><label>İstasyon</label><select><option>ZES Levent</option><option>Trugo Zincirlikuyu</option><option>Eşarj Gayrettepe</option></select><label style="display:block;margin-top:12px">Bildirim tipi</label><select><option>İstasyon arızalı</option><option>Yoğunluk bilgisi yanlış</option><option>Fiyat hatalı</option></select><label style="display:block;margin-top:12px">Not</label><textarea placeholder="Kısa açıklama yaz"></textarea><button class="submitBtn" onclick="alert('Demo bildirim gönderildi.')">Bildirim Gönder</button></div></div>
   <div id="tab-profile" class="tab"><div class="sectionTitle"><div><h3>Profil</h3><p>Uygulama ayarları ve hesap bilgileri</p></div></div><div class="panel"><div class="profileHead"><div class="avatar">👤</div><div><strong>Ufuk</strong><div class="muted" style="margin-top:4px">Şarj Bul demo kullanıcı</div></div></div><div class="listMini"><div class="row"><span>Favori istasyonlar</span><strong>3</strong></div><div class="row"><span>Son bildirimler</span><strong>1</strong></div><div class="row"><span>Bildirim ayarları</span><strong>›</strong></div><div class="row"><span>Admin girişi</span><strong>›</strong></div></div></div><div class="panel adminForm" style="margin-top:12px"><h4>Admin Demo</h4><input placeholder="İstasyon adı"><input placeholder="Firma"><input placeholder="Fiyat"><select><option>DC</option><option>AC</option></select><textarea placeholder="Not"></textarea><button class="submitBtn" onclick="alert('Admin kaydı demo olarak alındı. Firebase aşamasında kalıcı olacak.')">Kaydet</button></div></div>
 </div>
-
 <div class="bottomNav"><button class="navItem active" data-tab="home"><span>🏠</span><span>Ana Sayfa</span></button><button class="navItem" data-tab="stations"><span>📍</span><span>İstasyonlar</span></button><button class="navItem" data-tab="fav"><span>♡</span><span>Favoriler</span></button><button class="navItem" data-tab="report"><span>🔔</span><span>Bildir</span></button><button class="navItem" data-tab="profile"><span>👤</span><span>Profil</span></button></div>
-
 <script>
-const data=[
-  ["ZES","DC","4/6 müsait","ZES Levent","Levent Mah. Büyükdere Cd. No:175","₺6,49","450 m","150 kW","4.6"],
-  ["Trugo","DC","2/4 müsait","Trugo Zincirlikuyu","Zincirlikuyu Mah. 7/1","₺6,79","1,2 km","180 kW","4.5"],
-  ["Eşarj","AC","3/6 müsait","Eşarj Gayrettepe","Gayrettepe Mah. 2/1","₺6,19","1,6 km","120 kW","4.4"],
-  ["Voltrun","AC","1/2 müsait","Voltrun Levent","Levent çevresi","₺6,29","2,1 km","22 kW","4.2"]
-];
+const data=[["ZES","DC","4/6 müsait","ZES Levent","Levent Mah. Büyükdere Cd. No:175","₺6,49","450 m","150 kW","4.6"],["Trugo","DC","2/4 müsait","Trugo Zincirlikuyu","Zincirlikuyu Mah. 7/1","₺6,79","1,2 km","180 kW","4.5"],["Eşarj","AC","3/6 müsait","Eşarj Gayrettepe","Gayrettepe Mah. 2/1","₺6,19","1,6 km","120 kW","4.4"],["Voltrun","AC","1/2 müsait","Voltrun Levent","Levent çevresi","₺6,29","2,1 km","22 kW","4.2"]];
 function card(s){return `<div class="station"><div class="stationTop"><div><div class="tags"><span class="tag">${s[0]}</span><span class="tag ${s[1]=='DC'?'green':'blue'}">${s[1]}</span><span class="tag">${s[2]}</span></div><h4>${s[3]}</h4><p>${s[4]}</p></div><div style="text-align:right"><div class="priceStrong">${s[5]}</div><div class="muted" style="font-size:12px">/kWh</div></div></div><div class="metrics"><span>📍 ${s[6]}</span><span>⚡ ${s[7]}</span><span>⭐ ${s[8]}</span></div></div>`}
-document.getElementById("homeCards").innerHTML=data.slice(0,3).map(card).join("");
-document.getElementById("stationCards").innerHTML=data.map(card).join("");
+document.getElementById("homeCards").innerHTML=data.slice(0,3).map(card).join("");document.getElementById("stationCards").innerHTML=data.map(card).join("");
 document.querySelectorAll('.navItem').forEach(btn=>btn.addEventListener('click',()=>{document.querySelectorAll('.navItem').forEach(b=>b.classList.remove('active'));btn.classList.add('active');document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));document.getElementById('tab-'+btn.dataset.tab).classList.add('active');window.scrollTo({top:0,behavior:'smooth'});}));
 document.querySelectorAll('.chip').forEach(chip=>chip.addEventListener('click',()=>{document.querySelectorAll('.chip').forEach(c=>c.classList.remove('active'));chip.classList.add('active');}));
 document.querySelectorAll('.sort').forEach(sort=>sort.addEventListener('click',()=>{const p=sort.parentElement;p.querySelectorAll('.sort').forEach(s=>s.classList.remove('active'));sort.classList.add('active');}));
 document.getElementById("installBtn").addEventListener("click",()=>document.getElementById("installBox").classList.toggle("show"));
-if ("serviceWorker" in navigator) { window.addEventListener("load",()=>navigator.serviceWorker.register("./sw.js").catch(()=>{})); }
+if("serviceWorker" in navigator){window.addEventListener("load",()=>navigator.serviceWorker.register("./sw.js?v=2").catch(()=>{}));}
 </script>
 </body>
 </html>

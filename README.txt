@@ -1,16 +1,16 @@
-ŞARJ BUL - KLASÖRSÜZ GITHUB PAKETİ
+ŞARJ BUL - İKON DÜZELTME PAKETİ
 
-Bu pakette assets klasörü yoktur. Telefonda GitHub'a yüklemek daha kolaydır.
+Bu pakette ikon dosya isimleri değiştirildi ve cache yenilendi.
 
-Yüklenecek dosyalar:
+GitHub'a şu dosyaları ana dizine yükle:
 - index.html
 - manifest.json
 - sw.js
-- icon-192.png
-- icon-512.png
-- README.txt
+- sarjbul-icon-192.png
+- sarjbul-icon-512.png
 
-GitHub'da mevcut dosyaların üstüne bunları yükleyip Commit changes de.
+Sonra eski Şarj Bul kısayolunu telefondan sil.
+Chrome'da linki tekrar aç:
+https://ufukcicek81.github.io/Sarjbul/?v=2
 
-Canlı link:
-https://ufukcicek81.github.io/Sarjbul/
+Ardından tekrar Ana ekrana ekle.

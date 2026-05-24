@@ -1,5 +1,11 @@
-const CACHE_NAME = "sarj-bul-v1";
-const FILES = ["./", "./index.html", "./manifest.json", "./icon-192.png", "./icon-512.png"];
+const CACHE_NAME = "sarj-bul-icon-fix-v2";
+const FILES = [
+  "./",
+  "./index.html?v=2",
+  "./manifest.json?v=2",
+  "./sarjbul-icon-192.png?v=2",
+  "./sarjbul-icon-512.png?v=2"
+];
 self.addEventListener("install", event => {
   event.waitUntil(caches.open(CACHE_NAME).then(cache => cache.addAll(FILES)));
   self.skipWaiting();
