@@ -1,12 +1,18 @@
-ŞARJ BUL V5.1 - ZES KREMPARK AVM MANUEL KONUM
+ŞARJ BUL V6 - GERÇEKÇİ HARİTA GÖRÜNÜMÜ
 
-Bu güncellemede manuel kayıt olarak:
-- ZES Krempark AVM
-- Koordinat: 40.840618, 31.153017
-eklendi.
+Düzeltmeler:
+- Canlı harita alanı daha gerçekçi görünecek şekilde yenilendi.
+- Yol çizgileri, mahalle etiketleri ve daha profesyonel pin tasarımı eklendi.
+- ZES Krempark AVM manuel kayıt olarak eklendi.
+- Güç: 180 kW
 
-GitHub'a en az config.js dosyasını yüklemen yeterli.
-Tam paket yüklemek istersen zip içindeki tüm dosyaları ana dizine yükleyebilirsin.
+GitHub'a yüklenecek dosyalar:
+- index.html
+- config.js
+- manifest.json
+- sw.js
+- sarjbul-icon-192.png
+- sarjbul-icon-512.png
 
 Test:
-https://ufukcicek81.github.io/Sarjbul/?v=5
+https://ufukcicek81.github.io/Sarjbul/?v=6

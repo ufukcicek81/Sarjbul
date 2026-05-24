@@ -6,9 +6,9 @@
   <title>Şarj Bul</title>
   <meta name="description" content="Elektrikli araçlar için en yakın şarj istasyonlarını canlı ve manuel veriden bul." />
   <meta name="theme-color" content="#08111d" />
-  <link rel="manifest" href="./manifest.json?v=5">
-  <link rel="icon" type="image/png" sizes="192x192" href="./sarjbul-icon-192.png?v=5">
-  <link rel="apple-touch-icon" href="./sarjbul-icon-192.png?v=5">
+  <link rel="manifest" href="./manifest.json?v=6">
+  <link rel="icon" type="image/png" sizes="192x192" href="./sarjbul-icon-192.png?v=6">
+  <link rel="apple-touch-icon" href="./sarjbul-icon-192.png?v=6">
   <style>
     :root{--bg:#07111d;--line:rgba(255,255,255,.08);--text:#f4f8ff;--muted:#9bb0c9;--green:#41f08f;--green2:#2ed17b;--blue:#35a9ff;--yellow:#ffd166;--red:#ff6b7a;--shadow:0 20px 45px rgba(0,0,0,.35)}
     *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
@@ -19,16 +19,35 @@
     .searchWrap{display:flex;gap:10px;align-items:center;background:rgba(255,255,255,.04);border:1px solid var(--line);border-radius:18px;padding:12px 14px;box-shadow:var(--shadow)}.searchWrap input{flex:1;background:transparent;border:0;outline:0;color:white;font-size:15px}.searchWrap input::placeholder{color:#8aa2be}
     .chips,.sorts{display:flex;gap:8px;overflow:auto;scrollbar-width:none}.chips{padding:12px 0 4px}.sorts{padding-bottom:3px;margin-bottom:10px}.chips::-webkit-scrollbar,.sorts::-webkit-scrollbar{display:none}
     .chip,.sort{border:1px solid var(--line);background:rgba(255,255,255,.03);color:white;border-radius:999px;white-space:nowrap;font-size:14px}.chip{padding:10px 14px}.sort{padding:10px 14px;border-radius:16px}.chip.active,.sort.active{background:linear-gradient(135deg,var(--green2),var(--green));color:#062012;border-color:transparent}
-    .hero{margin-top:12px;background:linear-gradient(180deg, rgba(20,43,70,.88), rgba(9,20,33,.96));border:1px solid var(--line);border-radius:30px;padding:14px;box-shadow:var(--shadow);position:relative;overflow:hidden}.hero:before{content:"";position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.06) 1px, transparent 1px),linear-gradient(90deg, rgba(255,255,255,.06) 1px, transparent 1px);background-size:40px 40px;opacity:.22;pointer-events:none}.hero h2{margin:0;font-size:16px}.hero p{margin:4px 0 12px;color:var(--muted);font-size:12px}.map{height:260px;border-radius:22px;position:relative;overflow:hidden;background:radial-gradient(circle at 70% 30%, rgba(53,169,255,.18), transparent 18%),radial-gradient(circle at 20% 80%, rgba(65,240,143,.14), transparent 20%),linear-gradient(180deg,#0c1a2d,#091421);border:1px solid rgba(255,255,255,.05)}.pin{position:absolute;width:30px;height:30px;border-radius:50%;display:grid;place-items:center;font-size:15px;background:rgba(65,240,143,.16);border:1px solid rgba(65,240,143,.45);color:#8cffbd;box-shadow:0 0 18px rgba(65,240,143,.22)}.pin.you{background:rgba(53,169,255,.18);color:#80caff;border-color:rgba(53,169,255,.5)}
+    .hero{margin-top:12px;background:linear-gradient(180deg, rgba(20,43,70,.88), rgba(9,20,33,.96));border:1px solid var(--line);border-radius:30px;padding:14px;box-shadow:var(--shadow);position:relative;overflow:hidden}.hero:before{content:"";position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.06) 1px, transparent 1px),linear-gradient(90deg, rgba(255,255,255,.06) 1px, transparent 1px);background-size:40px 40px;opacity:.22;pointer-events:none}.hero h2{margin:0;font-size:16px}.hero p{margin:4px 0 12px;color:var(--muted);font-size:12px}.map{height:285px;border-radius:22px;position:relative;overflow:hidden;background:#0b1726;border:1px solid rgba(255,255,255,.07);box-shadow:inset 0 0 45px rgba(0,0,0,.28)}
+    .map:before{content:"";position:absolute;inset:-40px;background:
+      linear-gradient(28deg, transparent 0 37%, rgba(95,116,138,.24) 37% 39%, transparent 39% 100%),
+      linear-gradient(112deg, transparent 0 28%, rgba(95,116,138,.20) 28% 30%, transparent 30% 100%),
+      linear-gradient(165deg, transparent 0 58%, rgba(95,116,138,.18) 58% 60%, transparent 60% 100%),
+      linear-gradient(73deg, transparent 0 48%, rgba(65,240,143,.08) 48% 49%, transparent 49% 100%),
+      radial-gradient(circle at 42% 48%, rgba(53,169,255,.18), transparent 19%),
+      radial-gradient(circle at 18% 72%, rgba(65,240,143,.10), transparent 21%),
+      linear-gradient(180deg,#0c1d30,#081421);opacity:.95}
+    .map:after{content:"Düzce Merkez";position:absolute;left:18px;bottom:16px;color:rgba(221,234,247,.32);font-size:13px;font-weight:700;letter-spacing:.3px}.pin{position:absolute;width:30px;height:30px;border-radius:50%;display:grid;place-items:center;font-size:15px;background:rgba(65,240,143,.16);border:1px solid rgba(65,240,143,.45);color:#8cffbd;box-shadow:0 0 18px rgba(65,240,143,.22)}.pin.you{background:rgba(53,169,255,.18);color:#80caff;border-color:rgba(53,169,255,.5)}
     .floatingCard{margin-top:-52px;position:relative;z-index:3;background:#0b1726;border:1px solid var(--line);border-radius:24px;padding:14px;box-shadow:var(--shadow)}.miniTop{display:flex;justify-content:space-between;gap:12px}.badge{display:inline-flex;align-items:center;gap:6px;border-radius:999px;padding:6px 10px;font-size:12px;background:rgba(65,240,143,.12);color:#8cffbd;border:1px solid rgba(65,240,143,.2)}.muted{color:var(--muted)}.priceStrong{font-size:22px;font-weight:700}.priceText{margin-top:6px;color:#9eeebd;font-weight:700;font-size:13px;max-width:120px}
     .section{margin-top:18px}.sectionTitle{display:flex;justify-content:space-between;align-items:end;margin-bottom:10px}.sectionTitle h3{margin:0;font-size:24px}.sectionTitle p{margin:4px 0 0;color:var(--muted);font-size:13px}.cards{display:flex;flex-direction:column;gap:12px}.station,.panel{background:rgba(255,255,255,.03);border:1px solid var(--line);border-radius:24px;padding:14px;box-shadow:var(--shadow)}.stationTop{display:flex;justify-content:space-between;gap:12px}.station h4{margin:8px 0 4px;font-size:18px}.station p{margin:0;color:var(--muted);font-size:13px}.tags{display:flex;flex-wrap:wrap;gap:6px}.tag{font-size:12px;padding:5px 9px;border-radius:999px;background:rgba(255,255,255,.05);border:1px solid var(--line);color:#d8e3f0}.tag.green{background:rgba(65,240,143,.14);border-color:rgba(65,240,143,.22);color:#95ffc4}.tag.blue{background:rgba(53,169,255,.14);border-color:rgba(53,169,255,.22);color:#9bd1ff}.tag.yellow{background:rgba(255,209,102,.14);border-color:rgba(255,209,102,.22);color:#ffe39a}.metrics{display:flex;justify-content:space-between;gap:8px;margin-top:12px;font-size:13px;color:#cfe0f4}
     .bottomNav{position:fixed;left:50%;transform:translateX(-50%);bottom:12px;width:min(402px,calc(100% - 24px));background:rgba(9,19,32,.92);backdrop-filter:blur(12px);border:1px solid var(--line);border-radius:24px;padding:10px 8px;display:grid;grid-template-columns:repeat(5,1fr);gap:4px;z-index:20;box-shadow:var(--shadow)}.navItem{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;border-radius:16px;color:#9bb0c9;padding:8px 4px;font-size:11px;background:transparent;border:0}.navItem.active{color:var(--green);background:rgba(65,240,143,.08)}
     .tab{display:none}.tab.active{display:block}.reportForm select,.reportForm textarea{width:100%;background:#0a1524;border:1px solid var(--line);color:white;border-radius:16px;padding:12px;margin-top:10px;outline:0}.reportForm textarea{min-height:100px;resize:vertical}.submitBtn{width:100%;margin-top:12px;border-radius:16px;padding:14px 16px;border:0;background:linear-gradient(135deg,var(--green2),var(--green));color:#052112;font-weight:700}.listMini{display:flex;flex-direction:column;gap:10px;margin-top:12px}.listMini .row{display:flex;justify-content:space-between;align-items:center;padding:14px;border-radius:18px;background:#0a1524;border:1px solid var(--line)}
+  
+    .road{position:absolute;height:8px;border-radius:999px;background:rgba(164,179,199,.26);box-shadow:0 0 0 1px rgba(255,255,255,.05),0 0 16px rgba(53,169,255,.08);transform-origin:left center;z-index:2}
+    .road.main{height:12px;background:rgba(181,196,216,.32)}
+    .road.green{height:5px;background:rgba(65,240,143,.16)}
+    .district{position:absolute;color:rgba(221,234,247,.30);font-size:11px;font-weight:700;text-shadow:0 1px 6px rgba(0,0,0,.7);z-index:3}
+    .pin{width:34px!important;height:34px!important;border-radius:50% 50% 50% 8px!important;background:linear-gradient(135deg,rgba(65,240,143,.95),rgba(53,169,255,.92))!important;border:1px solid rgba(255,255,255,.35)!important;color:#07111d!important;box-shadow:0 10px 24px rgba(0,0,0,.35),0 0 18px rgba(65,240,143,.25)!important;transform:rotate(-45deg)!important;z-index:4}
+    .pin span{transform:rotate(45deg);font-size:15px}
+    .pin.you{width:32px!important;height:32px!important;border-radius:50%!important;background:rgba(53,169,255,.20)!important;color:#80caff!important;border:1px solid rgba(53,169,255,.6)!important;transform:none!important;box-shadow:0 0 0 10px rgba(53,169,255,.08),0 0 28px rgba(53,169,255,.30)!important;z-index:5}
+    .pin.you span{transform:none}
+
   </style>
 </head>
 <body>
 <div class="app">
-  <div class="header"><div class="brand"><div class="logo"><img src="./sarjbul-icon-192.png?v=5" alt=""></div><div><h1>Şarj <span>Bul</span></h1><p id="subTitle">Canlı + manuel veri</p></div></div><button class="iconBtn" id="refreshBtn">↻</button></div>
+  <div class="header"><div class="brand"><div class="logo"><img src="./sarjbul-icon-192.png?v=6" alt=""></div><div><h1>Şarj <span>Bul</span></h1><p id="subTitle">Canlı + manuel veri</p></div></div><button class="iconBtn" id="refreshBtn">↻</button></div>
   <div class="status" id="statusBox"></div>
 
   <div id="tab-home" class="tab active">
@@ -47,7 +66,7 @@
 
 <div class="bottomNav"><button class="navItem active" data-tab="home"><span>🏠</span><span>Ana Sayfa</span></button><button class="navItem" data-tab="stations"><span>📍</span><span>İstasyonlar</span></button><button class="navItem" data-tab="fav"><span>♡</span><span>Favoriler</span></button><button class="navItem" data-tab="report"><span>🔔</span><span>Bildir</span></button><button class="navItem" data-tab="profile"><span>👤</span><span>Profil</span></button></div>
 
-<script src="./config.js?v=5"></script>
+<script src="./config.js?v=6"></script>
 <script>
 const CFG=window.SARJ_BUL_CONFIG||{};
 let stations=[], filtered=[], currentBrand="Tümü", currentSort="near";
@@ -63,7 +82,28 @@ function normalizeManual(s){const dist=s.distance==null?km(userPos.lat,userPos.l
 function mergeUnique(api,manual){const all=[...manual,...api];const seen=new Set();return all.filter(s=>{const key=`${s.brand}-${s.name}-${Math.round(s.lat*1000)}-${Math.round(s.lon*1000)}`.toLowerCase();if(seen.has(key))return false;seen.add(key);return true;});}
 function renderBrands(){const set=new Set(stations.map(s=>s.brand).filter(Boolean));document.getElementById("brandChips").innerHTML=['<button class="chip active" data-brand="Tümü">Tümü</button>',...Array.from(set).sort((a,b)=>a.localeCompare(b,"tr")).map(b=>`<button class="chip" data-brand="${escapeHtml(b)}">${escapeHtml(b)}</button>`)].join("");document.querySelectorAll('.chip').forEach(chip=>chip.addEventListener('click',()=>{document.querySelectorAll('.chip').forEach(c=>c.classList.remove('active'));chip.classList.add('active');currentBrand=chip.dataset.brand;applyFilters();}));}
 function applyFilters(){const q=document.getElementById("searchInput").value.toLowerCase().trim();filtered=stations.filter(s=>(currentBrand==="Tümü"||s.brand===currentBrand)&&(`${s.name} ${s.brand} ${s.address}`.toLowerCase().includes(q)));if(currentSort==="near")filtered.sort((a,b)=>a.distance-b.distance);if(currentSort==="power")filtered.sort((a,b)=>b.power-a.power);if(currentSort==="name")filtered.sort((a,b)=>a.name.localeCompare(b.name,"tr"));renderAll();}
-function renderMap(){const box=document.getElementById("mapBox");let pins='<div class="pin you" style="top:52%;left:45%">📍</div>';filtered.slice(0,8).forEach((s,i)=>{const left=15+((i*23)%70),top=18+((i*17)%62);pins+=`<button class="pin" title="${escapeHtml(s.name)}" style="left:${left}%;top:${top}%">⚡</button>`;});box.innerHTML=pins;}
+function renderMap(){
+ const box=document.getElementById("mapBox");
+ const roads = `
+   <div class="road main" style="width:300px;left:-35px;top:202px;transform:rotate(-9deg)"></div>
+   <div class="road main" style="width:250px;left:168px;top:92px;transform:rotate(34deg)"></div>
+   <div class="road" style="width:260px;left:24px;top:62px;transform:rotate(18deg)"></div>
+   <div class="road" style="width:210px;left:52px;top:146px;transform:rotate(-31deg)"></div>
+   <div class="road" style="width:230px;left:178px;top:214px;transform:rotate(-19deg)"></div>
+   <div class="road green" style="width:190px;left:25px;top:116px;transform:rotate(82deg)"></div>
+   <div class="road green" style="width:210px;left:286px;top:52px;transform:rotate(93deg)"></div>
+   <div class="district" style="left:26px;top:30px">Kültür</div>
+   <div class="district" style="left:247px;top:58px">Aziziye</div>
+   <div class="district" style="left:68px;top:218px">Merkez</div>
+   <div class="district" style="left:265px;top:202px">Krempark</div>
+ `;
+ let pins = roads + '<div class="pin you" style="top:48%;left:47%"><span>●</span></div>';
+ filtered.slice(0,8).forEach((s,i)=>{
+   const left=12+((i*21)%74), top=15+((i*16)%65);
+   pins+=`<button class="pin" title="${escapeHtml(s.name)}" style="left:${left}%;top:${top}%"><span>⚡</span></button>`;
+ });
+ box.innerHTML=pins;
+}
 function renderFeatured(){const s=filtered[0]||stations[0];if(!s){document.getElementById("featuredCard").innerHTML="";return;}document.getElementById("featuredCard").innerHTML=`<div class="miniTop"><div><div class="badge">⚡ ${escapeHtml(s.type)} · ${Number(s.distance).toFixed(1)} km</div><h3 style="margin:10px 0 4px">${escapeHtml(s.name)}</h3><div class="muted" style="font-size:13px">${escapeHtml(s.address)}</div></div><div style="text-align:right"><div class="priceStrong">${s.power||"-"} kW</div><div class="priceText">${escapeHtml(s.price)}</div></div></div>`;}
 function brandTag(s){return s.brand ? `<span class="tag">${escapeHtml(s.brand)}</span>` : "";}
 function card(s){return `<div class="station"><div class="stationTop"><div><div class="tags">${brandTag(s)}<span class="tag ${s.type==="DC"?"green":"blue"}">${s.type}</span><span class="tag ${s.source==="manual"?"yellow":""}">${s.source==="manual"?"Doğrulanacak":"Canlı"}</span></div><h4>${escapeHtml(s.name)}</h4><p>${escapeHtml(s.address)}</p></div><div style="text-align:right"><div class="priceStrong">${s.power||"-"} kW</div><div class="priceText">${escapeHtml(s.price)}</div></div></div><div class="metrics"><span>📍 ${Number(s.distance).toFixed(1)} km</span><span>🔌 ${escapeHtml(s.sockets)}</span><span><button class="action greenBtn" style="padding:7px 9px" onclick="routeTo(${s.lat},${s.lon})">Yol</button></span></div></div>`}
@@ -75,7 +115,7 @@ function start(){if(navigator.geolocation){navigator.geolocation.getCurrentPosit
 document.getElementById("searchInput").addEventListener("input",applyFilters);document.getElementById("refreshBtn").addEventListener("click",loadOCM);
 document.querySelectorAll('.sort').forEach(sort=>sort.addEventListener('click',()=>{const p=sort.parentElement;p.querySelectorAll('.sort').forEach(s=>s.classList.remove('active'));sort.classList.add('active');currentSort=sort.dataset.sort||"near";applyFilters();}));
 document.querySelectorAll('.navItem').forEach(btn=>btn.addEventListener('click',()=>{document.querySelectorAll('.navItem').forEach(b=>b.classList.remove('active'));btn.classList.add('active');document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));document.getElementById('tab-'+btn.dataset.tab).classList.add('active');window.scrollTo({top:0,behavior:'smooth'});}));
-if("serviceWorker"in navigator){window.addEventListener("load",()=>navigator.serviceWorker.register("./sw.js?v=5").catch(()=>{}));}
+if("serviceWorker"in navigator){window.addEventListener("load",()=>navigator.serviceWorker.register("./sw.js?v=6").catch(()=>{}));}
 start();
 </script>
 </body>

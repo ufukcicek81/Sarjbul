@@ -1,11 +1,11 @@
-const CACHE_NAME = "sarj-bul-v5-pro-data";
+const CACHE_NAME = "sarj-bul-v6-map";
 const FILES = [
   "./",
-  "./index.html?v=5",
-  "./manifest.json?v=5",
-  "./config.js?v=5",
-  "./sarjbul-icon-192.png?v=5",
-  "./sarjbul-icon-512.png?v=5"
+  "./index.html?v=6",
+  "./manifest.json?v=6",
+  "./config.js?v=6",
+  "./sarjbul-icon-192.png?v=6",
+  "./sarjbul-icon-512.png?v=6"
 ];
 self.addEventListener("install", event => {
   event.waitUntil(caches.open(CACHE_NAME).then(cache => cache.addAll(FILES)));
