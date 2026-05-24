@@ -1,21 +1,12 @@
-ŞARJ BUL V4 - CANLI API + MANUEL TÜRKİYE KAYITLARI
+ŞARJ BUL V5.1 - ZES KREMPARK AVM MANUEL KONUM
 
-Bu sürümde:
-- Open Charge Map canlı verisi kullanılır.
-- OCM'de eksik kalan istasyonlar config.js içindeki MANUAL_STATIONS listesiyle eklenir.
-- ZES / Zorlu marka adları ZES olarak normalize edilir.
-- Trugo, Eşarj, Voltrun gibi markalar daha iyi tanınır.
+Bu güncellemede manuel kayıt olarak:
+- ZES Krempark AVM
+- Koordinat: 40.840618, 31.153017
+eklendi.
 
-Yüklenecek dosyalar:
-- index.html
-- config.js
-- manifest.json
-- sw.js
-- sarjbul-icon-192.png
-- sarjbul-icon-512.png
+GitHub'a en az config.js dosyasını yüklemen yeterli.
+Tam paket yüklemek istersen zip içindeki tüm dosyaları ana dizine yükleyebilirsin.
 
-Test linki:
-https://ufukcicek81.github.io/Sarjbul/?v=4
-
-Not:
-ZES Düzce adres/koordinat bilgisi netleşince config.js içindeki manuel kaydı gerçek konumla güncelle.
+Test:
+https://ufukcicek81.github.io/Sarjbul/?v=5

@@ -1,11 +1,11 @@
-const CACHE_NAME = "sarj-bul-v4-live-manual";
+const CACHE_NAME = "sarj-bul-v5-pro-data";
 const FILES = [
   "./",
-  "./index.html?v=4",
-  "./manifest.json?v=4",
-  "./config.js?v=4",
-  "./sarjbul-icon-192.png?v=4",
-  "./sarjbul-icon-512.png?v=4"
+  "./index.html?v=5",
+  "./manifest.json?v=5",
+  "./config.js?v=5",
+  "./sarjbul-icon-192.png?v=5",
+  "./sarjbul-icon-512.png?v=5"
 ];
 self.addEventListener("install", event => {
   event.waitUntil(caches.open(CACHE_NAME).then(cache => cache.addAll(FILES)));
