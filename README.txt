@@ -1,31 +1,16 @@
-ŞARJ BUL - GITHUB PAGES / PWA PAKETİ
+ŞARJ BUL - KLASÖRSÜZ GITHUB PAKETİ
 
-Bu paket GitHub Pages'e yüklenmeye hazırdır.
+Bu pakette assets klasörü yoktur. Telefonda GitHub'a yüklemek daha kolaydır.
 
-DOSYALAR:
+Yüklenecek dosyalar:
 - index.html
 - manifest.json
 - sw.js
-- assets/icon-192.png
-- assets/icon-512.png
+- icon-192.png
+- icon-512.png
 - README.txt
 
-GITHUB'A YÜKLEME:
-1) GitHub'a gir.
-2) Yeni repo oluştur: sarj-bul
-3) Bu zipi çıkar.
-4) İçindeki dosyaları repo ana dizinine yükle.
-5) Repo içinde Settings > Pages bölümüne gir.
-6) Source olarak Deploy from a branch seç.
-7) Branch: main, folder: /root seç.
-8) Save de.
-9) 1-2 dakika sonra link oluşur.
+GitHub'da mevcut dosyaların üstüne bunları yükleyip Commit changes de.
 
-TELEFONA UYGULAMA GİBİ EKLEME:
-- Chrome ile linki aç.
-- Sağ üstte üç nokta.
-- Ana ekrana ekle.
-- Şarj Bul ikonu ile uygulama gibi açılır.
-
-NOT:
-Bu sürüm demo verilerle çalışır. Bir sonraki aşama Firebase bağlantısıdır.
+Canlı link:
+https://ufukcicek81.github.io/Sarjbul/
