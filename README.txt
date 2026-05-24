@@ -1,6 +1,10 @@
-ŞARJ BUL - CANLI VERİ V3
+ŞARJ BUL V4 - CANLI API + MANUEL TÜRKİYE KAYITLARI
 
-Bu sürüm Open Charge Map canlı veri bağlantısına hazırdır.
+Bu sürümde:
+- Open Charge Map canlı verisi kullanılır.
+- OCM'de eksik kalan istasyonlar config.js içindeki MANUAL_STATIONS listesiyle eklenir.
+- ZES / Zorlu marka adları ZES olarak normalize edilir.
+- Trugo, Eşarj, Voltrun gibi markalar daha iyi tanınır.
 
 Yüklenecek dosyalar:
 - index.html
@@ -10,12 +14,8 @@ Yüklenecek dosyalar:
 - sarjbul-icon-192.png
 - sarjbul-icon-512.png
 
-ÖNEMLİ:
-Canlı veri için config.js içinde:
-OCM_API_KEY: "BURAYA_OPEN_CHARGE_MAP_API_KEY_YAZ"
-satırına Open Charge Map API key yazılmalıdır.
-
-API key yoksa uygulama demo veri gösterir.
-
 Test linki:
-https://ufukcicek81.github.io/Sarjbul/?v=3
+https://ufukcicek81.github.io/Sarjbul/?v=4
+
+Not:
+ZES Düzce adres/koordinat bilgisi netleşince config.js içindeki manuel kaydı gerçek konumla güncelle.
