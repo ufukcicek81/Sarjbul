@@ -59,7 +59,7 @@ const DEFAULT_SPONSORS=[
  {id:"krempark-oto-yikama",active:true,stationId:"zes-krempark",stationName:"ZES - Düzce Krempark AVM",name:"Krempark Oto Yıkama",type:"Oto Yıkama",icon:"🚗",logoUrl:"",whatsapp:"905000000000",distance:"Otopark içinde",discount:"%10",offer:"MolaVolt kullanıcılarına iç-dış yıkamada %10 indirim",codePrefix:"MOLA-YIKA",rules:"Kod 30 dakika geçerlidir. Kampanya aynı gün içinde bir kez kullanılabilir."},
  {id:"krempark-kahve",active:true,stationId:"zes-krempark",stationName:"ZES - Düzce Krempark AVM",name:"Krempark Kahve Molası",type:"Kafe",icon:"☕",logoUrl:"",whatsapp:"905000000000",distance:"2 dk yürüme",discount:"%15",offer:"Kahve + tatlı menüsünde %15 indirim",codePrefix:"MOLA-KAHVE",rules:"Kod 30 dakika geçerlidir."}
 ];
-let stations=[],filtered=[],currentBrand="Tümü",currentSort="near",selectedStation=null,userPos={lat:40.8438,lon:31.1565},realMap=null,markerLayer=null,userMarker=null,lastCoupon="";
+let stations=[],filtered=[],currentBrand="Tümü",currentSort="near",selectedStation=null,userPos={lat:40.8438,lon:31.1565},realMap=null,markerLayer=null,userMarker=null,lastCoupon="",watchId=null,locationReady=false;
 function esc(t){return String(t||"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]))}
 function km(lat1,lon1,lat2,lon2){const R=6371,dLat=(lat2-lat1)*Math.PI/180,dLon=(lon2-lon1)*Math.PI/180;const a=Math.sin(dLat/2)**2+Math.cos(lat1*Math.PI/180)*Math.cos(lat2*Math.PI/180)*Math.sin(dLon/2)**2;return R*2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a))}
 function normalizeBrand(text){const t=String(text||"").toLowerCase();if(t.includes("zes")||t.includes("zorlu"))return"ZES";if(t.includes("trugo"))return"Trugo";if(t.includes("eşarj")||t.includes("esarj"))return"Eşarj";if(t.includes("voltrun"))return"Voltrun";if(t.includes("sharz"))return"Sharz";return"Diğer"}
@@ -70,12 +70,41 @@ function saveCouponLog(log){try{const arr=JSON.parse(localStorage.getItem("molav
 function getLogs(){try{return JSON.parse(localStorage.getItem("molavolt_coupon_logs")||"[]")}catch(e){return[]}}
 function initMap(){if(realMap)return;realMap=L.map("realMap",{zoomControl:false}).setView([userPos.lat,userPos.lon],12);L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",{maxZoom:19,attribution:"&copy; OSM"}).addTo(realMap);markerLayer=L.layerGroup().addTo(realMap);setTimeout(()=>realMap.invalidateSize(),300)}
 function renderMap(){initMap();markerLayer.clearLayers();if(userMarker)realMap.removeLayer(userMarker);userMarker=L.circleMarker([userPos.lat,userPos.lon],{radius:8,color:"#fff",fillColor:"#35a9ff",fillOpacity:.9,weight:2}).addTo(realMap).bindPopup("Konumun");filtered.slice(0,80).forEach(s=>{const active=selectedStation&&selectedStation.id===s.id;const color=s.source==="verified"?"#41f08f":"#35a9ff";const m=L.circleMarker([s.lat,s.lon],{radius:active?13:10,color:"#fff",weight:2,fillColor:color,fillOpacity:.9}).addTo(markerLayer);m.bindPopup(`<b>${esc(s.name)}</b><br>${esc(s.brand)} · ${Number(s.distance).toFixed(1)} km`);m.on("click",()=>selectStation(s,true))});setTimeout(()=>realMap.invalidateSize(),100)}
-function centerUser(){if(realMap)realMap.setView([userPos.lat,userPos.lon],13,{animate:true})}
+function centerUser(){startRealSearch(true);if(realMap)realMap.setView([userPos.lat,userPos.lon],13,{animate:true})}
 function fitStations(){if(!realMap||!filtered.length)return;const pts=[[userPos.lat,userPos.lon],...filtered.slice(0,30).map(s=>[s.lat,s.lon])];try{realMap.fitBounds(pts,{padding:[36,36],maxZoom:13})}catch(e){}}
 function osmStation(el){const tags=el.tags||{}, lat=el.lat||el.center?.lat, lon=el.lon||el.center?.lon;const name=tags.name||tags.operator||"Şarj istasyonu";return{id:"osm-"+el.id,name,brand:normalizeBrand((tags.operator||"")+" "+name),type:"Şarj",status:"Açık",address:[tags["addr:street"],tags["addr:district"],tags["addr:city"]].filter(Boolean).join(", ")||"Adres bilgisi yok",lat,lon,distance:km(userPos.lat,userPos.lon,lat,lon),power:"",sockets:"Soket bilgisi uygulamada",price:"Operatör uygulamasında",amenities:["☕ Kafe","🚻 WC"],source:"osm"}}
 function mergeStations(remote=[]){const base=VERIFIED_STATIONS.map(s=>({...s,distance:km(userPos.lat,userPos.lon,s.lat,s.lon)}));const all=[...base,...remote.filter(s=>s.lat&&s.lon)];const seen=[];return all.filter(s=>{if(!ALLOWED_BRANDS.includes(s.brand))return false;const near=seen.some(x=>km(x.lat,x.lon,s.lat,s.lon)<.12 || (x.brand===s.brand&&String(x.name).toLowerCase()===String(s.name).toLowerCase()));if(near)return false;seen.push(s);return true})}
 async function fetchOsmStations(){const r=.23;const q=`[out:json][timeout:10];(node["amenity"="charging_station"](${userPos.lat-r},${userPos.lon-r},${userPos.lat+r},${userPos.lon+r});way["amenity"="charging_station"](${userPos.lat-r},${userPos.lon-r},${userPos.lat+r},${userPos.lon+r});relation["amenity"="charging_station"](${userPos.lat-r},${userPos.lon-r},${userPos.lat+r},${userPos.lon+r}););out center tags;`;const res=await fetch("https://overpass-api.de/api/interpreter",{method:"POST",body:q});const data=await res.json();return(data.elements||[]).map(osmStation).filter(s=>s.lat&&s.lon)}
-async function startRealSearch(){document.getElementById("subTitle").textContent="Yakındaki şarj istasyonları";const go=async()=>{let remote=[];try{remote=await fetchOsmStations()}catch(e){}stations=mergeStations(remote);selectedStation=stations[0]||null;applyFilters();document.getElementById("mapText").textContent="Düzce çevresindeki istasyonlar";if(realMap)fitStations()};if(navigator.geolocation){navigator.geolocation.getCurrentPosition(pos=>{userPos={lat:pos.coords.latitude,lon:pos.coords.longitude};go()},()=>go(),{enableHighAccuracy:true,timeout:6000,maximumAge:60000})}else go()}
+function locationOptions(){return{enableHighAccuracy:true,timeout:20000,maximumAge:0}}
+function setLocationText(txt){const m=document.getElementById("mapText");if(m)m.textContent=txt;const s=document.getElementById("subTitle");if(s)s.textContent=txt}
+function applyNewPosition(pos,center){
+  userPos={lat:pos.coords.latitude,lon:pos.coords.longitude};
+  locationReady=true;
+  setLocationText("Konumuna yakın şarj istasyonları");
+  refreshStations(center);
+}
+async function refreshStations(center=false){
+  let remote=[];
+  try{remote=await fetchOsmStations()}catch(e){}
+  stations=mergeStations(remote);
+  selectedStation=stations[0]||null;
+  applyFilters();
+  if(realMap){center?centerUserOnly():fitStations()}
+}
+function centerUserOnly(){if(realMap)realMap.setView([userPos.lat,userPos.lon],13,{animate:true})}
+function startLocationWatch(){
+  if(!navigator.geolocation||watchId!==null)return;
+  watchId=navigator.geolocation.watchPosition(pos=>applyNewPosition(pos,false),err=>{},locationOptions());
+}
+async function startRealSearch(center=false){
+  if(!navigator.geolocation){setLocationText("Konum izni yok, varsayılan liste gösteriliyor");refreshStations(false);return}
+  setLocationText("Konum güncelleniyor...");
+  navigator.geolocation.getCurrentPosition(
+    pos=>{applyNewPosition(pos,center);startLocationWatch()},
+    err=>{setLocationText("Konum alınamadı, izinleri kontrol et");refreshStations(false);if(center)alert("Konum alınamadı. Chrome > Site ayarları > Konum: İzin ver yap ve telefon GPS/konum servisini aç.")},
+    locationOptions()
+  );
+}
 function renderBrandChips(){document.getElementById("brandChips").innerHTML=ALLOWED_BRANDS.map(b=>`<button class="chip ${b===currentBrand?'active':''}" data-brand="${esc(b)}">${esc(b)}</button>`).join("");document.querySelectorAll(".chip").forEach(btn=>btn.onclick=()=>{currentBrand=btn.dataset.brand;renderBrandChips();applyFilters()})}
 function applyFilters(){const q=document.getElementById("searchInput").value.trim().toLowerCase();filtered=stations.filter(s=>(currentBrand==="Tümü"||s.brand===currentBrand)&&(!q||(s.name+s.brand+s.address).toLowerCase().includes(q)));filtered.sort((a,b)=>currentSort==="name"?a.name.localeCompare(b.name,"tr"):a.distance-b.distance);renderAll()}
 function renderAll(){renderBrandChips();renderCards();renderFeatured();renderSponsors();renderMap();renderAdminLists();document.getElementById("countText").textContent=`${filtered.length} istasyon gösteriliyor`;document.getElementById("stationCards").innerHTML=document.getElementById("homeCards").innerHTML}
@@ -103,7 +132,7 @@ function resetAll(){localStorage.removeItem("molavolt_sponsors");localStorage.re
 document.querySelectorAll(".navItem").forEach(b=>b.onclick=()=>{document.querySelectorAll(".navItem").forEach(x=>x.classList.remove("active"));b.classList.add("active");document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active"));document.getElementById("tab-"+b.dataset.tab).classList.add("active");setTimeout(()=>realMap&&realMap.invalidateSize(),150)});
 document.querySelectorAll(".sort").forEach(b=>b.onclick=()=>{document.querySelectorAll(".sort").forEach(x=>x.classList.remove("active"));b.classList.add("active");currentSort=b.dataset.sort;applyFilters()});
 document.getElementById("searchInput").addEventListener("input",applyFilters);
-stations=mergeStations([]);selectedStation=stations[0];renderBrandChips();applyFilters();setTimeout(startRealSearch,500);
+stations=mergeStations([]);selectedStation=stations[0];renderBrandChips();applyFilters();setTimeout(()=>startRealSearch(false),500);
 </script>
 </body>
 </html>
