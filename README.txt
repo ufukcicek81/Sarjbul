@@ -1,18 +1,10 @@
-ŞARJ BUL V6 - GERÇEKÇİ HARİTA GÖRÜNÜMÜ
+MolaVolt v23 güvenli konum sürümü
 
 Düzeltmeler:
-- Canlı harita alanı daha gerçekçi görünecek şekilde yenilendi.
-- Yol çizgileri, mahalle etiketleri ve daha profesyonel pin tasarımı eklendi.
-- ZES Krempark AVM manuel kayıt olarak eklendi.
-- Güç: 180 kW
+- Krempark AVM koordinatı düzeltildi: 40.840728, 31.152222
+- Gerçek veri gelirse manuel/demo istasyonlar listeye karıştırılmaz.
+- Gerçek veri gelmezse manuel kayıtlar 'Doğrulanacak' mantığında gösterilir.
+- Böylece yanlış manuel koordinatlar gerçek istasyon gibi görünmez.
 
-GitHub'a yüklenecek dosyalar:
-- index.html
-- config.js
-- manifest.json
-- sw.js
-- sarjbul-icon-192.png
-- sarjbul-icon-512.png
-
-Test:
-https://ufukcicek81.github.io/Sarjbul/?v=6
+GitHub'a sadece index.html dosyasını yükle.
+Açılış linki: https://ufukcicek81.github.io/Sarjbul/?v=23
