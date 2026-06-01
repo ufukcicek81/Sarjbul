@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="tr">
 <head>
-<!-- UFUK_COUPON_REPORTS_0502 -->
+<!-- UFUK_OFFER_COUNT_FIX_0503 -->
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>MolaVolt</title>
@@ -212,6 +212,7 @@
         <input id="sp_id" type="hidden">
         <label>Bağlı istasyon</label>
         <select id="sp_station"></select>
+        <p class="muted" style="font-size:12px;margin:0 0 8px">Boş bırakırsan fırsat tüm istasyon kartlarında görünür.</p>
         <label>İşletme adı</label>
         <input id="sp_name" placeholder="Krempark Oto Yıkama">
         <label>İndirim</label>
@@ -243,10 +244,10 @@
 <nav class="bottomNav customerOnly"><button class="navItem active" id="nav-home" onclick="showTab('home')"><span>🏠</span>Ana Sayfa</button><button class="navItem" id="nav-stations" onclick="showTab('stations')"><span>📍</span>İstasyonlar</button><button class="navItem" id="nav-favorites" onclick="showTab('favorites')"><span>♡</span>Favoriler</button><button class="navItem" id="nav-report" onclick="showTab('report')"><span>🔔</span>Bildir</button><button class="navItem" id="nav-profile" onclick="showTab('profile')"><span>👤</span>Profil</button></nav>
 <div class="modal" id="mapModal"><div class="sheet"><button class="close" onclick="closeStationMap()">×</button><h2 id="mapModalTitle">Haritada gör</h2><p class="muted" id="mapModalText">İstasyon konumu</p><div class="mapSheetBody"><div id="stationMap"></div></div><div class="cardActions"><button class="secondaryBtn" onclick="closeStationMap()">Kapat</button><a class="routeBtn" id="mapModalRoute" href="#" target="_blank" rel="noopener">Yol tarifi</a></div></div></div>
 <div class="modal" id="detailModal"><div class="sheet"><button class="close" onclick="closeModal('detailModal')">×</button><div id="detailContent"></div></div></div>
-<div class="modal" id="infoModal"><div class="sheet"><button class="close" onclick="closeModal('infoModal')">×</button><h2>MolaVolt</h2><p class="muted">Yakındaki şarj istasyonlarını kolayca bul, haritada gör ve yol tarifi al.</p><div>UFUK_COUPON_REPORTS_0502</div></div></div>
+<div class="modal" id="infoModal"><div class="sheet"><button class="close" onclick="closeModal('infoModal')">×</button><h2>MolaVolt</h2><p class="muted">Yakındaki şarj istasyonlarını kolayca bul, haritada gör ve yol tarifi al.</p><div>UFUK_OFFER_COUNT_FIX_0503</div></div></div>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
-const VERSION='0502',ADMIN_KEY='ufuk8790',DEFAULT_EPDK_URL='https://molavolt.vercel.app/api/epdk';
+const VERSION='0503',ADMIN_KEY='ufuk8790',DEFAULT_EPDK_URL='https://molavolt.vercel.app/api/epdk';
 const BRANDS=['Tümü','ZES','Eşarj','Trugo','Sharz','Voltrun','Ovolt','WAT','Diğer'];
 const LEGACY_KEYS=['mv_manual_stations','mv_hidden_stations','mv_turkey_stations','molavolt_turkey_osm_cache','molavolt_osm_cache_v2','molavolt_turkey_admin_seed','molavolt_turkey_admin_hidden','molavolt_turkey_seed','molavolt_hidden_seed'];
 let userPos=loadPos()||{lat:40.840621,lon:31.152219},stations=[],filtered=[],currentBrand='Tümü',sortMode='distance',isAdmin=false,stationMap=null,stationMapMarker=null;
@@ -379,7 +380,12 @@ function applyFilters(){
   renderAll();
 }
 function renderChips(){$('brandChips').innerHTML=BRANDS.map(b=>`<button class="chip ${b===currentBrand?'active':''}" onclick="setBrand('${esc(b)}')">${esc(b)}</button>`).join('')}function setBrand(b){currentBrand=b;renderChips();applyFilters()}function setSort(s){sortMode=s;$('sortDistance')?.classList.toggle('active',s==='distance');$('sortName')?.classList.toggle('active',s==='name');applyFilters()}
-function offerCount(id){return sponsors().filter(x=>x.stationId===id).length}
+function stationOffers(id){
+  return sponsors().filter(x=>!x.stationId || x.stationId===id);
+}
+function offerCount(id){
+  return stationOffers(id).length;
+}
 function stationCard(s){
   const offers=offerCount(s.id);
   return `<div class="station" onclick="openDetail('${esc(s.id)}')">
@@ -494,7 +500,7 @@ function openModal(id){$(id)?.classList.add('show')}function closeModal(id){$(id
 function openDetail(id){
   const s=stations.find(x=>x.id===id);
   if(!s)return;
-  const off=fairSponsors(sponsors().filter(x=>!x.stationId||x.stationId===id),id);
+  const off=fairSponsors(stationOffers(id),id);
   const offerHtml=off.length?off.map(o=>`<div class="sponsorCard" style="min-width:auto">
     <div class="sponsorHead">
       ${sponsorLogoHtml(o)}
@@ -524,7 +530,7 @@ function restoreAdminTab(){
   showAdminTab(saved);
 }
 
-function renderAdmin(){if(!isAdmin)return;if($('epdkUrl'))$('epdkUrl').value=localStorage.getItem('molavolt_epdk_url')||DEFAULT_EPDK_URL;const q=($('adminSearch')?.value||'').trim().toLowerCase();const list=stations.filter(s=>!q||String(s.name+s.brand+s.address+s.sockets+s.power).toLowerCase().includes(q));if($('adminStatus')&&!$('adminStatus').textContent.includes('çekiliyor'))$('adminStatus').textContent=`EPDK kayıtları: ${stations.length}. Arama sonucu: ${list.length}.`;if($('adminSummary'))$('adminSummary').textContent=`Toplam ${stations.length} EPDK istasyonu var. Arama sonucu: ${list.length}. Sponsor/fırsat sayısı: ${sponsors().length}.`;if($('sp_station'))$('sp_station').innerHTML=stations.map(s=>`<option value="${esc(s.id)}">${esc(s.name)}</option>`).join('');$('adminStationList').innerHTML=list.map(s=>`<div class="station"><h4>${esc(s.name)}</h4><p>${esc(s.brand)} · ${esc(s.address)}</p><div class="tags"><span class="tag y">${esc(s.power)}</span><span class="tag">${esc(s.sockets)}</span><span class="tag b">EPDK</span></div></div>`).join('')||'<div class="empty">EPDK verisi yok. Üstten EPDK verisini yükle.</div>';$('adminSponsorList').innerHTML=fairSponsors(sponsors(),'admin').map(s=>`<div class="station"><div class="sponsorHead">${sponsorLogoHtml(s)}<div><h4>${esc(s.name)} <span class="tag g">${esc(s.discount)}</span></h4><p>${esc(s.offer)}</p><div class="tags"><span class="tag b">${esc(s.whatsapp||'WP yok')}</span></div></div></div><div class="adminActions"><button class="secondaryBtn" onclick="editSponsor('${esc(s.id)}')">Düzenle</button><button class="secondaryBtn" onclick="deleteSponsor('${esc(s.id)}')">Sil</button></div></div>`).join('')||'<div class="empty">Fırsat yok.</div>'}
+function renderAdmin(){if(!isAdmin)return;if($('epdkUrl'))$('epdkUrl').value=localStorage.getItem('molavolt_epdk_url')||DEFAULT_EPDK_URL;const q=($('adminSearch')?.value||'').trim().toLowerCase();const list=stations.filter(s=>!q||String(s.name+s.brand+s.address+s.sockets+s.power).toLowerCase().includes(q));if($('adminStatus')&&!$('adminStatus').textContent.includes('çekiliyor'))$('adminStatus').textContent=`EPDK kayıtları: ${stations.length}. Arama sonucu: ${list.length}.`;if($('adminSummary'))$('adminSummary').textContent=`Toplam ${stations.length} EPDK istasyonu var. Arama sonucu: ${list.length}. Sponsor/fırsat sayısı: ${sponsors().length}.`;if($('sp_station'))$('sp_station').innerHTML='<option value="">Tüm istasyonlarda göster</option>'+stations.map(s=>`<option value="${esc(s.id)}">${esc(s.name)}</option>`).join('');$('adminStationList').innerHTML=list.map(s=>`<div class="station"><h4>${esc(s.name)}</h4><p>${esc(s.brand)} · ${esc(s.address)}</p><div class="tags"><span class="tag y">${esc(s.power)}</span><span class="tag">${esc(s.sockets)}</span><span class="tag b">EPDK</span></div></div>`).join('')||'<div class="empty">EPDK verisi yok. Üstten EPDK verisini yükle.</div>';$('adminSponsorList').innerHTML=fairSponsors(sponsors(),'admin').map(s=>`<div class="station"><div class="sponsorHead">${sponsorLogoHtml(s)}<div><h4>${esc(s.name)} <span class="tag g">${esc(s.discount)}</span></h4><p>${esc(s.offer)}</p><div class="tags"><span class="tag b">${esc(s.whatsapp||'WP yok')}</span></div></div></div><div class="adminActions"><button class="secondaryBtn" onclick="editSponsor('${esc(s.id)}')">Düzenle</button><button class="secondaryBtn" onclick="deleteSponsor('${esc(s.id)}')">Sil</button></div></div>`).join('')||'<div class="empty">Fırsat yok.</div>'}
 function clearSponsorForm(){['sp_id','sp_name','sp_discount','sp_offer','sp_whatsapp','sp_logo'].forEach(id=>$(id)&&($(id).value=''))}function saveSponsor(){const id=$('sp_id').value||'sp-'+Date.now();const obj={id,stationId:$('sp_station').value,name:$('sp_name').value||'Sponsor işletme',discount:$('sp_discount').value||'%10',offer:$('sp_offer').value||'MolaVolt kullanıcılarına özel fırsat',whatsapp:$('sp_whatsapp').value||'',logo:$('sp_logo')?$('sp_logo').value:''};const arr=sponsors();const i=arr.findIndex(x=>x.id===id);if(i>=0)arr[i]=obj;else arr.unshift(obj);setSponsors(arr);clearSponsorForm();renderAdmin();renderSponsors();alert('Fırsat kaydedildi ve Firebase senkronu tetiklendi.')}function editSponsor(id){const s=sponsors().find(x=>x.id===id);if(!s)return;$('sp_id').value=s.id;$('sp_station').value=s.stationId;$('sp_name').value=s.name;$('sp_discount').value=s.discount;$('sp_offer').value=s.offer;$('sp_whatsapp').value=s.whatsapp||'';if($('sp_logo'))$('sp_logo').value=s.logo||''}function deleteSponsor(id){if(!confirm('Silinsin mi?'))return;setSponsors(sponsors().filter(x=>x.id!==id));renderAdmin();renderSponsors()}
 function locateSort(){
   buildStations();
@@ -571,7 +577,7 @@ window.addEventListener('load',init);
 
 
 <script type="module">
-/* UFUK_COUPON_REPORTS_0502 */
+/* UFUK_OFFER_COUNT_FIX_0503 */
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
 import { getFirestore, doc, getDoc, setDoc, serverTimestamp, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
 
@@ -609,7 +615,7 @@ async function saveEpdkToFirebase(list){
       index: i,
       count: chunks[i].length,
       updatedAt: serverTimestamp(),
-      version: "0502"
+      version: "0503"
     });
     setAdminStatus("Firebase’e parça parça kaydediliyor... " + (i+1) + "/" + chunks.length);
   }
@@ -618,7 +624,7 @@ async function saveEpdkToFirebase(list){
     chunkCount: chunks.length,
     chunkSize: CHUNK_SIZE,
     updatedAt: serverTimestamp(),
-    version: "0502"
+    version: "0503"
   });
 }
 async function loadEpdkFromFirebase(){
@@ -668,7 +674,7 @@ async function saveSponsorsFirebase(list){
     sponsors: Array.isArray(list) ? list : [],
     count: Array.isArray(list) ? list.length : 0,
     updatedAt: serverTimestamp(),
-    version: "0502"
+    version: "0503"
   });
 }
 
