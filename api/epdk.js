@@ -13,25 +13,20 @@ export default async function handler(req, res) {
 
   function epdkRequest(bodyValue, label) {
     return new Promise((resolve) => {
-      const hasBody = bodyValue !== undefined && bodyValue !== null;
-      const body = hasBody ? bodyValue : "";
-
+      const body = bodyValue;
       const headers = {
         "Accept": "application/json,text/plain,*/*",
+        "Content-Type": "application/json",
+        "Content-Length": Buffer.byteLength(body),
         "User-Agent": "MolaVolt/1.0"
       };
-
-      if (hasBody) {
-        headers["Content-Type"] = "application/json";
-        headers["Content-Length"] = Buffer.byteLength(body);
-      }
 
       const options = {
         hostname: "apigateway.epdk.gov.tr",
         path: "/sarjIstasyonlari/",
         method: "GET",
         headers,
-        timeout: 30000
+        timeout: 45000
       };
 
       const request = https.request(options, (response) => {
@@ -64,117 +59,101 @@ export default async function handler(req, res) {
         resolve({
           label,
           statusCode: 502,
-          raw: "",
-          json: {
+          raw: JSON.stringify({
             ok: false,
             error: "EPDK bağlantı hatası",
             detail: error.message
-          }
+          }),
+          json: null
         });
       });
 
-      if (hasBody) request.write(body);
+      request.write(body);
       request.end();
     });
   }
 
-  function rowCount(r) {
-    if (!r || !r.json) return 0;
-    if (Array.isArray(r.json.result)) return r.json.result.length;
-    if (typeof r.json.numRows === "number") return r.json.numRows;
-    if (Array.isArray(r.json)) return r.json.length;
-    return 0;
+  function getRows(json) {
+    if (!json) return [];
+
+    if (Array.isArray(json)) return json;
+
+    if (Array.isArray(json.result)) return json.result;
+
+    if (json.result && Array.isArray(json.result.rows)) return json.result.rows;
+
+    if (json.data && Array.isArray(json.data)) return json.data;
+
+    if (json.data && Array.isArray(json.data.result)) return json.data.result;
+
+    return [];
   }
 
-  const attempts = [];
-
-  const noBody = await epdkRequest(undefined, "GET gövdesiz");
-  attempts.push({
-    label: noBody.label,
-    statusCode: noBody.statusCode,
-    numRows: rowCount(noBody),
-    sample: noBody.raw.slice(0, 250)
-  });
-  if (noBody.statusCode === 200 && rowCount(noBody) > 0) {
-    return res.status(200).send(noBody.raw);
+  function hasData(r) {
+    const rows = getRows(r.json);
+    if (rows.length > 0) return true;
+    if (r.json && typeof r.json.numRows === "number" && r.json.numRows > 0) return true;
+    return false;
   }
 
-  const emptyObject = await epdkRequest("{}", "GET body {}");
-  attempts.push({
-    label: emptyObject.label,
-    statusCode: emptyObject.statusCode,
-    numRows: rowCount(emptyObject),
-    sample: emptyObject.raw.slice(0, 250)
-  });
-  if (emptyObject.statusCode === 200 && rowCount(emptyObject) > 0) {
-    return res.status(200).send(emptyObject.raw);
-  }
-
-  const brands = [
-    "ZES",
-    "Eşarj",
-    "Trugo",
-    "Sharz",
-    "Voltrun",
-    "Ovolt",
-    "Oncharge",
-    "WAT",
-    "Tesla",
-    "Astor",
-    "Gio",
-    "Beefull"
+  const attempts = [
+    {
+      label: "GET body boş obje",
+      body: "{}"
+    },
+    {
+      label: "GET body boş string",
+      body: JSON.stringify("")
+    },
+    {
+      label: "GET body string obje",
+      body: JSON.stringify("{}")
+    },
+    {
+      label: "GET body null alanlar",
+      body: JSON.stringify({
+        lisansNo: null,
+        sarjIstasyonuAdi: null,
+        sarjIstasyonuNo: null,
+        markaAdi: null,
+        yesilSarjIstasyonuMu: null,
+        hizmetSekli: null
+      })
+    },
+    {
+      label: "GET body boş alanlar",
+      body: JSON.stringify({
+        lisansNo: "",
+        sarjIstasyonuAdi: "",
+        sarjIstasyonuNo: "",
+        markaAdi: "",
+        yesilSarjIstasyonuMu: "",
+        hizmetSekli: ""
+      })
+    }
   ];
 
-  const mergedRows = [];
-  let columnNames = null;
+  const logs = [];
 
-  for (const markaAdi of brands) {
-    const body = JSON.stringify({ markaAdi });
-    const r = await epdkRequest(body, `markaAdi=${markaAdi}`);
+  for (const attempt of attempts) {
+    const r = await epdkRequest(attempt.body, attempt.label);
 
-    attempts.push({
+    logs.push({
       label: r.label,
       statusCode: r.statusCode,
-      numRows: rowCount(r),
-      sample: r.raw.slice(0, 180)
+      numRows: r.json && typeof r.json.numRows === "number" ? r.json.numRows : getRows(r.json).length,
+      sample: r.raw.slice(0, 300)
     });
 
-    if (r.statusCode === 200 && r.json) {
-      if (Array.isArray(r.json.columnNames)) columnNames = r.json.columnNames;
-
-      if (Array.isArray(r.json.result)) {
-        mergedRows.push(...r.json.result);
-      } else if (Array.isArray(r.json)) {
-        mergedRows.push(...r.json);
-      }
+    if (r.statusCode === 200 && hasData(r)) {
+      return res.status(200).send(r.raw);
     }
-  }
-
-  const seen = new Set();
-  const uniqueRows = mergedRows.filter(row => {
-    const key = JSON.stringify(row);
-    if (seen.has(key)) return false;
-    seen.add(key);
-    return true;
-  });
-
-  if (uniqueRows.length > 0) {
-    return res.status(200).send(JSON.stringify({
-      statusCode: 200,
-      statusDescription: "OK",
-      message: "MolaVolt marka bazlı EPDK sorgusu",
-      columnNames,
-      numRows: uniqueRows.length,
-      result: uniqueRows,
-      attempts,
-      errors: []
-    }));
   }
 
   return res.status(502).send(JSON.stringify({
     ok: false,
     error: "EPDK bağlantısı çalıştı ama veri dönmedi",
-    note: "Gövdesiz, boş obje ve marka bazlı denemeler yapıldı.",
-    attempts
+    note: "Tüm GET body formatları denendi. EPDK geçici kota/boş cevap dönmüş olabilir.",
+    attempts: logs
   }, null, 2));
 }
