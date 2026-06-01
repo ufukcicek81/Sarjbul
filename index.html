@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="tr">
 <head>
-<!-- UFUK_SPONSOR_SYNC_COUPON_LOGO_0500 -->
+<!-- UFUK_COUPON_REPORTS_0502 -->
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>MolaVolt</title>
@@ -18,7 +18,7 @@
 .bottomNav{position:fixed;left:50%;transform:translateX(-50%);bottom:12px;width:min(402px,calc(100% - 24px));background:rgba(8,18,31,.96);border:1px solid var(--line);backdrop-filter:blur(14px);border-radius:26px;padding:10px 8px;display:grid;grid-template-columns:repeat(5,1fr);gap:4px;z-index:99999;box-shadow:var(--shadow)}.navItem{border:0;background:transparent;color:#9eb1c7;border-radius:18px;padding:8px 4px;display:flex;flex-direction:column;align-items:center;gap:5px;font-size:11px}.navItem span{font-size:20px}.navItem.active{background:rgba(54,239,141,.08);color:var(--green)}
 .modal{position:fixed;inset:0;background:rgba(0,0,0,.58);z-index:100000;display:none;align-items:flex-end}.modal.show{display:flex}.sheet{width:100%;max-width:430px;margin:0 auto;background:#081420;border:1px solid var(--line);border-bottom:0;border-radius:28px 28px 0 0;padding:18px;max-height:88vh;overflow:auto}.close{float:right;border:1px solid var(--line);background:rgba(255,255,255,.05);color:white;width:42px;height:42px;border-radius:16px;font-size:22px}.formBox input,.formBox select,.formBox textarea{width:100%;margin:6px 0 10px;background:#091827;border:1px solid var(--line);color:white;border-radius:15px;padding:12px;outline:0;font-size:14px}.formBox label{display:block;color:var(--muted);font-size:13px;margin-top:8px}.adminActions{display:flex;gap:8px;margin-top:8px}.adminActions button{flex:1}.mapSheetBody{height:72vh;min-height:420px}#stationMap{height:100%;width:100%;border-radius:22px;overflow:hidden;background:#101b2c}.empty{padding:18px;border-radius:22px;background:rgba(255,255,255,.035);border:1px solid var(--line);color:var(--muted)}
 
-.adminTabs{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:14px 0 18px}
+.adminTabs{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:14px 0 18px}
 .adminTabBtn{border:1px solid var(--line);background:rgba(255,255,255,.045);color:#dcecff;border-radius:18px;padding:12px 8px;font-weight:800;font-size:13px}
 .adminTabBtn.active{background:linear-gradient(135deg,var(--green),var(--green2));color:#052112;border-color:transparent}
 .adminSection{display:none}
@@ -74,6 +74,73 @@
 .couponBtn{width:100%;margin-top:14px;display:block}
 .smallInfo{font-size:12px;color:var(--muted);line-height:1.35;margin-top:7px}
 
+
+/* v0501 sponsor fırsat kartları oran ve otomatik kayma */
+.sponsorWrap{position:relative;overflow:hidden;margin-top:12px}
+.sponsorScroll{
+  display:flex!important;
+  gap:12px!important;
+  overflow-x:auto!important;
+  scroll-snap-type:x mandatory!important;
+  scroll-behavior:smooth!important;
+  scrollbar-width:none!important;
+  padding:2px 2px 8px!important;
+}
+.sponsorScroll::-webkit-scrollbar{display:none!important}
+.sponsorCard{
+  flex:0 0 82%!important;
+  min-width:82%!important;
+  max-width:82%!important;
+  min-height:278px!important;
+  display:flex!important;
+  flex-direction:column!important;
+  justify-content:space-between!important;
+  overflow:hidden!important;
+}
+.sponsorCard h4{
+  margin:8px 0 8px!important;
+  font-size:20px!important;
+  line-height:1.18!important;
+  min-height:48px!important;
+  display:-webkit-box!important;
+  -webkit-line-clamp:2!important;
+  -webkit-box-orient:vertical!important;
+  overflow:hidden!important;
+}
+.sponsorCard p{
+  margin:0!important;
+  color:var(--muted)!important;
+  font-size:15px!important;
+  line-height:1.35!important;
+  min-height:62px!important;
+  display:-webkit-box!important;
+  -webkit-line-clamp:3!important;
+  -webkit-box-orient:vertical!important;
+  overflow:hidden!important;
+}
+.sponsorCard .couponBtn{margin-top:14px!important}
+.sponsorCard .smallInfo{min-height:34px!important}
+.sponsorHead{min-height:72px!important}
+.sponsorDots{display:flex;justify-content:center;gap:6px;margin-top:8px}
+.sponsorDot{width:7px;height:7px;border-radius:999px;background:rgba(255,255,255,.22)}
+.sponsorDot.active{background:var(--green)}
+@media(min-width:410px){
+  .sponsorCard{flex-basis:78%!important;min-width:78%!important;max-width:78%!important}
+}
+
+
+/* v0502 fırsat kodu takip ve rapor */
+.reportGrid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+.reportBox{background:rgba(255,255,255,.04);border:1px solid var(--line);border-radius:18px;padding:12px}
+.reportBox b{font-size:22px;display:block;margin-top:4px}
+.couponRow{border:1px solid var(--line);border-radius:18px;padding:12px;margin-top:10px;background:rgba(255,255,255,.035)}
+.couponActions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.couponActions button,.couponActions a{flex:1;min-width:120px}
+.statusPill{display:inline-block;border-radius:999px;padding:5px 9px;font-size:12px;border:1px solid var(--line);background:rgba(255,255,255,.05);color:#dcecff}
+.statusPill.ok{background:rgba(54,239,141,.12);border-color:rgba(54,239,141,.25);color:#9bffc4}
+.statusPill.warn{background:rgba(255,224,129,.12);border-color:rgba(255,224,129,.25);color:#ffe9a6}
+@media(max-width:380px){.reportGrid{grid-template-columns:1fr}.couponActions button,.couponActions a{min-width:100%}}
+
 </style>
 </head>
 <body>
@@ -88,13 +155,13 @@
     <div class="search"><span>🔎</span><input id="searchInput" placeholder="Konum veya istasyon ara" autocomplete="off" autocapitalize="off" spellcheck="false" oninput="stableSearch()" onkeyup="stableSearch()" onchange="stableSearch()"><button class="menuBtn" onclick="openModal('infoModal')">≡</button></div>
     <div class="chips" id="brandChips"></div>
     <div class="tab active" id="tab-home">
-      <section class="section"><h3>Şarj molası fırsatları</h3><p class="muted">Kodu al, kasada göster, indirim kazan</p><div class="sponsorScroll" id="sponsorCards"></div></section>
+      <section class="section"><h3>Şarj molası fırsatları</h3><p class="muted">Kodu al, kasada göster, indirim kazan</p><div class="sponsorWrap"><div class="sponsorScroll" id="sponsorCards"></div></div><div class="sponsorDots" id="sponsorDots"></div></section>
       <section class="section"><h3>Yakındaki istasyonlar</h3><p class="muted" id="countText">Yakındaki istasyonlar</p><p class="muted" id="locStatus" style="font-size:13px;margin-top:4px">Konumuna yakın istasyonları görmek için arama yapabilir veya konum izni verebilirsin.</p><div class="sorts"><button id="sortDistance" class="sort active" onclick="setSort('distance')">En yakın</button><button id="sortName" class="sort" onclick="setSort('name')">A-Z</button></div><div class="cards" id="homeCards"></div></section>
     </div>
     <div class="tab" id="tab-stations"><section class="section"><h3>İstasyonlar</h3><p class="muted">Marka seçerek veya arama yaparak filtreleyebilirsin.</p><div class="cards" id="stationCards"></div></section></div>
     <div class="tab" id="tab-favorites"><section class="section"><h3>Favoriler</h3><div class="cards" id="favCards"></div></section></div>
     <div class="tab" id="tab-report"><section class="section"><h3>Eksik istasyon bildir</h3><p class="muted">Görünmeyen şarj noktasını bize gönder</p><div class="panel"><a class="routeBtn" style="display:block;padding:14px" href="https://wa.me/905327664404?text=MolaVolt%20eksik%20%C5%9Farj%20istasyonu%20bildirimi:%0A%C4%B0stasyon%20ad%C4%B1:%0AMarka:%0AKonum%20linki:%0ANot:" target="_blank" rel="noopener">WhatsApp ile bildir</a></div></section></div>
-    <div class="tab" id="tab-profile"><section class="section"><h3>Profil</h3><p class="muted">MolaVolt</p><div class="panel"><b>MolaVolt</b><p class="muted">Yakındaki şarj istasyonlarını bul, haritada gör ve yol tarifini hemen al.</p></div><div class="panel" style="margin-top:12px"><h3 style="font-size:18px">Destek</h3><p class="muted">Öneri, hata bildirimi veya destek için bize ulaş.</p><a class="routeBtn" style="display:block;text-align:center;margin-top:8px" href="https://wa.me/905327664404?text=MolaVolt%20destek%20talebi:%20" target="_blank" rel="noopener">WhatsApp destek</a></div></section></div>
+    <div class="tab" id="tab-profile"><section class="section"><h3>Profil</h3><p class="muted">MolaVolt</p><div class="panel"><b>MolaVolt</b><p class="muted">Yakındaki şarj istasyonlarını bul, haritada gör ve yol tarifini hemen al.</p></div><div class="panel" style="margin-top:12px"><h3 style="font-size:18px">Destek</h3><p class="muted">Öneri, hata bildirimi veya destek için bize ulaş.</p><a class="routeBtn" style="display:block;text-align:center;margin-top:8px" href="https://wa.me/905327664404?text=MolaVolt%20destek%20talebi:%20" target="_blank" rel="noopener">WhatsApp destek</a></div><div class="panel" style="margin-top:12px"><h3 style="font-size:18px">Fırsat kodlarım</h3><p class="muted">Kullandığın fırsatı buradan onaylayabilirsin.</p><div id="myCouponCards"></div></div></section></div>
   </main>
 
   <main class="adminOnly" id="adminPage">
@@ -107,6 +174,7 @@
       <button class="adminTabBtn active" id="adminTab-epdk" onclick="showAdminTab('epdk')">EPDK Veri</button>
       <button class="adminTabBtn" id="adminTab-stations" onclick="showAdminTab('stations')">İstasyonlar</button>
       <button class="adminTabBtn" id="adminTab-sponsor" onclick="showAdminTab('sponsor')">Sponsor / Fırsat</button>
+      <button class="adminTabBtn" id="adminTab-reports" onclick="showAdminTab('reports');loadCouponReports()">Raporlar</button>
     </div>
 
     <section class="adminSection active" id="adminSection-epdk">
@@ -159,15 +227,26 @@
       </div>
       <section class="section"><h3>Fırsatlar</h3><div class="cards" id="adminSponsorList"></div></section>
     </section>
+
+    <section class="adminSection" id="adminSection-reports">
+      <div class="panel">
+        <h3>Fırsat kodu raporları</h3>
+        <p class="muted">Kod üretimi, müşteri onayı ve sponsor satış onaylarını takip et.</p>
+        <button class="primaryBtn" style="width:100%;margin-top:8px" onclick="loadCouponReports()">Raporu yenile</button>
+        <div class="reportGrid" id="couponReportSummary"></div>
+      </div>
+      <section class="section"><h3>Sponsor dönüşüm tablosu</h3><div class="cards" id="couponSponsorReport"></div></section>
+      <section class="section"><h3>Son kodlar</h3><div class="cards" id="couponRecentList"></div></section>
+    </section>
   </main>
 </div>
 <nav class="bottomNav customerOnly"><button class="navItem active" id="nav-home" onclick="showTab('home')"><span>🏠</span>Ana Sayfa</button><button class="navItem" id="nav-stations" onclick="showTab('stations')"><span>📍</span>İstasyonlar</button><button class="navItem" id="nav-favorites" onclick="showTab('favorites')"><span>♡</span>Favoriler</button><button class="navItem" id="nav-report" onclick="showTab('report')"><span>🔔</span>Bildir</button><button class="navItem" id="nav-profile" onclick="showTab('profile')"><span>👤</span>Profil</button></nav>
 <div class="modal" id="mapModal"><div class="sheet"><button class="close" onclick="closeStationMap()">×</button><h2 id="mapModalTitle">Haritada gör</h2><p class="muted" id="mapModalText">İstasyon konumu</p><div class="mapSheetBody"><div id="stationMap"></div></div><div class="cardActions"><button class="secondaryBtn" onclick="closeStationMap()">Kapat</button><a class="routeBtn" id="mapModalRoute" href="#" target="_blank" rel="noopener">Yol tarifi</a></div></div></div>
 <div class="modal" id="detailModal"><div class="sheet"><button class="close" onclick="closeModal('detailModal')">×</button><div id="detailContent"></div></div></div>
-<div class="modal" id="infoModal"><div class="sheet"><button class="close" onclick="closeModal('infoModal')">×</button><h2>MolaVolt</h2><p class="muted">Yakındaki şarj istasyonlarını kolayca bul, haritada gör ve yol tarifi al.</p><div>UFUK_SPONSOR_SYNC_COUPON_LOGO_0500</div></div></div>
+<div class="modal" id="infoModal"><div class="sheet"><button class="close" onclick="closeModal('infoModal')">×</button><h2>MolaVolt</h2><p class="muted">Yakındaki şarj istasyonlarını kolayca bul, haritada gör ve yol tarifi al.</p><div>UFUK_COUPON_REPORTS_0502</div></div></div>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
-const VERSION='0500',ADMIN_KEY='ufuk8790',DEFAULT_EPDK_URL='https://molavolt.vercel.app/api/epdk';
+const VERSION='0502',ADMIN_KEY='ufuk8790',DEFAULT_EPDK_URL='https://molavolt.vercel.app/api/epdk';
 const BRANDS=['Tümü','ZES','Eşarj','Trugo','Sharz','Voltrun','Ovolt','WAT','Diğer'];
 const LEGACY_KEYS=['mv_manual_stations','mv_hidden_stations','mv_turkey_stations','molavolt_turkey_osm_cache','molavolt_osm_cache_v2','molavolt_turkey_admin_seed','molavolt_turkey_admin_hidden','molavolt_turkey_seed','molavolt_hidden_seed'];
 let userPos=loadPos()||{lat:40.840621,lon:31.152219},stations=[],filtered=[],currentBrand='Tümü',sortMode='distance',isAdmin=false,stationMap=null,stationMapMarker=null;
@@ -193,6 +272,46 @@ function setSponsors(v){
   if(window.saveSponsorsToFirebase) window.saveSponsorsToFirebase(v||[]);
 }
 
+
+function deviceId(){
+  let id=localStorage.getItem('molavolt_device_id');
+  if(!id){id='dev-'+Date.now()+'-'+Math.random().toString(16).slice(2);localStorage.setItem('molavolt_device_id',id)}
+  return id;
+}
+function localCoupons(){return getJson('molavolt_my_coupons',[])}
+function setLocalCoupons(v){setJson('molavolt_my_coupons',v||[])}
+function addLocalCoupon(c){
+  const arr=localCoupons().filter(x=>x.code!==c.code);
+  arr.unshift(c);
+  setLocalCoupons(arr.slice(0,30));
+  renderMyCoupons();
+}
+function couponStatusText(c){
+  if(c.status==='sponsor_ok')return 'Sponsor onayladı';
+  if(c.status==='customer_ok')return 'Müşteri kullandım dedi';
+  if(c.status==='cancelled')return 'İptal / kullanılmadı';
+  return 'Kod oluşturuldu';
+}
+function couponStatusClass(c){
+  if(c.status==='sponsor_ok')return 'ok';
+  if(c.status==='customer_ok')return 'warn';
+  return '';
+}
+function renderMyCoupons(){
+  const box=$('myCouponCards');
+  if(!box)return;
+  const arr=localCoupons();
+  box.innerHTML=arr.length?arr.map(c=>`<div class="couponRow">
+    <b>${esc(c.code)}</b><br>
+    <span class="statusPill ${couponStatusClass(c)}">${esc(couponStatusText(c))}</span>
+    <p class="muted" style="margin-top:8px">${esc(c.sponsorName||'Sponsor')} ${c.stationName?('· '+esc(c.stationName)):''}</p>
+    <div class="couponActions">
+      <button class="primaryBtn" onclick="confirmCoupon('${esc(c.code)}','customer_ok')">Kullandım</button>
+      <button class="secondaryBtn" onclick="confirmCoupon('${esc(c.code)}','cancelled')">Kullanmadım</button>
+    </div>
+  </div>`).join(''):'<div class="empty">Henüz fırsat kodun yok.</div>';
+}
+
 function dayNumber(){return Math.floor(Date.now()/86400000)}
 function sponsorSeed(o){return String(o.id||o.name||'').split('').reduce((a,c)=>a+c.charCodeAt(0),0)}
 function fairSponsors(list,context='global'){
@@ -207,17 +326,37 @@ function makeCouponCode(o){
   const base=(String(o.name||'MOLA').replace(/[^A-Za-zÇĞİÖŞÜçğıöşü0-9]/g,'').slice(0,4)||'MOLA').toUpperCase();
   return base + Math.floor(1000+Math.random()*9000);
 }
-function useSponsorCoupon(id,stationId=''){
+async function useSponsorCoupon(id,stationId=''){
   const o=sponsors().find(x=>x.id===id);
   if(!o)return alert('Fırsat bulunamadı.');
   const s=stations.find(x=>x.id===stationId)||null;
   const code=makeCouponCode(o);
-  const msg=`Merhaba, MolaVolt fırsat kodumu kullanmak istiyorum.%0A%0AKod: ${code}%0AFirma: ${encodeURIComponent(o.name||'Sponsor')}%0Aİndirim: ${encodeURIComponent(o.discount||'')}${s?`%0Aİstasyon: ${encodeURIComponent(s.name)}`:''}`;
+  const coupon={
+    code,
+    sponsorId:o.id,
+    sponsorName:o.name||'Sponsor',
+    sponsorWhatsapp:o.whatsapp||'',
+    stationId:s?s.id:(o.stationId||''),
+    stationName:s?s.name:'',
+    customerDeviceId:deviceId(),
+    status:'created',
+    customerConfirmed:false,
+    sponsorConfirmed:false,
+    createdMs:Date.now()
+  };
+  if(window.createCouponFirebase){
+    try{await window.createCouponFirebase(coupon)}catch(err){console.error(err)}
+  }
+  addLocalCoupon(coupon);
   const phone=String(o.whatsapp||'').replace(/[^0-9]/g,'');
+  const sponsorLink=`${location.origin}${location.pathname}?coupon=${encodeURIComponent(code)}&action=sponsor_ok`;
+  const customerLink=`${location.origin}${location.pathname}?coupon=${encodeURIComponent(code)}&action=customer_ok`;
+  const msg=`Merhaba, MolaVolt fırsat kodumu kullanmak istiyorum.%0A%0AKod: ${code}%0AFirma: ${encodeURIComponent(o.name||'Sponsor')}%0Aİndirim: ${encodeURIComponent(o.discount||'')}${s?`%0Aİstasyon: ${encodeURIComponent(s.name)}`:''}%0A%0ASatış gerçekleştiyse onay linki:%0A${encodeURIComponent(sponsorLink)}%0A%0AMüşteri kullandı onay linki:%0A${encodeURIComponent(customerLink)}`;
   if(!phone){
-    alert('Fırsat kodun: '+code+'\\nSponsor WhatsApp numarası eklenmemiş.');
+    alert('Fırsat kodun: '+code+'\\nSponsor WhatsApp numarası eklenmemiş. Profil > Fırsat kodlarım bölümünden kullandım onayı verebilirsin.');
     return;
   }
+  alert('Fırsat kodun oluşturuldu: '+code+'\\nWhatsApp mesajı açılıyor. Sonra Profil > Fırsat kodlarım bölümünden kullandım onayı verebilirsin.');
   window.open(`https://wa.me/${phone}?text=${msg}`,'_blank','noopener');
 }
 
@@ -296,21 +435,55 @@ function renderCards(){
   }
 }
 function renderFavs(){$('favCards').innerHTML='<div class="empty">Favori özelliği yakında aktif olacak.</div>'}
+
+let sponsorAutoTimer=null;
+let sponsorAutoIndex=0;
+function sponsorVisibleCount(){
+  const box=$('sponsorCards');
+  return box?box.children.length:0;
+}
+function updateSponsorDots(){
+  const dots=$('sponsorDots'), box=$('sponsorCards');
+  if(!dots||!box)return;
+  const count=box.children.length;
+  dots.innerHTML=Array.from({length:Math.min(count,8)},(_,i)=>`<span class="sponsorDot ${i===(sponsorAutoIndex%Math.min(count,8))?'active':''}"></span>`).join('');
+}
+function startSponsorAutoScroll(){
+  const box=$('sponsorCards');
+  if(!box)return;
+  if(sponsorAutoTimer) clearInterval(sponsorAutoTimer);
+  sponsorAutoTimer=setInterval(()=>{
+    const count=box.children.length;
+    if(count<2)return;
+    sponsorAutoIndex=(sponsorAutoIndex+1)%count;
+    const card=box.children[sponsorAutoIndex];
+    if(card) box.scrollTo({left:card.offsetLeft-2,behavior:'smooth'});
+    updateSponsorDots();
+  },3600);
+}
+
 function renderSponsors(){
   const box=$('sponsorCards');
   if(!box)return;
   const arr=fairSponsors(sponsors(),'home').slice(0,12);
+  sponsorAutoIndex=0;
   box.innerHTML=arr.length?arr.map(o=>`<div class="sponsorCard">
-    <div class="sponsorHead">
-      ${sponsorLogoHtml(o)}
-      <div><span class="tag g">${esc(o.discount)} indirim</span><h4>${esc(o.name)}</h4></div>
+    <div>
+      <div class="sponsorHead">
+        ${sponsorLogoHtml(o)}
+        <div><span class="tag g">${esc(o.discount)} indirim</span><h4>${esc(o.name)}</h4></div>
+      </div>
+      <p>${esc(o.offer)}</p>
     </div>
-    <p>${esc(o.offer)}</p>
-    <button class="routeBtn couponBtn" onclick="useSponsorCoupon('${esc(o.id)}','${esc(o.stationId||'')}')">Fırsat kodu al</button>
-    <div class="smallInfo">Kod WhatsApp üzerinden sponsor firmaya iletilir.</div>
+    <div>
+      <button class="routeBtn couponBtn" onclick="useSponsorCoupon('${esc(o.id)}','${esc(o.stationId||'')}')">Fırsat kodu al</button>
+      <div class="smallInfo">Kod WhatsApp üzerinden sponsor firmaya iletilir.</div>
+    </div>
   </div>`).join(''):'<div class="empty">Sponsor fırsatı yok.</div>';
+  updateSponsorDots();
+  startSponsorAutoScroll();
 }
-function renderAll(){renderCards();renderFavs();renderSponsors();if(isAdmin){renderAdmin();setTimeout(restoreAdminTab,50)}}function showTab(name){
+function renderAll(){renderCards();renderFavs();renderSponsors();renderMyCoupons();if(isAdmin){renderAdmin();setTimeout(restoreAdminTab,50)}}function showTab(name){
   activeCustomerTab=name;
   ['home','stations','favorites','report','profile'].forEach(t=>{
     $('tab-'+t)?.classList.toggle('active',t===name);
@@ -339,7 +512,7 @@ async function loadEpdk(){const url=($('epdkUrl').value||DEFAULT_EPDK_URL).trim(
 function clearEpdk(){if(!confirm('EPDK verisi temizlensin mi?'))return;localStorage.removeItem('molavolt_epdk_stations');buildStations();applyFilters();renderAdmin();$('adminStatus').textContent='EPDK verisi temizlendi.'}
 
 function showAdminTab(name){
-  ['epdk','stations','sponsor'].forEach(t=>{
+  ['epdk','stations','sponsor','reports'].forEach(t=>{
     document.getElementById('adminTab-'+t)?.classList.toggle('active',t===name);
     document.getElementById('adminSection-'+t)?.classList.toggle('active',t===name);
   });
@@ -398,9 +571,9 @@ window.addEventListener('load',init);
 
 
 <script type="module">
-/* UFUK_SPONSOR_SYNC_COUPON_LOGO_0500 */
+/* UFUK_COUPON_REPORTS_0502 */
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
-import { getFirestore, doc, getDoc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
+import { getFirestore, doc, getDoc, setDoc, serverTimestamp, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyAcmXWfZMcSpTrZ5hDBNCDta8xmsIk4TwY",
@@ -436,7 +609,7 @@ async function saveEpdkToFirebase(list){
       index: i,
       count: chunks[i].length,
       updatedAt: serverTimestamp(),
-      version: "0500"
+      version: "0502"
     });
     setAdminStatus("Firebase’e parça parça kaydediliyor... " + (i+1) + "/" + chunks.length);
   }
@@ -445,7 +618,7 @@ async function saveEpdkToFirebase(list){
     chunkCount: chunks.length,
     chunkSize: CHUNK_SIZE,
     updatedAt: serverTimestamp(),
-    version: "0500"
+    version: "0502"
   });
 }
 async function loadEpdkFromFirebase(){
@@ -495,7 +668,7 @@ async function saveSponsorsFirebase(list){
     sponsors: Array.isArray(list) ? list : [],
     count: Array.isArray(list) ? list.length : 0,
     updatedAt: serverTimestamp(),
-    version: "0500"
+    version: "0502"
   });
 }
 
@@ -536,6 +709,87 @@ window.loadSponsorsFromFirebase = async function(silent=false){
   }
 };
 
+
+const COUPON_COLLECTION = "molavoltCoupons";
+
+window.createCouponFirebase = async function(coupon){
+  await setDoc(doc(db, COUPON_COLLECTION, coupon.code), {
+    ...coupon,
+    createdAt: serverTimestamp(),
+    updatedAt: serverTimestamp()
+  }, {merge:true});
+};
+
+window.confirmCoupon = async function(code, action){
+  const ref=doc(db, COUPON_COLLECTION, code);
+  const update={updatedAt:serverTimestamp()};
+  if(action==='customer_ok'){
+    update.status='customer_ok';
+    update.customerConfirmed=true;
+    update.customerConfirmedAt=serverTimestamp();
+  }else if(action==='sponsor_ok'){
+    update.status='sponsor_ok';
+    update.sponsorConfirmed=true;
+    update.sponsorConfirmedAt=serverTimestamp();
+  }else if(action==='cancelled'){
+    update.status='cancelled';
+    update.customerConfirmed=false;
+    update.cancelledAt=serverTimestamp();
+  }
+  await setDoc(ref, update, {merge:true});
+  const arr=localCoupons();
+  const i=arr.findIndex(x=>x.code===code);
+  if(i>=0){
+    arr[i]={...arr[i],...update,status:update.status||arr[i].status,customerConfirmed:!!update.customerConfirmed,sponsorConfirmed:!!update.sponsorConfirmed};
+    setLocalCoupons(arr);
+    renderMyCoupons();
+  }
+  alert(code+' kodu güncellendi: '+couponStatusText({status:update.status}));
+  if(history.replaceState && new URLSearchParams(location.search).get('coupon')){
+    history.replaceState({},'',location.pathname);
+  }
+};
+
+async function handleCouponActionFromUrl(){
+  const p=new URLSearchParams(location.search);
+  const code=p.get('coupon');
+  const action=p.get('action');
+  if(code&&action&&window.confirmCoupon){
+    await window.confirmCoupon(code,action);
+    showTab('profile');
+  }
+}
+
+window.loadCouponReports = async function(){
+  const summary=$('couponReportSummary'), sponsorBox=$('couponSponsorReport'), recent=$('couponRecentList');
+  if(summary)summary.innerHTML='<div class="empty">Rapor yükleniyor...</div>';
+  try{
+    const snap=await getDocs(collection(db, COUPON_COLLECTION));
+    const rows=[];
+    snap.forEach(d=>rows.push({id:d.id,...(d.data()||{})}));
+    rows.sort((a,b)=>(b.createdMs||0)-(a.createdMs||0));
+    const total=rows.length;
+    const cust=rows.filter(x=>x.customerConfirmed||x.status==='customer_ok'||x.status==='sponsor_ok').length;
+    const sponsorOk=rows.filter(x=>x.sponsorConfirmed||x.status==='sponsor_ok').length;
+    const cancelled=rows.filter(x=>x.status==='cancelled').length;
+    if(summary)summary.innerHTML=`<div class="reportBox">Kod alındı<b>${total}</b></div><div class="reportBox">Müşteri onayı<b>${cust}</b></div><div class="reportBox">Sponsor onayı<b>${sponsorOk}</b></div><div class="reportBox">Net dönüşüm<b>${total?Math.round((sponsorOk/total)*100):0}%</b></div>`;
+    const by={};
+    rows.forEach(r=>{
+      const k=r.sponsorName||'Sponsor';
+      by[k]=by[k]||{name:k,total:0,cust:0,sponsor:0,cancel:0};
+      by[k].total++;
+      if(r.customerConfirmed||r.status==='customer_ok'||r.status==='sponsor_ok')by[k].cust++;
+      if(r.sponsorConfirmed||r.status==='sponsor_ok')by[k].sponsor++;
+      if(r.status==='cancelled')by[k].cancel++;
+    });
+    const sponsorHtml=Object.values(by).sort((a,b)=>b.total-a.total).map(x=>`<div class="couponRow"><b>${esc(x.name)}</b><div class="reportGrid"><div class="reportBox">Kod<b>${x.total}</b></div><div class="reportBox">Müşteri<b>${x.cust}</b></div><div class="reportBox">Sponsor<b>${x.sponsor}</b></div><div class="reportBox">Dönüşüm<b>${x.total?Math.round((x.sponsor/x.total)*100):0}%</b></div></div></div>`).join('');
+    if(sponsorBox)sponsorBox.innerHTML=sponsorHtml||'<div class="empty">Rapor verisi yok.</div>';
+    if(recent)recent.innerHTML=rows.slice(0,30).map(r=>`<div class="couponRow"><b>${esc(r.code||r.id)}</b> <span class="statusPill ${couponStatusClass(r)}">${esc(couponStatusText(r))}</span><p class="muted">${esc(r.sponsorName||'Sponsor')} ${r.stationName?('· '+esc(r.stationName)):''}</p><div class="couponActions"><button class="secondaryBtn" onclick="confirmCoupon('${esc(r.code||r.id)}','sponsor_ok')">Sponsor onayla</button><button class="secondaryBtn" onclick="confirmCoupon('${esc(r.code||r.id)}','cancelled')">İptal</button></div></div>`).join('')||'<div class="empty">Kod kaydı yok.</div>';
+  }catch(err){
+    if(summary)summary.innerHTML='<div class="empty">Rapor hatası: '+esc(err.message)+'</div>';
+  }
+};
+
 window.loadEpdk = async function(){
   const input = document.getElementById("epdkUrl");
   const url = (input && input.value.trim()) || localStorage.getItem("molavolt_epdk_url") || "https://molavolt.vercel.app/api/epdk";
@@ -568,7 +822,7 @@ window.loadFirebaseStations = async function(){
   const ok = await applyFirebaseStations(false);
   if(ok) alert("Firebase’den istasyonlar yüklendi.");
 };
-window.addEventListener("load", () => {
+window.addEventListener("load", () => { handleCouponActionFromUrl();
   setTimeout(async () => {
     try{
       const local = JSON.parse(localStorage.getItem("molavolt_epdk_stations") || "[]");
