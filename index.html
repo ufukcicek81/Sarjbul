@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="tr">
 <head>
-<!-- UFUK_CLEAN_EPDK_ONLY_0492 -->
+<!-- UFUK_FIREBASE_EPDK_SHARED_0493 -->
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>MolaVolt</title>
@@ -37,13 +37,13 @@
     <div class="tab" id="tab-stations"><section class="section"><h3>İstasyonlar</h3><p class="muted">Sadece EPDK verisi gösteriliyor</p><div class="cards" id="stationCards"></div></section></div>
     <div class="tab" id="tab-favorites"><section class="section"><h3>Favoriler</h3><div class="cards" id="favCards"></div></section></div>
     <div class="tab" id="tab-report"><section class="section"><h3>Eksik istasyon bildir</h3><p class="muted">Görünmeyen şarj noktasını bize gönder</p><div class="panel"><a class="routeBtn" style="display:block;padding:14px" href="https://wa.me/905327664404?text=MolaVolt%20eksik%20%C5%9Farj%20istasyonu%20bildirimi:%0A%C4%B0stasyon%20ad%C4%B1:%0AMarka:%0AKonum%20linki:%0ANot:" target="_blank" rel="noopener">WhatsApp ile bildir</a></div></section></div>
-    <div class="tab" id="tab-profile"><section class="section"><h3>Profil</h3><p class="muted">MolaVolt</p><div class="panel"><b>Sürüm: 0492</b><p class="muted">Canlı harita yok. Sadece EPDK istasyonları. Harita karttaki Haritada gör tuşuyla açılır.</p></div></section></div>
+    <div class="tab" id="tab-profile"><section class="section"><h3>Profil</h3><p class="muted">MolaVolt</p><div class="panel"><b>Sürüm: 0493</b><p class="muted">Canlı harita yok. Sadece EPDK istasyonları. Harita karttaki Haritada gör tuşuyla açılır.</p></div></section></div>
   </main>
 
   <main class="adminOnly">
     <section class="section" style="margin-top:6px"><h3>Admin Panel</h3><p class="muted">EPDK verisi ve kampanya yönetimi</p></section>
     <div class="panel formBox">
-      <h3>EPDK Türkiye verisi</h3><p class="muted">Eski/manuel/sabit kayıt gösterilmez. Liste sadece EPDK API’den gelen veridir. Sonraki adımda Firebase’e bağlanınca veri herkes için ortak kaydedilecek.</p>
+      <h3>EPDK Türkiye verisi</h3><p class="muted">Eski/manuel/sabit kayıt gösterilmez. Liste sadece EPDK API’den gelen veridir. Firebase bağlı: EPDK verisi cihaz yerine ortak veritabanına kaydedilir.</p>
       <label>EPDK / Vercel API URL</label><input id="epdkUrl" placeholder="https://molavolt.vercel.app/api/epdk">
       <button class="primaryBtn" style="width:100%;margin-top:8px" onclick="loadEpdk()">EPDK verisini yükle</button>
       <button class="secondaryBtn" style="display:block;text-align:center;margin-top:8px" onclick="clearEpdk()">EPDK verisini temizle</button>
@@ -59,10 +59,10 @@
 <nav class="bottomNav customerOnly"><button class="navItem active" id="nav-home" onclick="showTab('home')"><span>🏠</span>Ana Sayfa</button><button class="navItem" id="nav-stations" onclick="showTab('stations')"><span>📍</span>İstasyonlar</button><button class="navItem" id="nav-favorites" onclick="showTab('favorites')"><span>♡</span>Favoriler</button><button class="navItem" id="nav-report" onclick="showTab('report')"><span>🔔</span>Bildir</button><button class="navItem" id="nav-profile" onclick="showTab('profile')"><span>👤</span>Profil</button></nav>
 <div class="modal" id="mapModal"><div class="sheet"><button class="close" onclick="closeStationMap()">×</button><h2 id="mapModalTitle">Haritada gör</h2><p class="muted" id="mapModalText">İstasyon konumu</p><div class="mapSheetBody"><div id="stationMap"></div></div><div class="cardActions"><button class="secondaryBtn" onclick="closeStationMap()">Kapat</button><a class="routeBtn" id="mapModalRoute" href="#" target="_blank" rel="noopener">Yol tarifi</a></div></div></div>
 <div class="modal" id="detailModal"><div class="sheet"><button class="close" onclick="closeModal('detailModal')">×</button><div id="detailContent"></div></div></div>
-<div class="modal" id="infoModal"><div class="sheet"><button class="close" onclick="closeModal('infoModal')">×</button><h2>MolaVolt</h2><p class="muted">Sürüm 0492. EPDK result string/koordinat düzeltmesi eklendi.</p><div>UFUK_CLEAN_EPDK_ONLY_0492</div></div></div>
+<div class="modal" id="infoModal"><div class="sheet"><button class="close" onclick="closeModal('infoModal')">×</button><h2>MolaVolt</h2><p class="muted">Sürüm 0493. EPDK result string/koordinat düzeltmesi eklendi.</p><div>UFUK_FIREBASE_EPDK_SHARED_0493</div></div></div>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
-const VERSION='0492',ADMIN_KEY='ufuk8790',DEFAULT_EPDK_URL='https://molavolt.vercel.app/api/epdk';
+const VERSION='0493',ADMIN_KEY='ufuk8790',DEFAULT_EPDK_URL='https://molavolt.vercel.app/api/epdk';
 const BRANDS=['Tümü','ZES','Eşarj','Trugo','Sharz','Voltrun','Ovolt','WAT','Diğer'];
 const LEGACY_KEYS=['mv_manual_stations','mv_hidden_stations','mv_turkey_stations','molavolt_turkey_osm_cache','molavolt_osm_cache_v2','molavolt_turkey_admin_seed','molavolt_turkey_admin_hidden','molavolt_turkey_seed','molavolt_hidden_seed'];
 let userPos=loadPos()||{lat:40.840621,lon:31.152219},stations=[],filtered=[],currentBrand='Tümü',sortMode='distance',isAdmin=false,stationMap=null,stationMapMarker=null;
@@ -145,5 +145,116 @@ function init(){
 }
 window.addEventListener('load',init);
 </script>
+
+<script type="module">
+/* UFUK_FIREBASE_EPDK_SHARED_0493 */
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
+import { getFirestore, doc, getDoc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyAcmXWfZMcSpTrZ5hDBNCDta8xmsIk4TwY",
+  authDomain: "molavolt.firebaseapp.com",
+  projectId: "molavolt",
+  storageBucket: "molavolt.firebasestorage.app",
+  messagingSenderId: "582172292918",
+  appId: "1:582172292918:web:c59296193cb3f236b96597"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+const EPDK_DOC = doc(db, "molavolt", "epdkStations");
+
+function setAdminStatus(msg){
+  const el = document.getElementById("adminStatus");
+  if(el) el.textContent = msg;
+}
+
+async function saveEpdkToFirebase(list){
+  await setDoc(EPDK_DOC, {
+    stations: list,
+    count: Array.isArray(list) ? list.length : 0,
+    updatedAt: serverTimestamp(),
+    version: "0493"
+  });
+}
+
+async function loadEpdkFromFirebase(){
+  const snap = await getDoc(EPDK_DOC);
+  if(!snap.exists()) return [];
+  const data = snap.data() || {};
+  return Array.isArray(data.stations) ? data.stations : [];
+}
+
+async function applyFirebaseStations(silent=false){
+  try{
+    const list = await loadEpdkFromFirebase();
+    if(!list.length){
+      if(!silent) setAdminStatus("Firebase’de EPDK verisi yok. Önce EPDK verisini yükle.");
+      return false;
+    }
+    localStorage.setItem("molavolt_epdk_stations", JSON.stringify(list));
+    if(typeof buildStations === "function") buildStations();
+    if(typeof applyFilters === "function") applyFilters();
+    if(typeof renderAdmin === "function") renderAdmin();
+    if(!silent) setAdminStatus("Firebase’den yüklendi: " + list.length + " istasyon");
+    return true;
+  }catch(err){
+    console.error("Firebase okuma hatası", err);
+    if(!silent) setAdminStatus("Firebase okuma hatası: " + err.message);
+    return false;
+  }
+}
+
+window.loadEpdk = async function(){
+  const input = document.getElementById("epdkUrl");
+  const url = (input && input.value.trim()) || localStorage.getItem("molavolt_epdk_url") || "https://molavolt.vercel.app/api/epdk";
+  if(input) input.value = url;
+  localStorage.setItem("molavolt_epdk_url", url);
+
+  setAdminStatus("EPDK verisi çekiliyor...");
+  try{
+    const res = await fetch(url, {cache:"no-store"});
+    const txt = await res.text();
+    let data;
+    try{ data = JSON.parse(txt); }catch(e){ throw new Error("API JSON döndürmedi: " + txt.slice(0,120)); }
+    if(!res.ok) throw new Error("HTTP " + res.status + " - " + txt.slice(0,220));
+
+    const list = normalizeEpdkData(data);
+    if(!list.length) throw new Error("EPDK cevap verdi ama koordinatlı istasyon bulunamadı. numRows: " + (data.numRows ?? "bilinmiyor"));
+
+    if(typeof clearLegacySilent === "function") clearLegacySilent();
+    if(typeof setEpdkStations === "function") setEpdkStations(list);
+    await saveEpdkToFirebase(list);
+
+    if(typeof buildStations === "function") buildStations();
+    if(typeof applyFilters === "function") applyFilters();
+    if(typeof renderAdmin === "function") renderAdmin();
+
+    setAdminStatus("EPDK Firebase’e kaydedildi: " + list.length + " istasyon");
+    alert("EPDK verisi Firebase’e kaydedildi: " + list.length + " istasyon. Artık müşteriler de ortak veriyi görecek.");
+  }catch(err){
+    console.error(err);
+    setAdminStatus("Hata: " + err.message);
+    alert("EPDK/Firebase yükleme hatası: " + err.message);
+  }
+};
+
+window.loadFirebaseStations = async function(){
+  const ok = await applyFirebaseStations(false);
+  if(ok) alert("Firebase’den istasyonlar yüklendi.");
+};
+
+window.addEventListener("load", () => {
+  setTimeout(async () => {
+    try{
+      const local = JSON.parse(localStorage.getItem("molavolt_epdk_stations") || "[]");
+      if(!local.length) await applyFirebaseStations(true);
+    }catch(e){
+      await applyFirebaseStations(true);
+    }
+  }, 700);
+});
+</script>
+
 </body>
 </html>
