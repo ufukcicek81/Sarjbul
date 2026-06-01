@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="tr">
 <head>
-<!-- UFUK_CUSTOMER_MAP_BUTTON_0495 -->
+<!-- UFUK_MAP_BUTTON_FORCE_0497 -->
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>MolaVolt</title>
@@ -34,6 +34,34 @@
 .station .mapShowBtn{border:1px solid var(--line);background:rgba(255,255,255,.055);color:#e7f2ff;border-radius:999px;padding:10px 12px;text-decoration:none;font-weight:800;flex:1}
 .station .routeActionBtn{flex:1}
 
+
+/* v0497: Müşteri istasyon kartlarında Haritada gör butonu zorunlu görünür */
+.station .cardActions{
+  display:flex!important;
+  gap:8px!important;
+  margin-top:14px!important;
+  align-items:center!important;
+}
+.station .cardActions button,
+.station .cardActions a{
+  min-height:46px!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  font-size:14px!important;
+}
+.station .mapShowBtn{
+  border:1px solid var(--line)!important;
+  background:rgba(255,255,255,.06)!important;
+  color:#e7f2ff!important;
+  border-radius:999px!important;
+  padding:11px 12px!important;
+  text-decoration:none!important;
+  font-weight:900!important;
+  flex:1!important;
+}
+.station .routeActionBtn{flex:1!important}
+
 </style>
 </head>
 <body>
@@ -49,12 +77,12 @@
     <div class="chips" id="brandChips"></div>
     <div class="tab active" id="tab-home">
       <section class="section"><h3>Şarj molası fırsatları</h3><p class="muted">Kodu al, kasada göster, indirim kazan</p><div class="sponsorScroll" id="sponsorCards"></div></section>
-      <section class="section"><h3>Yakındaki istasyonlar</h3><p class="muted" id="countText">EPDK verisi bekleniyor</p><p class="muted" id="locStatus" style="font-size:13px;margin-top:4px">Konum alınınca en yakın istasyonlar öne gelir.</p><div class="sorts"><button id="sortDistance" class="sort active" onclick="setSort('distance')">En yakın</button><button id="sortName" class="sort" onclick="setSort('name')">A-Z</button></div><div class="cards" id="homeCards"></div></section>
+      <section class="section"><h3>Yakındaki istasyonlar</h3><p class="muted" id="countText">Yakındaki istasyonlar</p><p class="muted" id="locStatus" style="font-size:13px;margin-top:4px">Konumuna yakın istasyonları görmek için arama yapabilir veya konum izni verebilirsin.</p><div class="sorts"><button id="sortDistance" class="sort active" onclick="setSort('distance')">En yakın</button><button id="sortName" class="sort" onclick="setSort('name')">A-Z</button></div><div class="cards" id="homeCards"></div></section>
     </div>
-    <div class="tab" id="tab-stations"><section class="section"><h3>İstasyonlar</h3><p class="muted">Sadece EPDK verisi gösteriliyor</p><div class="cards" id="stationCards"></div></section></div>
+    <div class="tab" id="tab-stations"><section class="section"><h3>İstasyonlar</h3><p class="muted">Marka seçerek veya arama yaparak filtreleyebilirsin.</p><div class="cards" id="stationCards"></div></section></div>
     <div class="tab" id="tab-favorites"><section class="section"><h3>Favoriler</h3><div class="cards" id="favCards"></div></section></div>
     <div class="tab" id="tab-report"><section class="section"><h3>Eksik istasyon bildir</h3><p class="muted">Görünmeyen şarj noktasını bize gönder</p><div class="panel"><a class="routeBtn" style="display:block;padding:14px" href="https://wa.me/905327664404?text=MolaVolt%20eksik%20%C5%9Farj%20istasyonu%20bildirimi:%0A%C4%B0stasyon%20ad%C4%B1:%0AMarka:%0AKonum%20linki:%0ANot:" target="_blank" rel="noopener">WhatsApp ile bildir</a></div></section></div>
-    <div class="tab" id="tab-profile"><section class="section"><h3>Profil</h3><p class="muted">MolaVolt</p><div class="panel"><b>Sürüm: 0495</b><p class="muted">Canlı harita yok. Sadece EPDK istasyonları. Harita karttaki Haritada gör tuşuyla açılır.</p></div></section></div>
+    <div class="tab" id="tab-profile"><section class="section"><h3>Profil</h3><p class="muted">MolaVolt</p><div class="panel"><b>MolaVolt</b><p class="muted">Yakındaki şarj istasyonlarını bul, haritada gör ve yol tarifini hemen al.</p></div><div class="panel" style="margin-top:12px"><h3 style="font-size:18px">Destek</h3><p class="muted">Öneri, hata bildirimi veya destek için bize ulaş.</p><a class="routeBtn" style="display:block;text-align:center;margin-top:8px" href="https://wa.me/905327664404?text=MolaVolt%20destek%20talebi:%20" target="_blank" rel="noopener">WhatsApp destek</a></div></section></div>
   </main>
 
   <main class="adminOnly" id="adminPage">
@@ -122,10 +150,10 @@
 <nav class="bottomNav customerOnly"><button class="navItem active" id="nav-home" onclick="showTab('home')"><span>🏠</span>Ana Sayfa</button><button class="navItem" id="nav-stations" onclick="showTab('stations')"><span>📍</span>İstasyonlar</button><button class="navItem" id="nav-favorites" onclick="showTab('favorites')"><span>♡</span>Favoriler</button><button class="navItem" id="nav-report" onclick="showTab('report')"><span>🔔</span>Bildir</button><button class="navItem" id="nav-profile" onclick="showTab('profile')"><span>👤</span>Profil</button></nav>
 <div class="modal" id="mapModal"><div class="sheet"><button class="close" onclick="closeStationMap()">×</button><h2 id="mapModalTitle">Haritada gör</h2><p class="muted" id="mapModalText">İstasyon konumu</p><div class="mapSheetBody"><div id="stationMap"></div></div><div class="cardActions"><button class="secondaryBtn" onclick="closeStationMap()">Kapat</button><a class="routeBtn" id="mapModalRoute" href="#" target="_blank" rel="noopener">Yol tarifi</a></div></div></div>
 <div class="modal" id="detailModal"><div class="sheet"><button class="close" onclick="closeModal('detailModal')">×</button><div id="detailContent"></div></div></div>
-<div class="modal" id="infoModal"><div class="sheet"><button class="close" onclick="closeModal('infoModal')">×</button><h2>MolaVolt</h2><p class="muted">Sürüm 0495. EPDK result string/koordinat düzeltmesi eklendi.</p><div>UFUK_CUSTOMER_MAP_BUTTON_0495</div></div></div>
+<div class="modal" id="infoModal"><div class="sheet"><button class="close" onclick="closeModal('infoModal')">×</button><h2>MolaVolt</h2><p class="muted">Yakındaki şarj istasyonlarını kolayca bul, haritada gör ve yol tarifi al.</p><div>UFUK_MAP_BUTTON_FORCE_0497</div></div></div>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
-const VERSION='0495',ADMIN_KEY='ufuk8790',DEFAULT_EPDK_URL='https://molavolt.vercel.app/api/epdk';
+const VERSION='0497',ADMIN_KEY='ufuk8790',DEFAULT_EPDK_URL='https://molavolt.vercel.app/api/epdk';
 const BRANDS=['Tümü','ZES','Eşarj','Trugo','Sharz','Voltrun','Ovolt','WAT','Diğer'];
 const LEGACY_KEYS=['mv_manual_stations','mv_hidden_stations','mv_turkey_stations','molavolt_turkey_osm_cache','molavolt_osm_cache_v2','molavolt_turkey_admin_seed','molavolt_turkey_admin_hidden','molavolt_turkey_seed','molavolt_hidden_seed'];
 let userPos=loadPos()||{lat:40.840621,lon:31.152219},stations=[],filtered=[],currentBrand='Tümü',sortMode='distance',isAdmin=false,stationMap=null,stationMapMarker=null;
@@ -188,10 +216,10 @@ function stationCard(s){
   </div>`;
 }
 
-function renderCards(){const empty='<div class="empty">EPDK verisi yok. Admin panelinden EPDK verisini yükle.</div>';const html=filtered.map(stationCard).join('')||empty;$('homeCards').innerHTML=html;$('stationCards').innerHTML=html;$('countText').textContent=`${filtered.length} EPDK istasyonu gösteriliyor`}function renderFavs(){$('favCards').innerHTML='<div class="empty">Favori sistemi sonraki adımda bağlanacak.</div>'}
+function renderCards(){const empty='<div class="empty">Şu anda gösterilecek istasyon bulunamadı. Lütfen birazdan tekrar dene.</div>';const html=filtered.map(stationCard).join('')||empty;$('homeCards').innerHTML=html;$('stationCards').innerHTML=html;$('countText').textContent=filtered.length?`${filtered.length} istasyon bulundu`:'Yakındaki istasyonlar'}function renderFavs(){$('favCards').innerHTML='<div class="empty">Favori özelliği yakında aktif olacak.</div>'}
 function renderSponsors(){const box=$('sponsorCards');if(!box)return;const arr=sponsors();box.innerHTML=arr.length?arr.map(o=>`<div class="sponsorCard"><div style="display:flex;gap:14px;align-items:center"><div class="gift">🎁</div><div><span class="tag g">${esc(o.discount)} indirim</span><h4>${esc(o.name)}</h4></div></div><p>${esc(o.offer)}</p><button class="routeBtn" style="width:100%;margin-top:14px" onclick="alert('Kod: MOLA'+Math.floor(1000+Math.random()*8999))">Kod al</button></div>`).join(''):'<div class="empty">Sponsor fırsatı yok.</div>'}
 function renderAll(){renderCards();renderFavs();renderSponsors();if(isAdmin){renderAdmin();setTimeout(restoreAdminTab,50)}}function showTab(name){['home','stations','favorites','report','profile'].forEach(t=>{$('tab-'+t)?.classList.toggle('active',t===name);$('nav-'+t)?.classList.toggle('active',t===name)})}function openModal(id){$(id)?.classList.add('show')}function closeModal(id){$(id)?.classList.remove('show')}
-function openDetail(id){const s=stations.find(x=>x.id===id);if(!s)return;const off=sponsors().filter(x=>x.stationId===id);const offerHtml=off.length?off.map(o=>`<div class="sponsorCard" style="min-width:auto"><h4>${esc(o.name)} <span class="tag g">${esc(o.discount)}</span></h4><p>${esc(o.offer)}</p></div>`).join(''):'<div class="empty">Bu istasyonda fırsat yok.</div>';$('detailContent').innerHTML=`<h2>${esc(s.name)}</h2><p class="muted">${esc(s.address)}</p><div class="tags"><span class="tag g">${esc(s.brand)}</span><span class="tag b">${Number(s.distance||0).toFixed(1)} km</span><span class="tag">${esc(s.sockets)}</span><span class="tag y">${esc(s.power)}</span></div><br><div class="cardActions"><button class="secondaryBtn" onclick="openStationMap('${esc(s.id)}',event)">Haritada gör</button><a class="routeBtn" href="${routeUrl(s)}" target="_blank" rel="noopener">Yol tarifi al</a></div><div style="margin-top:16px"><h3>Fırsatlar</h3>${offerHtml}</div>`;openModal('detailModal')}
+function openDetail(id){const s=stations.find(x=>x.id===id);if(!s)return;const off=sponsors().filter(x=>x.stationId===id);const offerHtml=off.length?off.map(o=>`<div class="sponsorCard" style="min-width:auto"><h4>${esc(o.name)} <span class="tag g">${esc(o.discount)}</span></h4><p>${esc(o.offer)}</p></div>`).join(''):'<div class="empty">Bu istasyonda fırsat yok.</div>';$('detailContent').innerHTML=`<h2>${esc(s.name)}</h2><p class="muted">${esc(s.address)}</p><div class="tags"><span class="tag g">${esc(s.brand)}</span><span class="tag b">${Number(s.distance||0).toFixed(1)} km</span><span class="tag">${esc(s.sockets)}</span><span class="tag y">${esc(s.power)}</span></div><br><div class="cardActions"><button class="mapShowBtn" onclick="openStationMap('${esc(s.id)}',event)">Haritada gör</button><a class="routeBtn" href="${routeUrl(s)}" target="_blank" rel="noopener">Yol tarifi al</a></div><div style="margin-top:16px"><h3>Fırsatlar</h3>${offerHtml}</div>`;openModal('detailModal')}
 function openStationMap(id,event){if(event){event.preventDefault();event.stopPropagation()}const s=stations.find(x=>x.id===id);if(!s)return;$('mapModalTitle').textContent=s.name;$('mapModalText').textContent=`${s.brand} · ${s.address} · ${s.power}`;$('mapModalRoute').href=routeUrl(s);openModal('mapModal');setTimeout(()=>{if(!stationMap){stationMap=L.map('stationMap',{zoomControl:true,tap:true,dragging:true,touchZoom:true,doubleClickZoom:true,scrollWheelZoom:true}).setView([s.lat,s.lon],15);L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'&copy; OSM'}).addTo(stationMap)}else{stationMap.setView([s.lat,s.lon],15)}if(stationMapMarker)stationMap.removeLayer(stationMapMarker);stationMapMarker=L.marker([s.lat,s.lon]).addTo(stationMap).bindPopup(`<b>${esc(s.name)}</b><br>${esc(s.address)}`).openPopup();setTimeout(()=>stationMap.invalidateSize(),180)},180)}function closeStationMap(){closeModal('mapModal')}function hardRefresh(){location.href=location.pathname+'?v='+Date.now()}
 async function loadEpdk(){const url=($('epdkUrl').value||DEFAULT_EPDK_URL).trim();localStorage.setItem('molavolt_epdk_url',url);$('adminStatus').textContent='EPDK verisi çekiliyor...';try{const res=await fetch(url,{cache:'no-store'});const txt=await res.text();let data=parseMaybe(txt);if(typeof data==='string')throw new Error('API JSON döndürmedi: '+txt.slice(0,120));if(!res.ok)throw new Error('HTTP '+res.status+' - '+txt.slice(0,220));const list=normalizeEpdkData(data);if(!list.length)throw new Error('EPDK cevap verdi ama koordinatlı istasyon bulunamadı. numRows: '+(data.numRows??'bilinmiyor')+' / result tipi: '+(typeof data.result));clearLegacySilent();setEpdkStations(list);buildStations();applyFilters();renderAdmin();$('adminStatus').textContent=`EPDK yüklendi: ${list.length} istasyon`;alert('EPDK verisi yüklendi: '+list.length+' istasyon')}catch(err){$('adminStatus').textContent='Hata: '+err.message;alert('EPDK yükleme hatası: '+err.message)}}
 function clearEpdk(){if(!confirm('EPDK verisi temizlensin mi?'))return;localStorage.removeItem('molavolt_epdk_stations');buildStations();applyFilters();renderAdmin();$('adminStatus').textContent='EPDK verisi temizlendi.'}
@@ -253,7 +281,7 @@ window.addEventListener('load',init);
 </script>
 
 <script type="module">
-/* UFUK_CUSTOMER_MAP_BUTTON_0495 */
+/* UFUK_MAP_BUTTON_FORCE_0497 */
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
 import { getFirestore, doc, getDoc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
 
@@ -280,7 +308,7 @@ async function saveEpdkToFirebase(list){
     stations: list,
     count: Array.isArray(list) ? list.length : 0,
     updatedAt: serverTimestamp(),
-    version: "0495"
+    version: "0497"
   });
 }
 
