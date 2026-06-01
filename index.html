@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="tr">
 <head>
-<!-- UFUK_FIREBASE_CHUNKS_0498 -->
+<!-- UFUK_FAST_TABS_LIMIT_RENDER_0499 -->
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>MolaVolt</title>
@@ -61,6 +61,11 @@
   flex:1!important;
 }
 .station .routeActionBtn{flex:1!important}
+
+
+/* v0499: mobil hız optimizasyonu */
+.loadMoreBtn{width:100%;margin-top:10px}
+.fastNote{font-size:12px;color:var(--muted);margin-top:8px;line-height:1.35}
 
 </style>
 </head>
@@ -150,13 +155,14 @@
 <nav class="bottomNav customerOnly"><button class="navItem active" id="nav-home" onclick="showTab('home')"><span>🏠</span>Ana Sayfa</button><button class="navItem" id="nav-stations" onclick="showTab('stations')"><span>📍</span>İstasyonlar</button><button class="navItem" id="nav-favorites" onclick="showTab('favorites')"><span>♡</span>Favoriler</button><button class="navItem" id="nav-report" onclick="showTab('report')"><span>🔔</span>Bildir</button><button class="navItem" id="nav-profile" onclick="showTab('profile')"><span>👤</span>Profil</button></nav>
 <div class="modal" id="mapModal"><div class="sheet"><button class="close" onclick="closeStationMap()">×</button><h2 id="mapModalTitle">Haritada gör</h2><p class="muted" id="mapModalText">İstasyon konumu</p><div class="mapSheetBody"><div id="stationMap"></div></div><div class="cardActions"><button class="secondaryBtn" onclick="closeStationMap()">Kapat</button><a class="routeBtn" id="mapModalRoute" href="#" target="_blank" rel="noopener">Yol tarifi</a></div></div></div>
 <div class="modal" id="detailModal"><div class="sheet"><button class="close" onclick="closeModal('detailModal')">×</button><div id="detailContent"></div></div></div>
-<div class="modal" id="infoModal"><div class="sheet"><button class="close" onclick="closeModal('infoModal')">×</button><h2>MolaVolt</h2><p class="muted">Yakındaki şarj istasyonlarını kolayca bul, haritada gör ve yol tarifi al.</p><div>UFUK_FIREBASE_CHUNKS_0498</div></div></div>
+<div class="modal" id="infoModal"><div class="sheet"><button class="close" onclick="closeModal('infoModal')">×</button><h2>MolaVolt</h2><p class="muted">Yakındaki şarj istasyonlarını kolayca bul, haritada gör ve yol tarifi al.</p><div>UFUK_FAST_TABS_LIMIT_RENDER_0499</div></div></div>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
-const VERSION='0498',ADMIN_KEY='ufuk8790',DEFAULT_EPDK_URL='https://molavolt.vercel.app/api/epdk';
+const VERSION='0499',ADMIN_KEY='ufuk8790',DEFAULT_EPDK_URL='https://molavolt.vercel.app/api/epdk';
 const BRANDS=['Tümü','ZES','Eşarj','Trugo','Sharz','Voltrun','Ovolt','WAT','Diğer'];
 const LEGACY_KEYS=['mv_manual_stations','mv_hidden_stations','mv_turkey_stations','molavolt_turkey_osm_cache','molavolt_osm_cache_v2','molavolt_turkey_admin_seed','molavolt_turkey_admin_hidden','molavolt_turkey_seed','molavolt_hidden_seed'];
 let userPos=loadPos()||{lat:40.840621,lon:31.152219},stations=[],filtered=[],currentBrand='Tümü',sortMode='distance',isAdmin=false,stationMap=null,stationMapMarker=null;
+let homeLimit=40, stationLimit=80, activeCustomerTab='home';
 let searchTimer=null;
 function stableSearch(){
   if(searchTimer) clearTimeout(searchTimer);
@@ -183,7 +189,14 @@ function socketSummary(soketler){let sockets='Soket bilgisi EPDK verisinde',powe
 function normalizeEpdkData(data){data=parseMaybe(data);let rows=[];const cols=data&&Array.isArray(data.columnNames)?data.columnNames:[];if(data&&typeof data.result==='string')data={...data,result:parseMaybe(data.result)};if(Array.isArray(data))rows=data;else if(data&&Array.isArray(data.result))rows=data.result.map(r=>rowObject(parseMaybe(r),cols));else if(data&&data.result&&typeof data.result==='object')rows=[data.result];else if(data&&data.data){const d=parseMaybe(data.data);if(Array.isArray(d))rows=d;else if(d&&Array.isArray(d.result))rows=d.result.map(r=>rowObject(parseMaybe(r),cols))}const out=[];rows.forEach((raw,idx)=>{raw=parseMaybe(raw);const r=rowObject(raw,cols);const lat=toNum(pick(r,['enlem','lat','latitude','koordinatx','koordinatX']));const lon=toNum(pick(r,['boylam','lon','lng','longitude','koordinaty','koordinatY']));if(!isFinite(lat)||!isFinite(lon))return;const sok=socketSummary(r.soketler);const name=pick(r,['sarjIstasyonuAdi','istasyonAdi','ad','name'])||'EPDK Şarj İstasyonu';const op=pick(r,['marka','sarjAgiIsletmecisiUnvan','sarjIstasyonuIsletmecisi','isletmeciUnvan'])||'Diğer';const address=pick(r,['adres','address'])||'Adres bilgisi yok';const no=pick(r,['sarjIstasyonuNo','istasyonNo','id'])||(idx+'-'+lat.toFixed(5)+'-'+lon.toFixed(5));out.push({id:'epdk-'+String(no).replace(/[^a-zA-Z0-9_.-]/g,'-')+'-'+idx,name:String(name),brand:normBrand(String(op)+' '+String(name)),type:pick(r,['hizmetSekli'])||'Şarj',status:'Açık',address:String(address),lat,lon,distance:km(userPos.lat,userPos.lon,lat,lon),sockets:sok.sockets,power:sok.power,source:'EPDK'})});const seen=new Set();return out.filter(s=>{const key=s.name+'|'+s.lat.toFixed(5)+'|'+s.lon.toFixed(5);if(seen.has(key))return false;seen.add(key);return true})}
 function clearLegacy(){clearLegacySilent();alert('Eski kayıtlar temizlendi.')}function clearLegacySilent(){LEGACY_KEYS.forEach(k=>localStorage.removeItem(k));Object.keys(localStorage).filter(k=>k.startsWith('molavolt_osm')).forEach(k=>localStorage.removeItem(k))}
 function buildStations(){stations=epdkStations().map(s=>({...s,distance:km(userPos.lat,userPos.lon,s.lat,s.lon)})).sort((a,b)=>a.distance-b.distance)}
-function applyFilters(){const q=($('searchInput')?.value||'').trim().toLowerCase();filtered=stations.filter(s=>(currentBrand==='Tümü'||s.brand===currentBrand)&&(!q||String(s.name+s.brand+s.address+s.sockets+s.power).toLowerCase().includes(q)));filtered.sort((a,b)=>sortMode==='name'?a.name.localeCompare(b.name,'tr'):(a.distance||0)-(b.distance||0));renderAll()}
+function applyFilters(){
+  const q=($('searchInput')?.value||'').trim().toLowerCase();
+  filtered=stations.filter(s=>(currentBrand==='Tümü'||s.brand===currentBrand)&&(!q||String(s.name+s.brand+s.address+s.sockets+s.power).toLowerCase().includes(q)));
+  filtered.sort((a,b)=>sortMode==='name'?a.name.localeCompare(b.name,'tr'):(a.distance||0)-(b.distance||0));
+  homeLimit=40;
+  stationLimit=80;
+  renderAll();
+}
 function renderChips(){$('brandChips').innerHTML=BRANDS.map(b=>`<button class="chip ${b===currentBrand?'active':''}" onclick="setBrand('${esc(b)}')">${esc(b)}</button>`).join('')}function setBrand(b){currentBrand=b;renderChips();applyFilters()}function setSort(s){sortMode=s;$('sortDistance')?.classList.toggle('active',s==='distance');$('sortName')?.classList.toggle('active',s==='name');applyFilters()}
 function offerCount(id){return sponsors().filter(x=>x.stationId===id).length}
 function stationCard(s){
@@ -216,9 +229,40 @@ function stationCard(s){
   </div>`;
 }
 
-function renderCards(){const empty='<div class="empty">Şu anda gösterilecek istasyon bulunamadı. Lütfen birazdan tekrar dene.</div>';const html=filtered.map(stationCard).join('')||empty;$('homeCards').innerHTML=html;$('stationCards').innerHTML=html;$('countText').textContent=filtered.length?`${filtered.length} istasyon bulundu`:'Yakındaki istasyonlar'}function renderFavs(){$('favCards').innerHTML='<div class="empty">Favori özelliği yakında aktif olacak.</div>'}
+function renderCards(){
+  const empty='<div class="empty">Şu anda gösterilecek istasyon bulunamadı. Lütfen birazdan tekrar dene.</div>';
+
+  const homeList=filtered.slice(0,homeLimit);
+  const stationList=filtered.slice(0,stationLimit);
+
+  let homeHtml=homeList.map(stationCard).join('')||empty;
+  let stationHtml=stationList.map(stationCard).join('')||empty;
+
+  if(filtered.length>homeLimit){
+    homeHtml+=`<button class="secondaryBtn loadMoreBtn" onclick="homeLimit+=40;renderCards()">Daha fazla göster (${filtered.length-homeLimit} kaldı)</button>`;
+  }
+
+  if(filtered.length>stationLimit){
+    stationHtml+=`<button class="secondaryBtn loadMoreBtn" onclick="stationLimit+=100;renderCards()">Daha fazla göster (${filtered.length-stationLimit} kaldı)</button>`;
+  }
+
+  if($('homeCards')) $('homeCards').innerHTML=homeHtml;
+  if($('stationCards')) $('stationCards').innerHTML=stationHtml;
+
+  if($('countText')){
+    $('countText').textContent=filtered.length?`${filtered.length} istasyon bulundu`:'Yakındaki istasyonlar';
+  }
+}
+function renderFavs(){$('favCards').innerHTML='<div class="empty">Favori özelliği yakında aktif olacak.</div>'}
 function renderSponsors(){const box=$('sponsorCards');if(!box)return;const arr=sponsors();box.innerHTML=arr.length?arr.map(o=>`<div class="sponsorCard"><div style="display:flex;gap:14px;align-items:center"><div class="gift">🎁</div><div><span class="tag g">${esc(o.discount)} indirim</span><h4>${esc(o.name)}</h4></div></div><p>${esc(o.offer)}</p><button class="routeBtn" style="width:100%;margin-top:14px" onclick="alert('Kod: MOLA'+Math.floor(1000+Math.random()*8999))">Kod al</button></div>`).join(''):'<div class="empty">Sponsor fırsatı yok.</div>'}
-function renderAll(){renderCards();renderFavs();renderSponsors();if(isAdmin){renderAdmin();setTimeout(restoreAdminTab,50)}}function showTab(name){['home','stations','favorites','report','profile'].forEach(t=>{$('tab-'+t)?.classList.toggle('active',t===name);$('nav-'+t)?.classList.toggle('active',t===name)})}function openModal(id){$(id)?.classList.add('show')}function closeModal(id){$(id)?.classList.remove('show')}
+function renderAll(){renderCards();renderFavs();renderSponsors();if(isAdmin){renderAdmin();setTimeout(restoreAdminTab,50)}}function showTab(name){
+  activeCustomerTab=name;
+  ['home','stations','favorites','report','profile'].forEach(t=>{
+    $('tab-'+t)?.classList.toggle('active',t===name);
+    $('nav-'+t)?.classList.toggle('active',t===name);
+  });
+}
+function openModal(id){$(id)?.classList.add('show')}function closeModal(id){$(id)?.classList.remove('show')}
 function openDetail(id){const s=stations.find(x=>x.id===id);if(!s)return;const off=sponsors().filter(x=>x.stationId===id);const offerHtml=off.length?off.map(o=>`<div class="sponsorCard" style="min-width:auto"><h4>${esc(o.name)} <span class="tag g">${esc(o.discount)}</span></h4><p>${esc(o.offer)}</p></div>`).join(''):'<div class="empty">Bu istasyonda fırsat yok.</div>';$('detailContent').innerHTML=`<h2>${esc(s.name)}</h2><p class="muted">${esc(s.address)}</p><div class="tags"><span class="tag g">${esc(s.brand)}</span><span class="tag b">${Number(s.distance||0).toFixed(1)} km</span><span class="tag">${esc(s.sockets)}</span><span class="tag y">${esc(s.power)}</span></div><br><div class="cardActions"><button class="mapShowBtn" onclick="openStationMap('${esc(s.id)}',event)">Haritada gör</button><a class="routeBtn" href="${routeUrl(s)}" target="_blank" rel="noopener">Yol tarifi al</a></div><div style="margin-top:16px"><h3>Fırsatlar</h3>${offerHtml}</div>`;openModal('detailModal')}
 function openStationMap(id,event){if(event){event.preventDefault();event.stopPropagation()}const s=stations.find(x=>x.id===id);if(!s)return;$('mapModalTitle').textContent=s.name;$('mapModalText').textContent=`${s.brand} · ${s.address} · ${s.power}`;$('mapModalRoute').href=routeUrl(s);openModal('mapModal');setTimeout(()=>{if(!stationMap){stationMap=L.map('stationMap',{zoomControl:true,tap:true,dragging:true,touchZoom:true,doubleClickZoom:true,scrollWheelZoom:true}).setView([s.lat,s.lon],15);L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'&copy; OSM'}).addTo(stationMap)}else{stationMap.setView([s.lat,s.lon],15)}if(stationMapMarker)stationMap.removeLayer(stationMapMarker);stationMapMarker=L.marker([s.lat,s.lon]).addTo(stationMap).bindPopup(`<b>${esc(s.name)}</b><br>${esc(s.address)}`).openPopup();setTimeout(()=>stationMap.invalidateSize(),180)},180)}function closeStationMap(){closeModal('mapModal')}function hardRefresh(){location.href=location.pathname+'?v='+Date.now()}
 async function loadEpdk(){const url=($('epdkUrl').value||DEFAULT_EPDK_URL).trim();localStorage.setItem('molavolt_epdk_url',url);$('adminStatus').textContent='EPDK verisi çekiliyor...';try{const res=await fetch(url,{cache:'no-store'});const txt=await res.text();let data=parseMaybe(txt);if(typeof data==='string')throw new Error('API JSON döndürmedi: '+txt.slice(0,120));if(!res.ok)throw new Error('HTTP '+res.status+' - '+txt.slice(0,220));const list=normalizeEpdkData(data);if(!list.length)throw new Error('EPDK cevap verdi ama koordinatlı istasyon bulunamadı. numRows: '+(data.numRows??'bilinmiyor')+' / result tipi: '+(typeof data.result));clearLegacySilent();setEpdkStations(list);buildStations();applyFilters();renderAdmin();$('adminStatus').textContent=`EPDK yüklendi: ${list.length} istasyon`;alert('EPDK verisi yüklendi: '+list.length+' istasyon')}catch(err){$('adminStatus').textContent='Hata: '+err.message;alert('EPDK yükleme hatası: '+err.message)}}
@@ -284,7 +328,7 @@ window.addEventListener('load',init);
 
 
 <script type="module">
-/* UFUK_FIREBASE_CHUNKS_0498 */
+/* UFUK_FAST_TABS_LIMIT_RENDER_0499 */
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
 import { getFirestore, doc, getDoc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
 
@@ -322,7 +366,7 @@ async function saveEpdkToFirebase(list){
       index: i,
       count: chunks[i].length,
       updatedAt: serverTimestamp(),
-      version: "0498"
+      version: "0499"
     });
     setAdminStatus("Firebase’e parça parça kaydediliyor... " + (i+1) + "/" + chunks.length);
   }
@@ -331,7 +375,7 @@ async function saveEpdkToFirebase(list){
     chunkCount: chunks.length,
     chunkSize: CHUNK_SIZE,
     updatedAt: serverTimestamp(),
-    version: "0498"
+    version: "0499"
   });
 }
 async function loadEpdkFromFirebase(){
@@ -340,14 +384,18 @@ async function loadEpdkFromFirebase(){
   const meta = metaSnap.data() || {};
   const chunkCount = Number(meta.chunkCount || 0);
   const all = [];
+  const promises = [];
   for(let i=0; i<chunkCount; i++){
     const id = "chunk_" + String(i).padStart(3, "0");
-    const snap = await getDoc(doc(db, CHUNK_COLLECTION, id));
+    promises.push(getDoc(doc(db, CHUNK_COLLECTION, id)));
+  }
+  const snaps = await Promise.all(promises);
+  snaps.forEach(snap=>{
     if(snap.exists()){
       const data = snap.data() || {};
       if(Array.isArray(data.stations)) all.push(...data.stations);
     }
-  }
+  });
   return all;
 }
 async function applyFirebaseStations(silent=false){
