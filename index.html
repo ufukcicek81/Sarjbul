@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="tr">
 <head>
-<!-- UFUK_CLEAN_EPDK_ONLY_0491 -->
+<!-- UFUK_CLEAN_EPDK_ONLY_0492 -->
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>MolaVolt</title>
@@ -28,22 +28,22 @@
   </div>
 
   <main class="customerOnly">
-    <div class="search"><span>🔎</span><input id="searchInput" placeholder="Konum veya istasyon ara" oninput="applyFilters()"><button class="menuBtn" onclick="openModal('infoModal')">≡</button></div>
+    <div class="search"><span>🔎</span><input id="searchInput" placeholder="Konum veya istasyon ara" autocomplete="off" autocapitalize="off" spellcheck="false" oninput="stableSearch()" onkeyup="stableSearch()" onchange="stableSearch()"><button class="menuBtn" onclick="openModal('infoModal')">≡</button></div>
     <div class="chips" id="brandChips"></div>
     <div class="tab active" id="tab-home">
       <section class="section"><h3>Şarj molası fırsatları</h3><p class="muted">Kodu al, kasada göster, indirim kazan</p><div class="sponsorScroll" id="sponsorCards"></div></section>
-      <section class="section"><h3>Yakındaki istasyonlar</h3><p class="muted" id="countText">EPDK verisi bekleniyor</p><div class="sorts"><button id="sortDistance" class="sort active" onclick="setSort('distance')">En yakın</button><button id="sortName" class="sort" onclick="setSort('name')">A-Z</button></div><div class="cards" id="homeCards"></div></section>
+      <section class="section"><h3>Yakındaki istasyonlar</h3><p class="muted" id="countText">EPDK verisi bekleniyor</p><p class="muted" id="locStatus" style="font-size:13px;margin-top:4px">Konum alınınca en yakın istasyonlar öne gelir.</p><div class="sorts"><button id="sortDistance" class="sort active" onclick="setSort('distance')">En yakın</button><button id="sortName" class="sort" onclick="setSort('name')">A-Z</button></div><div class="cards" id="homeCards"></div></section>
     </div>
     <div class="tab" id="tab-stations"><section class="section"><h3>İstasyonlar</h3><p class="muted">Sadece EPDK verisi gösteriliyor</p><div class="cards" id="stationCards"></div></section></div>
     <div class="tab" id="tab-favorites"><section class="section"><h3>Favoriler</h3><div class="cards" id="favCards"></div></section></div>
     <div class="tab" id="tab-report"><section class="section"><h3>Eksik istasyon bildir</h3><p class="muted">Görünmeyen şarj noktasını bize gönder</p><div class="panel"><a class="routeBtn" style="display:block;padding:14px" href="https://wa.me/905327664404?text=MolaVolt%20eksik%20%C5%9Farj%20istasyonu%20bildirimi:%0A%C4%B0stasyon%20ad%C4%B1:%0AMarka:%0AKonum%20linki:%0ANot:" target="_blank" rel="noopener">WhatsApp ile bildir</a></div></section></div>
-    <div class="tab" id="tab-profile"><section class="section"><h3>Profil</h3><p class="muted">MolaVolt</p><div class="panel"><b>Sürüm: 0491</b><p class="muted">Canlı harita yok. Sadece EPDK istasyonları. Harita karttaki Haritada gör tuşuyla açılır.</p></div></section></div>
+    <div class="tab" id="tab-profile"><section class="section"><h3>Profil</h3><p class="muted">MolaVolt</p><div class="panel"><b>Sürüm: 0492</b><p class="muted">Canlı harita yok. Sadece EPDK istasyonları. Harita karttaki Haritada gör tuşuyla açılır.</p></div></section></div>
   </main>
 
   <main class="adminOnly">
     <section class="section" style="margin-top:6px"><h3>Admin Panel</h3><p class="muted">EPDK verisi ve kampanya yönetimi</p></section>
     <div class="panel formBox">
-      <h3>EPDK Türkiye verisi</h3><p class="muted">Eski/manuel/sabit kayıt gösterilmez. Liste sadece EPDK API’den gelen veridir.</p>
+      <h3>EPDK Türkiye verisi</h3><p class="muted">Eski/manuel/sabit kayıt gösterilmez. Liste sadece EPDK API’den gelen veridir. Sonraki adımda Firebase’e bağlanınca veri herkes için ortak kaydedilecek.</p>
       <label>EPDK / Vercel API URL</label><input id="epdkUrl" placeholder="https://molavolt.vercel.app/api/epdk">
       <button class="primaryBtn" style="width:100%;margin-top:8px" onclick="loadEpdk()">EPDK verisini yükle</button>
       <button class="secondaryBtn" style="display:block;text-align:center;margin-top:8px" onclick="clearEpdk()">EPDK verisini temizle</button>
@@ -59,13 +59,23 @@
 <nav class="bottomNav customerOnly"><button class="navItem active" id="nav-home" onclick="showTab('home')"><span>🏠</span>Ana Sayfa</button><button class="navItem" id="nav-stations" onclick="showTab('stations')"><span>📍</span>İstasyonlar</button><button class="navItem" id="nav-favorites" onclick="showTab('favorites')"><span>♡</span>Favoriler</button><button class="navItem" id="nav-report" onclick="showTab('report')"><span>🔔</span>Bildir</button><button class="navItem" id="nav-profile" onclick="showTab('profile')"><span>👤</span>Profil</button></nav>
 <div class="modal" id="mapModal"><div class="sheet"><button class="close" onclick="closeStationMap()">×</button><h2 id="mapModalTitle">Haritada gör</h2><p class="muted" id="mapModalText">İstasyon konumu</p><div class="mapSheetBody"><div id="stationMap"></div></div><div class="cardActions"><button class="secondaryBtn" onclick="closeStationMap()">Kapat</button><a class="routeBtn" id="mapModalRoute" href="#" target="_blank" rel="noopener">Yol tarifi</a></div></div></div>
 <div class="modal" id="detailModal"><div class="sheet"><button class="close" onclick="closeModal('detailModal')">×</button><div id="detailContent"></div></div></div>
-<div class="modal" id="infoModal"><div class="sheet"><button class="close" onclick="closeModal('infoModal')">×</button><h2>MolaVolt</h2><p class="muted">Sürüm 0491. EPDK result string/koordinat düzeltmesi eklendi.</p><div>UFUK_CLEAN_EPDK_ONLY_0491</div></div></div>
+<div class="modal" id="infoModal"><div class="sheet"><button class="close" onclick="closeModal('infoModal')">×</button><h2>MolaVolt</h2><p class="muted">Sürüm 0492. EPDK result string/koordinat düzeltmesi eklendi.</p><div>UFUK_CLEAN_EPDK_ONLY_0492</div></div></div>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
-const VERSION='0491',ADMIN_KEY='ufuk8790',DEFAULT_EPDK_URL='https://molavolt.vercel.app/api/epdk';
+const VERSION='0492',ADMIN_KEY='ufuk8790',DEFAULT_EPDK_URL='https://molavolt.vercel.app/api/epdk';
 const BRANDS=['Tümü','ZES','Eşarj','Trugo','Sharz','Voltrun','Ovolt','WAT','Diğer'];
 const LEGACY_KEYS=['mv_manual_stations','mv_hidden_stations','mv_turkey_stations','molavolt_turkey_osm_cache','molavolt_osm_cache_v2','molavolt_turkey_admin_seed','molavolt_turkey_admin_hidden','molavolt_turkey_seed','molavolt_hidden_seed'];
 let userPos=loadPos()||{lat:40.840621,lon:31.152219},stations=[],filtered=[],currentBrand='Tümü',sortMode='distance',isAdmin=false,stationMap=null,stationMapMarker=null;
+let searchTimer=null;
+function stableSearch(){
+  if(searchTimer) clearTimeout(searchTimer);
+  searchTimer=setTimeout(()=>applyFilters(),35);
+}
+function setLocStatus(msg){
+  const el=document.getElementById('locStatus');
+  if(el) el.textContent=msg;
+}
+
 function $(id){return document.getElementById(id)}function esc(t){return String(t??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]))}
 function loadPos(){try{return JSON.parse(localStorage.getItem('mv_pos')||'null')}catch(e){return null}}function savePos(p){localStorage.setItem('mv_pos',JSON.stringify(p))}
 function km(a,b,c,d){const R=6371,toRad=x=>x*Math.PI/180;const dLat=toRad(c-a),dLon=toRad(d-b);const x=Math.sin(dLat/2)**2+Math.cos(toRad(a))*Math.cos(toRad(c))*Math.sin(dLon/2)**2;return R*2*Math.atan2(Math.sqrt(x),Math.sqrt(1-x))}
@@ -95,8 +105,45 @@ async function loadEpdk(){const url=($('epdkUrl').value||DEFAULT_EPDK_URL).trim(
 function clearEpdk(){if(!confirm('EPDK verisi temizlensin mi?'))return;localStorage.removeItem('molavolt_epdk_stations');buildStations();applyFilters();renderAdmin();$('adminStatus').textContent='EPDK verisi temizlendi.'}
 function renderAdmin(){if(!isAdmin)return;if($('epdkUrl'))$('epdkUrl').value=localStorage.getItem('molavolt_epdk_url')||DEFAULT_EPDK_URL;const q=($('adminSearch')?.value||'').trim().toLowerCase();const list=stations.filter(s=>!q||String(s.name+s.brand+s.address+s.sockets+s.power).toLowerCase().includes(q));if($('adminStatus')&&!$('adminStatus').textContent.includes('çekiliyor'))$('adminStatus').textContent=`EPDK kayıtları: ${stations.length}. Arama sonucu: ${list.length}.`;if($('sp_station'))$('sp_station').innerHTML=stations.map(s=>`<option value="${esc(s.id)}">${esc(s.name)}</option>`).join('');$('adminStationList').innerHTML=list.map(s=>`<div class="station"><h4>${esc(s.name)}</h4><p>${esc(s.brand)} · ${esc(s.address)}</p><div class="tags"><span class="tag y">${esc(s.power)}</span><span class="tag">${esc(s.sockets)}</span><span class="tag b">EPDK</span></div></div>`).join('')||'<div class="empty">EPDK verisi yok. Üstten EPDK verisini yükle.</div>';$('adminSponsorList').innerHTML=sponsors().map(s=>`<div class="station"><h4>${esc(s.name)} <span class="tag g">${esc(s.discount)}</span></h4><p>${esc(s.offer)}</p><div class="adminActions"><button class="secondaryBtn" onclick="editSponsor('${esc(s.id)}')">Düzenle</button><button class="secondaryBtn" onclick="deleteSponsor('${esc(s.id)}')">Sil</button></div></div>`).join('')||'<div class="empty">Fırsat yok.</div>'}
 function clearSponsorForm(){['sp_id','sp_name','sp_discount','sp_offer','sp_whatsapp'].forEach(id=>$(id).value='')}function saveSponsor(){const id=$('sp_id').value||'sp-'+Date.now();const obj={id,stationId:$('sp_station').value,name:$('sp_name').value||'Sponsor işletme',discount:$('sp_discount').value||'%10',offer:$('sp_offer').value||'MolaVolt kullanıcılarına özel fırsat',whatsapp:$('sp_whatsapp').value||''};const arr=sponsors();const i=arr.findIndex(x=>x.id===id);if(i>=0)arr[i]=obj;else arr.unshift(obj);setSponsors(arr);clearSponsorForm();renderAdmin();renderSponsors();alert('Fırsat kaydedildi.')}function editSponsor(id){const s=sponsors().find(x=>x.id===id);if(!s)return;$('sp_id').value=s.id;$('sp_station').value=s.stationId;$('sp_name').value=s.name;$('sp_discount').value=s.discount;$('sp_offer').value=s.offer;$('sp_whatsapp').value=s.whatsapp||''}function deleteSponsor(id){if(!confirm('Silinsin mi?'))return;setSponsors(sponsors().filter(x=>x.id!==id));renderAdmin();renderSponsors()}
-function locateSort(){if(navigator.geolocation){navigator.geolocation.getCurrentPosition(pos=>{userPos={lat:pos.coords.latitude,lon:pos.coords.longitude};savePos(userPos);buildStations();applyFilters()},()=>{buildStations();applyFilters()},{enableHighAccuracy:true,timeout:6000,maximumAge:60000})}else{buildStations();applyFilters()}}
-function init(){isAdmin=new URLSearchParams(location.search).get('admin')===ADMIN_KEY;document.body.classList.toggle('admin-mode',isAdmin);if(isAdmin)$('subTitle').textContent='Admin Panel';clearLegacySilent();renderChips();buildStations();renderSponsors();locateSort();if(isAdmin)renderAdmin()}window.addEventListener('load',init);
+function locateSort(){
+  buildStations();
+  applyFilters();
+  setLocStatus('Konum alınıyor...');
+  if(navigator.geolocation){
+    navigator.geolocation.getCurrentPosition(pos=>{
+      userPos={lat:pos.coords.latitude,lon:pos.coords.longitude,accuracy:Math.round(pos.coords.accuracy||0)};
+      savePos(userPos);
+      buildStations();
+      applyFilters();
+      setLocStatus('Canlı konuma göre sıralandı' + (userPos.accuracy ? ' · hassasiyet ±'+userPos.accuracy+' m' : ''));
+    },()=>{
+      buildStations();
+      applyFilters();
+      setLocStatus('Konum alınamadı; son kayıtlı konuma göre sıralandı.');
+    },{enableHighAccuracy:true,timeout:10000,maximumAge:30000});
+  }else{
+    setLocStatus('Bu cihazda konum desteği yok; son kayıtlı konuma göre sıralandı.');
+  }
+}
+function init(){
+  isAdmin=new URLSearchParams(location.search).get('admin')===ADMIN_KEY;
+  document.body.classList.toggle('admin-mode',isAdmin);
+  if(isAdmin) $('subTitle').textContent='Admin Panel';
+  clearLegacySilent();
+  renderChips();
+  buildStations();
+  renderSponsors();
+  const si=$('searchInput');
+  if(si){
+    si.addEventListener('input',stableSearch);
+    si.addEventListener('keyup',stableSearch);
+    si.addEventListener('search',stableSearch);
+    si.addEventListener('compositionend',stableSearch);
+  }
+  locateSort();
+  if(isAdmin) renderAdmin();
+}
+window.addEventListener('load',init);
 </script>
 </body>
 </html>
