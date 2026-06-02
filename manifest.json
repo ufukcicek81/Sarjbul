@@ -23,9 +23,5 @@
       "purpose": "any maskable"
     }
   ],
-  "categories": [
-    "navigation",
-    "travel",
-    "utilities"
-  ]
+  "categories": ["navigation", "travel", "utilities"]
 }
