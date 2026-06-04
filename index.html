@@ -2976,5 +2976,212 @@ window.addEventListener('load',()=>{
 })();
 </script>
 
+
+
+<script>
+/* UFUK_IOS_EPDK_DATA_HARD_FIX_0605
+   Amaç: iOS/Safari/WebView tarafında EPDK veri yükleme takılmasını düzeltmek.
+   Alt panel, admin HTML ve tasarıma dokunmaz; sadece veri yükleme fonksiyonlarını override eder. */
+(function(){
+  const PATCH='UFUK_IOS_EPDK_DATA_HARD_FIX_0605';
+  const API_MAIN='https://molavolt.vercel.app/api/epdk';
+  const FIREBASE_KEY='AIzaSyAcmXWfZMcSpTrZ5hDBNCDta8xmsIk4TwY';
+  const FIREBASE_BASE='https://firestore.googleapis.com/v1/projects/molavolt/databases/(default)/documents';
+  const LAST_GOOD_KEY='molavolt_epdk_last_good_0605';
+
+  function byId(id){ return document.getElementById(id); }
+  function st(msg){ const el=byId('adminStatus'); if(el) el.textContent=msg; try{ console.log(PATCH,msg); }catch(e){} }
+  function sleep(ms){ return new Promise(r=>setTimeout(r,ms)); }
+  function unique(arr){ return [...new Set((arr||[]).filter(Boolean))]; }
+  function cleanSavedUrl(u){
+    u=String(u||'').trim();
+    if(!u) return '';
+    if(/^https?:\/\/(localhost|127\.0\.0\.1|chatgpt\.com|.*openai.*|.*sandbox.*)/i.test(u)) return '';
+    if(!/^https?:\/\//i.test(u)) return '';
+    return u;
+  }
+  function getSavedStations(){
+    const keys=['molavolt_epdk_stations',LAST_GOOD_KEY];
+    for(const k of keys){
+      try{ const v=JSON.parse(localStorage.getItem(k)||'[]'); if(Array.isArray(v)&&v.length) return v; }catch(e){}
+    }
+    return [];
+  }
+  function saveGoodStations(list){
+    if(!Array.isArray(list)||!list.length) return;
+    try{ localStorage.setItem('molavolt_epdk_stations',JSON.stringify(list)); }catch(e){}
+    try{ localStorage.setItem(LAST_GOOD_KEY,JSON.stringify(list)); }catch(e){}
+  }
+  function commit(list){
+    if(!Array.isArray(list)||!list.length) return false;
+    try{ if(typeof clearLegacySilent==='function') clearLegacySilent(); }catch(e){}
+    try{ if(typeof setEpdkStations==='function') setEpdkStations(list); else localStorage.setItem('molavolt_epdk_stations',JSON.stringify(list)); }catch(e){ try{ localStorage.setItem('molavolt_epdk_stations',JSON.stringify(list)); }catch(_){} }
+    saveGoodStations(list);
+    try{ if(typeof buildStations==='function') buildStations(); }catch(e){}
+    try{ if(typeof applyFilters==='function') applyFilters(); }catch(e){}
+    try{ if(typeof renderAdmin==='function') renderAdmin(); }catch(e){}
+    return true;
+  }
+  function normalize(data){
+    try{ if(typeof normalizeAnyEpdk0604==='function'){ const x=normalizeAnyEpdk0604(data); if(Array.isArray(x)&&x.length) return x; } }catch(e){}
+    try{ if(typeof normalizeEpdkData==='function'){ const x=normalizeEpdkData(data); if(Array.isArray(x)&&x.length) return x; } }catch(e){}
+    let d=data;
+    if(typeof d==='string'){
+      try{ d=JSON.parse(d); }catch(e){ try{ if(typeof parseMaybe==='function') d=parseMaybe(d); }catch(_){} }
+    }
+    function pick(o,ks){ if(!o||typeof o!=='object')return undefined; for(const k of ks){ if(o[k]!==undefined&&o[k]!==null&&o[k]!=='')return o[k]; const f=Object.keys(o).find(x=>x.toLowerCase()===String(k).toLowerCase()); if(f&&o[f]!==undefined&&o[f]!==null&&o[f]!=='')return o[f]; } }
+    function num(v){ if(Array.isArray(v))return NaN; if(typeof v==='string')v=v.replace(',','.').replace(/[^0-9.\-]/g,''); const n=Number(v); return Number.isFinite(n)?n:NaN; }
+    function rows(o,out=[],depth=0){ if(!o||depth>6)return out; if(Array.isArray(o)){ if(o.length&&typeof o[0]==='object')out.push(o); o.slice(0,5).forEach(x=>rows(x,out,depth+1)); return out; } if(typeof o==='object')Object.keys(o).forEach(k=>rows(o[k],out,depth+1)); return out; }
+    let r=[];
+    if(Array.isArray(d)) r=d;
+    else if(d&&Array.isArray(d.features)) r=d.features.map(f=>({...(f.properties||{}),lat:f.geometry?.coordinates?.[1],lon:f.geometry?.coordinates?.[0]}));
+    else if(d&&typeof d==='object'){
+      const direct=pick(d,['result','data','items','records','stations','sarjIstasyonlari','chargingStations']);
+      if(Array.isArray(direct)) r=direct; else r=(rows(d).sort((a,b)=>b.length-a.length)[0]||[]);
+    }
+    const out=[], seen=new Set();
+    r.forEach((raw,i)=>{
+      let o=raw; if(typeof o==='string'){ try{o=JSON.parse(o)}catch(e){return;} }
+      if(!o||typeof o!=='object')return;
+      if(o.properties)o={...o.properties,lat:o.geometry?.coordinates?.[1],lon:o.geometry?.coordinates?.[0]};
+      let lat=num(pick(o,['enlem','lat','latitude','koordinatx','koordinatX','x']));
+      let lon=num(pick(o,['boylam','lon','lng','longitude','koordinaty','koordinatY','y']));
+      const c=pick(o,['coordinates','koordinat','coord']); if((!Number.isFinite(lat)||!Number.isFinite(lon))&&Array.isArray(c)&&c.length>=2){ lon=num(c[0]); lat=num(c[1]); }
+      if(!Number.isFinite(lat)||!Number.isFinite(lon)||Math.abs(lat)>90||Math.abs(lon)>180)return;
+      const name=String(pick(o,['sarjIstasyonuAdi','istasyonAdi','stationName','ad','name','title'])||'EPDK Şarj İstasyonu');
+      const op=String(pick(o,['marka','brand','sarjAgiIsletmecisiUnvan','operator','isletmeciUnvan'])||'Diğer');
+      const address=String(pick(o,['adres','address','fullAddress','lokasyon'])||'Adres bilgisi yok');
+      const no=String(pick(o,['sarjIstasyonuNo','istasyonNo','id','stationId'])||i+'-'+lat.toFixed(5)+'-'+lon.toFixed(5));
+      let brand=op; try{ if(typeof normBrand==='function')brand=normBrand(op+' '+name); }catch(e){}
+      let distance=0; try{ distance=km(userPos.lat,userPos.lon,lat,lon); }catch(e){}
+      let sockets='AC/DC', power='kW bilgisi yok';
+      try{ if(typeof socketSummary==='function'){ const sok=socketSummary(pick(o,['soketler','sockets','connectors','socketList'])); sockets=sok.sockets||sockets; power=sok.power||power; } }catch(e){}
+      const key=name.toLowerCase()+'|'+lat.toFixed(5)+'|'+lon.toFixed(5); if(seen.has(key))return; seen.add(key);
+      out.push({id:'epdk-'+no.replace(/[^a-zA-Z0-9_.-]/g,'-')+'-'+i,name,brand,type:'Şarj',status:'Açık',address,lat,lon,distance,sockets,power,source:'EPDK'});
+    });
+    return out;
+  }
+  async function fetchText(url,timeout=18000){
+    const ctrl=window.AbortController?new AbortController():null;
+    const t=setTimeout(()=>{try{ctrl&&ctrl.abort()}catch(e){}},timeout);
+    try{
+      const res=await fetch(url,{method:'GET',mode:'cors',credentials:'omit',cache:'no-store',signal:ctrl?ctrl.signal:undefined,headers:{'Accept':'application/json,text/plain,*/*'}});
+      const txt=await res.text();
+      if(!res.ok) throw new Error('HTTP '+res.status+' '+txt.slice(0,120));
+      return txt;
+    }finally{ clearTimeout(t); }
+  }
+  async function fetchJson(url,timeout){ const txt=await fetchText(url,timeout); try{return JSON.parse(txt)}catch(e){return txt} }
+  async function loadFromApi(){
+    const saved=cleanSavedUrl(localStorage.getItem('molavolt_epdk_url')||'');
+    const origin=(location.origin&&/^https?:/.test(location.origin)&&!/chatgpt|openai|sandbox/i.test(location.origin)) ? location.origin.replace(/\/$/,'')+'/api/epdk' : '';
+    const direct=unique([saved,origin,API_MAIN]);
+    const proxied=[];
+    direct.forEach(u=>{
+      proxied.push('https://api.allorigins.win/raw?url='+encodeURIComponent(u));
+      proxied.push('https://corsproxy.io/?'+encodeURIComponent(u));
+    });
+    let last=null;
+    for(const url of unique([...direct,...proxied])){
+      try{
+        st('EPDK deneniyor: '+url.replace(/^https?:\/\//,'').slice(0,70));
+        const data=await fetchJson(url+(url.includes('?')?'&':'?')+'t='+Date.now(),18000);
+        const list=normalize(data);
+        if(list.length){ st('EPDK API tamam: '+list.length+' istasyon'); return list; }
+        last=new Error('Koordinatlı istasyon yok');
+      }catch(e){ last=e; try{console.warn(PATCH,'kaynak geçildi',url,e)}catch(_){} }
+    }
+    throw last||new Error('API cevap vermedi');
+  }
+  function firestoreVal(v){
+    if(!v||typeof v!=='object')return v;
+    if('stringValue'in v)return v.stringValue;
+    if('integerValue'in v)return Number(v.integerValue);
+    if('doubleValue'in v)return Number(v.doubleValue);
+    if('booleanValue'in v)return !!v.booleanValue;
+    if('arrayValue'in v)return (v.arrayValue.values||[]).map(firestoreVal);
+    if('mapValue'in v){const o={}; const f=v.mapValue.fields||{}; Object.keys(f).forEach(k=>o[k]=firestoreVal(f[k])); return o;}
+    return v;
+  }
+  async function loadFromFirestoreRest(){
+    const urls=[
+      `${FIREBASE_BASE}/molavolt/epdkMeta?key=${FIREBASE_KEY}&t=${Date.now()}`,
+      `${FIREBASE_BASE}/molavolt/epdkMeta?t=${Date.now()}`
+    ];
+    let meta=null,last=null;
+    for(const u of urls){ try{ meta=await fetchJson(u,16000); if(meta&&meta.fields)break; }catch(e){last=e;} }
+    if(!meta||!meta.fields) throw last||new Error('Firebase meta yok');
+    const count=Number(firestoreVal(meta.fields.chunkCount)||0);
+    if(!count) throw new Error('Firebase chunk yok');
+    const all=[];
+    for(let i=0;i<count;i++){
+      const id='chunk_'+String(i).padStart(3,'0');
+      st('Firebase EPDK okunuyor: '+(i+1)+'/'+count);
+      const doc=await fetchJson(`${FIREBASE_BASE}/molavoltEpdkChunks/${id}?key=${FIREBASE_KEY}&t=${Date.now()}`,16000);
+      const arr=firestoreVal(doc.fields&&doc.fields.stations)||[];
+      if(Array.isArray(arr)) all.push(...arr);
+    }
+    return normalize(all);
+  }
+  async function waitSdkAndLoad(){
+    for(let i=0;i<25;i++){
+      if(typeof window.loadEpdkFromFirebase0604==='function'){
+        const list=await Promise.race([window.loadEpdkFromFirebase0604(), sleep(20000).then(()=>{throw new Error('Firebase SDK bekleme zaman aşımı')})]);
+        return normalize(list);
+      }
+      await sleep(400);
+    }
+    return [];
+  }
+  async function ensureData(opts={}){
+    const force=!!opts.forceRemote;
+    if(!force){
+      try{ if(Array.isArray(stations)&&stations.length){ saveGoodStations(stations); return true; } }catch(e){}
+      const saved=getSavedStations(); if(saved.length){ commit(saved); return true; }
+    }
+    try{ const sdk=await waitSdkAndLoad(); if(sdk.length){ commit(sdk); st('Firebase SDK tamam: '+sdk.length+' istasyon'); return true; } }catch(e){ console.warn(PATCH,'SDK olmadı',e); }
+    try{ const rest=await loadFromFirestoreRest(); if(rest.length){ commit(rest); st('Firebase REST tamam: '+rest.length+' istasyon'); return true; } }catch(e){ console.warn(PATCH,'REST olmadı',e); }
+    try{ const api=await loadFromApi(); if(api.length){ commit(api); return true; } }catch(e){ console.warn(PATCH,'API olmadı',e); }
+    const any=getSavedStations(); if(any.length){ commit(any); st('Son sağlam kayıtla açıldı: '+any.length); return true; }
+    st('EPDK verisi alınamadı. API/Firebase erişimi yok.');
+    return false;
+  }
+  async function adminLoad(){
+    const input=byId('epdkUrl');
+    const u=cleanSavedUrl(input&&input.value)||API_MAIN;
+    if(input)input.value=u; try{localStorage.setItem('molavolt_epdk_url',u)}catch(e){}
+    st('EPDK verisi çekiliyor...');
+    try{ const ok=await ensureData({forceRemote:true}); if(!ok) throw new Error('Veri alınamadı'); alert('EPDK verisi hazır: '+((window.stations||stations||[]).length)+' istasyon'); }
+    catch(e){ alert('EPDK yükleme hatası: '+(e.message||e)); }
+  }
+
+  function install(){
+    window.ensureEpdkData0604=ensureData;
+    window.ensureEpdkData0605=ensureData;
+    try{ ensureRouteStationsReady0519=async()=>ensureData({forceRemote:false}); }catch(e){}
+    try{ ensureRouteStationsReady0518=async()=>ensureData({forceRemote:false}); }catch(e){}
+    try{ loadEpdk=adminLoad; }catch(e){}
+    window.loadEpdk=adminLoad;
+    // iOS'ta rota butonuna basınca veri yoksa önce veriyi zorla yükle, sonra mevcut rota fonksiyonunu çalıştır.
+    if(!window.__molavolt_original_plan_0605 && typeof window.planEvRoute==='function'){
+      window.__molavolt_original_plan_0605=window.planEvRoute;
+      window.planEvRoute=async function(){
+        const out=byId('routeOutput');
+        if(out && (!Array.isArray(window.stations||stations)||!(window.stations||stations).length)) out.innerHTML='<div class="routeDataLoading"><b>İstasyon verisi yükleniyor…</b><br>iOS için Firebase ve EPDK kaynakları yeniden deneniyor.</div>';
+        await ensureData({forceRemote:false});
+        return window.__molavolt_original_plan_0605.apply(this,arguments);
+      };
+      try{ planEvRoute=window.planEvRoute; }catch(e){}
+    }
+  }
+  install();
+  window.addEventListener('load',()=>{
+    setTimeout(install,300);
+    setTimeout(()=>ensureData({forceRemote:false}),700);
+    setTimeout(()=>{ try{ if(!Array.isArray(stations)||!stations.length) ensureData({forceRemote:true}); }catch(e){} },5500);
+  });
+})();
+</script>
+
 </body>
 </html>
