@@ -1,7 +1,8 @@
 <!doctype html>
 <html lang="tr">
 <head>
-<!-- UFUK_OFFER_COUNT_FIX_0503 -->
+<!-- UFUK_ROUTE_PLANNER_PATCH_0504 -->
+<!-- UFUK_OFFER_COUNT_FIX_0503 + ROUTE_0504 -->
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>MolaVolt</title>
@@ -14,7 +15,7 @@
 .section{margin-top:22px}.section h3{font-size:25px;margin:0 0 6px}.sectionTitle{display:flex;justify-content:space-between;align-items:flex-end;gap:10px;margin-bottom:10px}.muted{color:var(--muted)}.cards{display:flex;flex-direction:column;gap:12px;margin-top:12px}.station,.panel,.sponsorCard{background:rgba(255,255,255,.035);border:1px solid var(--line);border-radius:24px;padding:15px;box-shadow:var(--shadow)}.station{cursor:pointer}.stationTop{display:flex;justify-content:space-between;gap:12px}.station h4{margin:9px 0 5px;font-size:18px}.station p{margin:0;color:var(--muted);line-height:1.35;font-size:13px}.tags{display:flex;flex-wrap:wrap;gap:6px}.tag{border:1px solid var(--line);background:rgba(255,255,255,.05);border-radius:999px;padding:6px 10px;font-size:12px;color:#dcecff}.tag.g{background:rgba(54,239,141,.13);border-color:rgba(54,239,141,.24);color:#9bffc4}.tag.b{background:rgba(57,170,255,.13);border-color:rgba(57,170,255,.24);color:#9bd4ff}.tag.y{background:rgba(255,224,129,.13);border-color:rgba(255,224,129,.24);color:#ffe9a6}
 .metrics{display:flex;gap:8px;justify-content:space-between;align-items:center;margin-top:14px;color:#d4e5f6;font-size:13px}.routeBtn,.primaryBtn{border:0;text-decoration:none;border-radius:999px;background:linear-gradient(135deg,var(--green),#12c873);color:#052112;font-weight:900;padding:11px 13px;white-space:nowrap;text-align:center}.secondaryBtn{border:1px solid var(--line);background:rgba(255,255,255,.05);color:#e7f2ff;border-radius:999px;padding:10px 12px;text-decoration:none}.cardActions{display:flex;gap:8px;margin-top:14px;align-items:center}.cardActions .routeBtn,.cardActions .secondaryBtn{flex:1;display:block;text-align:center}
 .sponsorScroll{display:flex;gap:12px;overflow-x:auto;scrollbar-width:none;margin-top:12px}.sponsorCard{min-width:270px}.gift{width:58px;height:58px;border-radius:18px;background:rgba(255,255,255,.06);display:grid;place-items:center;font-size:28px}.tab{display:none}.tab.active{display:block}.adminOnly{display:none}.admin-mode .customerOnly{display:none!important}.admin-mode .adminOnly{display:block}
-.bottomNav{position:fixed;left:50%;transform:translateX(-50%);bottom:12px;width:min(402px,calc(100% - 24px));background:rgba(8,18,31,.96);border:1px solid var(--line);backdrop-filter:blur(14px);border-radius:26px;padding:10px 8px;display:grid;grid-template-columns:repeat(5,1fr);gap:4px;z-index:99999;box-shadow:var(--shadow)}.navItem{border:0;background:transparent;color:#9eb1c7;border-radius:18px;padding:8px 4px;display:flex;flex-direction:column;align-items:center;gap:5px;font-size:11px}.navItem span{font-size:20px}.navItem.active{background:rgba(54,239,141,.08);color:var(--green)}
+.bottomNav{position:fixed;left:50%;transform:translateX(-50%);bottom:12px;width:min(402px,calc(100% - 24px));background:rgba(8,18,31,.96);border:1px solid var(--line);backdrop-filter:blur(14px);border-radius:26px;padding:10px 8px;display:grid;grid-template-columns:repeat(6,1fr);gap:4px;z-index:99999;box-shadow:var(--shadow)}.navItem{border:0;background:transparent;color:#9eb1c7;border-radius:18px;padding:8px 4px;display:flex;flex-direction:column;align-items:center;gap:5px;font-size:11px}.navItem span{font-size:20px}.navItem.active{background:rgba(54,239,141,.08);color:var(--green)}
 .modal{position:fixed;inset:0;background:rgba(0,0,0,.58);z-index:100000;display:none;align-items:flex-end}.modal.show{display:flex}.sheet{width:100%;max-width:430px;margin:0 auto;background:#081420;border:1px solid var(--line);border-bottom:0;border-radius:28px 28px 0 0;padding:18px;max-height:88vh;overflow:auto}.close{float:right;border:1px solid var(--line);background:rgba(255,255,255,.05);color:white;width:42px;height:42px;border-radius:16px;font-size:22px}.formBox input,.formBox select,.formBox textarea{width:100%;margin:6px 0 10px;background:#091827;border:1px solid var(--line);color:white;border-radius:15px;padding:12px;outline:0;font-size:14px}.formBox label{display:block;color:var(--muted);font-size:13px;margin-top:8px}.adminActions{display:flex;gap:8px;margin-top:8px}.adminActions button{flex:1}.mapSheetBody{height:72vh;min-height:420px}#stationMap{height:100%;width:100%;border-radius:22px;overflow:hidden;background:#101b2c}.empty{padding:18px;border-radius:22px;background:rgba(255,255,255,.035);border:1px solid var(--line);color:var(--muted)}
 
 .adminTabs{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:14px 0 18px}
@@ -140,6 +141,23 @@
 .statusPill.warn{background:rgba(255,224,129,.12);border-color:rgba(255,224,129,.25);color:#ffe9a6}
 @media(max-width:380px){.reportGrid{grid-template-columns:1fr}.couponActions button,.couponActions a{min-width:100%}}
 
+
+/* UFUK_ROUTE_PLANNER_PATCH_0504 */
+.routeForm label{display:block;color:var(--muted);font-size:13px;margin:10px 0 5px}
+.routeForm input,.routeForm select{width:100%;margin:6px 0 10px;background:#091827;border:1px solid var(--line);color:white;border-radius:15px;padding:12px;outline:0;font-size:14px}
+.routeGrid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.routeSummary{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}
+.routeMetric{background:rgba(255,255,255,.04);border:1px solid var(--line);border-radius:18px;padding:12px}
+.routeMetric span{color:var(--muted);font-size:12px}
+.routeMetric b{display:block;font-size:18px;margin-top:5px}
+.routeStep{border:1px solid rgba(54,239,141,.20);background:rgba(54,239,141,.07);border-radius:20px;padding:13px;margin-top:12px}
+.routeWarn{border:1px solid rgba(255,224,129,.25);background:rgba(255,224,129,.08);border-radius:18px;padding:12px;margin-top:10px;color:#ffe9a6;line-height:1.35}
+.routeStationNote{font-size:12px;color:var(--muted);margin-top:6px}
+@media(max-width:390px){
+  .bottomNav{grid-template-columns:repeat(3,1fr)!important}
+  .routeGrid,.routeSummary{grid-template-columns:1fr}
+}
+
 </style>
  <link rel="manifest" href="/manifest.json?v=10">
   <meta name="theme-color" content="#07111d">
@@ -161,6 +179,85 @@
       <section class="section"><h3>Yakındaki istasyonlar</h3><p class="muted" id="countText">Yakındaki istasyonlar</p><p class="muted" id="locStatus" style="font-size:13px;margin-top:4px">Konumuna yakın istasyonları görmek için arama yapabilir veya konum izni verebilirsin.</p><div class="sorts"><button id="sortDistance" class="sort active" onclick="setSort('distance')">En yakın</button><button id="sortName" class="sort" onclick="setSort('name')">A-Z</button></div><div class="cards" id="homeCards"></div></section>
     </div>
     <div class="tab" id="tab-stations"><section class="section"><h3>İstasyonlar</h3><p class="muted">Marka seçerek veya arama yaparak filtreleyebilirsin.</p><div class="cards" id="stationCards"></div></section></div>
+
+    <div class="tab" id="tab-route">
+      <section class="section">
+        <h3>Rota Planla</h3>
+        <p class="muted">Batarya, tüketim ve hedefe göre şarj durağı önerisi</p>
+
+        <div class="panel routeForm">
+          <label>Nereye gidiyorsun?</label>
+          <input id="rp_dest" placeholder="Örn: Ankara" value="Ankara">
+
+          <div class="routeGrid">
+            <div>
+              <label>Toplam mesafe km</label>
+              <input id="rp_distance" type="number" inputmode="decimal" placeholder="Boş bırak: tahmini hesaplar">
+            </div>
+            <div>
+              <label>Rota sapma limiti km</label>
+              <input id="rp_corridor" type="number" inputmode="decimal" value="25">
+            </div>
+          </div>
+
+          <div class="routeGrid">
+            <div>
+              <label>Batarya kapasitesi kWh</label>
+              <input id="rp_battery" type="number" inputmode="decimal" value="60">
+            </div>
+            <div>
+              <label>Mevcut şarj %</label>
+              <input id="rp_soc" type="number" inputmode="decimal" value="45">
+            </div>
+          </div>
+
+          <div class="routeGrid">
+            <div>
+              <label>Varışta kalsın %</label>
+              <input id="rp_arrival" type="number" inputmode="decimal" value="10">
+            </div>
+            <div>
+              <label>Şarj hedefi %</label>
+              <input id="rp_charge_target" type="number" inputmode="decimal" value="80">
+            </div>
+          </div>
+
+          <label>Tüketim hesabı</label>
+          <select id="rp_mode" onchange="toggleRouteConsumption()">
+            <option value="manual">Benim kullanım ortalamam</option>
+            <option value="wltp">WLTP</option>
+          </select>
+
+          <div class="routeGrid">
+            <div>
+              <label>Manuel tüketim kWh/100 km</label>
+              <input id="rp_manual" type="number" inputmode="decimal" value="18">
+            </div>
+            <div>
+              <label>WLTP tüketim kWh/100 km</label>
+              <input id="rp_wltp" type="number" inputmode="decimal" value="15">
+            </div>
+          </div>
+
+          <div class="routeGrid">
+            <div>
+              <label>DC fiyat TL/kWh</label>
+              <input id="rp_dc_price" type="number" inputmode="decimal" value="10">
+            </div>
+            <div>
+              <label>Ortalama şarj hızı kW</label>
+              <input id="rp_charge_kw" type="number" inputmode="decimal" value="90">
+            </div>
+          </div>
+
+          <button class="primaryBtn" style="width:100%;margin-top:12px" onclick="planEvRoute()">Rota planla</button>
+          <p class="routeStationNote">İlk sürümde hesaplama EPDK istasyonları ve düz rota koridoru ile yapılır. Google/OSRM rota çizgisine bağlayınca hassasiyet artar.</p>
+        </div>
+
+        <div id="routeResult"></div>
+      </section>
+    </div>
+
     <div class="tab" id="tab-favorites"><section class="section"><h3>Favoriler</h3><div class="cards" id="favCards"></div></section></div>
     <div class="tab" id="tab-report"><section class="section"><h3>Eksik istasyon bildir</h3><p class="muted">Görünmeyen şarj noktasını bize gönder</p><div class="panel"><a class="routeBtn" style="display:block;padding:14px" href="https://wa.me/905327664404?text=MolaVolt%20eksik%20%C5%9Farj%20istasyonu%20bildirimi:%0A%C4%B0stasyon%20ad%C4%B1:%0AMarka:%0AKonum%20linki:%0ANot:" target="_blank" rel="noopener">WhatsApp ile bildir</a></div></section></div>
     <div class="tab" id="tab-profile"><section class="section"><h3>Profil</h3><p class="muted">MolaVolt</p><div class="panel"><b>MolaVolt</b><p class="muted">Yakındaki şarj istasyonlarını bul, haritada gör ve yol tarifini hemen al.</p></div><div class="panel" style="margin-top:12px"><h3 style="font-size:18px">Destek</h3><p class="muted">Öneri, hata bildirimi veya destek için bize ulaş.</p><a class="routeBtn" style="display:block;text-align:center;margin-top:8px" href="https://wa.me/905327664404?text=MolaVolt%20destek%20talebi:%20" target="_blank" rel="noopener">WhatsApp destek</a></div><div class="panel" style="margin-top:12px"><h3 style="font-size:18px">Fırsat kodlarım</h3><p class="muted">Kullandığın fırsatı buradan onaylayabilirsin.</p><div id="myCouponCards"></div></div></section></div>
@@ -243,13 +340,13 @@
     </section>
   </main>
 </div>
-<nav class="bottomNav customerOnly"><button class="navItem active" id="nav-home" onclick="showTab('home')"><span>🏠</span>Ana Sayfa</button><button class="navItem" id="nav-stations" onclick="showTab('stations')"><span>📍</span>İstasyonlar</button><button class="navItem" id="nav-favorites" onclick="showTab('favorites')"><span>♡</span>Favoriler</button><button class="navItem" id="nav-report" onclick="showTab('report')"><span>🔔</span>Bildir</button><button class="navItem" id="nav-profile" onclick="showTab('profile')"><span>👤</span>Profil</button></nav>
+<nav class="bottomNav customerOnly"><button class="navItem active" id="nav-home" onclick="showTab('home')"><span>🏠</span>Ana Sayfa</button><button class="navItem" id="nav-stations" onclick="showTab('stations')"><span>📍</span>İstasyonlar</button><button class="navItem" id="nav-route" onclick="showTab('route')"><span>🧭</span>Rota</button><button class="navItem" id="nav-favorites" onclick="showTab('favorites')"><span>♡</span>Favoriler</button><button class="navItem" id="nav-report" onclick="showTab('report')"><span>🔔</span>Bildir</button><button class="navItem" id="nav-profile" onclick="showTab('profile')"><span>👤</span>Profil</button></nav>
 <div class="modal" id="mapModal"><div class="sheet"><button class="close" onclick="closeStationMap()">×</button><h2 id="mapModalTitle">Haritada gör</h2><p class="muted" id="mapModalText">İstasyon konumu</p><div class="mapSheetBody"><div id="stationMap"></div></div><div class="cardActions"><button class="secondaryBtn" onclick="closeStationMap()">Kapat</button><a class="routeBtn" id="mapModalRoute" href="#" target="_blank" rel="noopener">Yol tarifi</a></div></div></div>
 <div class="modal" id="detailModal"><div class="sheet"><button class="close" onclick="closeModal('detailModal')">×</button><div id="detailContent"></div></div></div>
-<div class="modal" id="infoModal"><div class="sheet"><button class="close" onclick="closeModal('infoModal')">×</button><h2>MolaVolt</h2><p class="muted">Yakındaki şarj istasyonlarını kolayca bul, haritada gör ve yol tarifi al.</p><div>UFUK_OFFER_COUNT_FIX_0503</div></div></div>
+<div class="modal" id="infoModal"><div class="sheet"><button class="close" onclick="closeModal('infoModal')">×</button><h2>MolaVolt</h2><p class="muted">Yakındaki şarj istasyonlarını kolayca bul, haritada gör ve yol tarifi al.</p><div>UFUK_OFFER_COUNT_FIX_0503 + UFUK_ROUTE_PLANNER_PATCH_0504</div></div></div>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
-const VERSION='0503',ADMIN_KEY='ufuk8790',DEFAULT_EPDK_URL='https://molavolt.vercel.app/api/epdk';
+const VERSION='0504',ADMIN_KEY='ufuk8790',DEFAULT_EPDK_URL='https://molavolt.vercel.app/api/epdk';
 const BRANDS=['Tümü','ZES','Eşarj','Trugo','Sharz','Voltrun','Ovolt','WAT','Diğer'];
 const LEGACY_KEYS=['mv_manual_stations','mv_hidden_stations','mv_turkey_stations','molavolt_turkey_osm_cache','molavolt_osm_cache_v2','molavolt_turkey_admin_seed','molavolt_turkey_admin_hidden','molavolt_turkey_seed','molavolt_hidden_seed'];
 let userPos=loadPos()||{lat:40.840621,lon:31.152219},stations=[],filtered=[],currentBrand='Tümü',sortMode='distance',isAdmin=false,stationMap=null,stationMapMarker=null;
@@ -493,7 +590,7 @@ function renderSponsors(){
 }
 function renderAll(){renderCards();renderFavs();renderSponsors();renderMyCoupons();if(isAdmin){renderAdmin();setTimeout(restoreAdminTab,50)}}function showTab(name){
   activeCustomerTab=name;
-  ['home','stations','favorites','report','profile'].forEach(t=>{
+  ['home','stations','route','favorites','report','profile'].forEach(t=>{
     $('tab-'+t)?.classList.toggle('active',t===name);
     $('nav-'+t)?.classList.toggle('active',t===name);
   });
@@ -530,6 +627,139 @@ function showAdminTab(name){
 function restoreAdminTab(){
   const saved=localStorage.getItem('molavolt_admin_tab')||'epdk';
   showAdminTab(saved);
+}
+
+
+/* UFUK_ROUTE_PLANNER_PATCH_0504_JS */
+const ROUTE_CITY_COORDS={
+  "ankara":[39.9334,32.8597],"istanbul":[41.0082,28.9784],"izmir":[38.4237,27.1428],
+  "bursa":[40.1885,29.0610],"antalya":[36.8969,30.7133],"eskisehir":[39.7767,30.5206],
+  "eskişehir":[39.7767,30.5206],"konya":[37.8746,32.4932],"sakarya":[40.7569,30.3781],
+  "bolu":[40.7350,31.6061],"duzce":[40.8438,31.1565],"düzce":[40.8438,31.1565],
+  "karasu":[41.1047,30.6928],"denizli":[37.7765,29.0864],"adana":[37.0000,35.3213],
+  "samsun":[41.2867,36.3300],"trabzon":[41.0027,39.7168],"kocaeli":[40.8533,29.8815],
+  "kayseri":[38.7205,35.4826],"mersin":[36.8121,34.6415],"gaziantep":[37.0662,37.3833]
+};
+function routeVal(id,def=0){
+  const v=parseFloat(String($(id)?.value||'').replace(',','.'));
+  return isFinite(v)?v:def;
+}
+function routeDestination(){
+  const q=String($('rp_dest')?.value||'').trim().toLowerCase();
+  for(const [k,v] of Object.entries(ROUTE_CITY_COORDS)){
+    if(q.includes(k))return {name:k,lat:v[0],lon:v[1]};
+  }
+  return {name:q||'Ankara',lat:39.9334,lon:32.8597};
+}
+function pointLineDistanceKm(a,b,p){
+  const ax=a.lat, ay=a.lon, bx=b.lat, by=b.lon, px=p.lat, py=p.lon;
+  const abx=bx-ax, aby=by-ay, apx=px-ax, apy=py-ay;
+  const ab2=abx*abx+aby*aby || 1;
+  let t=(apx*abx+apy*aby)/ab2;
+  t=Math.max(0,Math.min(1,t));
+  const lat=ax+t*abx, lon=ay+t*aby;
+  return {distance:km(px,py,lat,lon),progress:t};
+}
+function routeStationsFor(dest,corridorKm){
+  const start={lat:userPos.lat,lon:userPos.lon};
+  return stations.map(s=>{
+    const m=pointLineDistanceKm(start,dest,s);
+    return {...s,routeDeviation:m.distance,routeProgress:m.progress};
+  }).filter(s=>s.routeDeviation<=corridorKm && s.routeProgress>0.03 && s.routeProgress<0.98)
+    .sort((a,b)=>a.routeProgress-b.routeProgress);
+}
+function toggleRouteConsumption(){
+  const mode=$('rp_mode')?.value||'manual';
+  if($('rp_manual'))$('rp_manual').parentElement.style.opacity=mode==='manual'?'1':'.45';
+  if($('rp_wltp'))$('rp_wltp').parentElement.style.opacity=mode==='wltp'?'1':'.45';
+}
+function planEvRoute(){
+  buildStations();
+  if(!stations.length){
+    $('routeResult').innerHTML='<div class="routeWarn">EPDK istasyon verisi henüz yok. Admin panelden EPDK verisini yükle veya Firebase’den oku.</div>';
+    return;
+  }
+  const dest=routeDestination();
+  const roadFactor=1.18;
+  const estimatedKm=km(userPos.lat,userPos.lon,dest.lat,dest.lon)*roadFactor;
+  const distance=routeVal('rp_distance',estimatedKm);
+  const battery=routeVal('rp_battery',60);
+  const soc=routeVal('rp_soc',45);
+  const arrival=routeVal('rp_arrival',10);
+  const chargeTarget=routeVal('rp_charge_target',80);
+  const mode=$('rp_mode')?.value||'manual';
+  const consumption=mode==='wltp'?routeVal('rp_wltp',15):routeVal('rp_manual',18);
+  const price=routeVal('rp_dc_price',10);
+  const chargeKw=routeVal('rp_charge_kw',90);
+  const corridor=routeVal('rp_corridor',25);
+
+  const energyNeed=distance*consumption/100;
+  const usableStart=battery*Math.max(0,(soc-arrival))/100;
+  const startRange=usableStart/Math.max(consumption,1)*100;
+  const totalCost=energyNeed*price;
+  const routeList=routeStationsFor(dest,corridor);
+
+  let html=`<section class="section"><div class="panel">
+    <h3>Rota sonucu</h3>
+    <p class="muted">Konumundan ${esc($('rp_dest')?.value||dest.name)} yönüne tahmini hesap</p>
+    <div class="routeSummary">
+      <div class="routeMetric"><span>Tahmini mesafe</span><b>${distance.toFixed(0)} km</b></div>
+      <div class="routeMetric"><span>Enerji ihtiyacı</span><b>${energyNeed.toFixed(1)} kWh</b></div>
+      <div class="routeMetric"><span>Kullanılabilir enerji</span><b>${usableStart.toFixed(1)} kWh</b></div>
+      <div class="routeMetric"><span>Toplam enerji maliyeti</span><b>${totalCost.toFixed(0)} TL</b></div>
+    </div>`;
+
+  if(energyNeed<=usableStart){
+    const arrivalSoc=soc-(energyNeed/battery*100);
+    html+=`<div class="routeStep"><b>Şarj molası gerekmiyor.</b><p>Bu tüketimle hedefe yaklaşık %${Math.max(0,arrivalSoc).toFixed(0)} şarjla varırsın.</p></div>`;
+  }else{
+    const missing=energyNeed-usableStart;
+    const chargeKwh=Math.min(Math.max(missing + battery*0.08, 8), battery*Math.max(0,(chargeTarget-arrival))/100);
+    const chargeMin=chargeKwh/Math.max(10,chargeKw)*60;
+    const targetProgress=Math.min(.9, Math.max(.12, (startRange/distance)*0.82));
+    const candidates=routeList.filter(s=>s.routeProgress<=targetProgress+.22).sort((a,b)=>Math.abs(a.routeProgress-targetProgress)-Math.abs(b.routeProgress-targetProgress));
+    const stop=candidates[0]||routeList[0];
+
+    if(stop){
+      html+=`<div class="routeStep">
+        <b>Önerilen şarj molası</b>
+        <p><b>${esc(stop.name)}</b><br>${esc(stop.address)}<br>Rotadan sapma: ${stop.routeDeviation.toFixed(1)} km · Rota ilerleme: %${(stop.routeProgress*100).toFixed(0)}</p>
+        <div class="routeSummary">
+          <div class="routeMetric"><span>Alınacak enerji</span><b>${chargeKwh.toFixed(1)} kWh</b></div>
+          <div class="routeMetric"><span>Şarj süresi</span><b>${Math.ceil(chargeMin)} dk</b></div>
+          <div class="routeMetric"><span>Mola maliyeti</span><b>${(chargeKwh*price).toFixed(0)} TL</b></div>
+          <div class="routeMetric"><span>Ortalama hız</span><b>${chargeKw.toFixed(0)} kW</b></div>
+        </div>
+        <div class="cardActions">
+          <button class="mapShowBtn" onclick="openStationMap('${esc(stop.id)}',event)">Haritada gör</button>
+          <a class="routeBtn routeActionBtn" href="${routeUrl(stop)}" target="_blank" rel="noopener" onclick="event.stopPropagation()">Yol tarifi</a>
+        </div>
+      </div>`;
+    }else{
+      html+=`<div class="routeWarn">Bu rota koridorunda uygun istasyon bulunamadı. Sapma limitini yükselt veya EPDK verisini güncelle.</div>`;
+    }
+  }
+  html+=`<div class="routeWarn">Not: Bu ilk sürüm düz rota koridoru ile hesaplar. Sonraki aşamada Google Maps/OSRM rota çizgisiyle daha hassas durak seçimi eklenir.</div></div></section>`;
+
+  if(routeList.length){
+    html+=`<section class="section"><h3>Rota üzerindeki istasyonlar</h3><p class="muted">${routeList.length} istasyon, ${corridor} km koridor içinde</p><div class="cards">`+
+      routeList.slice(0,15).map(s=>`<div class="station" onclick="openDetail('${esc(s.id)}')">
+        <div class="stationTop">
+          <div>
+            <div class="tags"><span class="tag g">${esc(s.brand)}</span><span class="tag y">${esc(s.power||'kW bilgisi yok')}</span></div>
+            <h4>${esc(s.name)}</h4>
+            <p>${esc(s.address)}</p>
+          </div>
+          <div style="text-align:right"><b>${s.routeDeviation.toFixed(1)} km</b><p>sapma</p></div>
+        </div>
+        <div class="cardActions">
+          <button class="mapShowBtn" onclick="openStationMap('${esc(s.id)}',event)">Haritada gör</button>
+          <a class="routeBtn routeActionBtn" href="${routeUrl(s)}" target="_blank" rel="noopener" onclick="event.stopPropagation()">Yol tarifi</a>
+        </div>
+      </div>`).join('')+
+    `</div></section>`;
+  }
+  $('routeResult').innerHTML=html;
 }
 
 function renderAdmin(){if(!isAdmin)return;if($('epdkUrl'))$('epdkUrl').value=localStorage.getItem('molavolt_epdk_url')||DEFAULT_EPDK_URL;const q=($('adminSearch')?.value||'').trim().toLowerCase();const list=stations.filter(s=>!q||String(s.name+s.brand+s.address+s.sockets+s.power).toLowerCase().includes(q));if($('adminStatus')&&!$('adminStatus').textContent.includes('çekiliyor'))$('adminStatus').textContent=`EPDK kayıtları: ${stations.length}. Arama sonucu: ${list.length}.`;if($('adminSummary'))$('adminSummary').textContent=`Toplam ${stations.length} EPDK istasyonu var. Arama sonucu: ${list.length}. Sponsor/fırsat sayısı: ${sponsors().length}.`;if($('sp_station'))$('sp_station').innerHTML='<option value="">Tüm istasyonlarda göster</option>'+stations.map(s=>`<option value="${esc(s.id)}">${esc(s.name)}</option>`).join('');$('adminStationList').innerHTML=list.map(s=>`<div class="station"><h4>${esc(s.name)}</h4><p>${esc(s.brand)} · ${esc(s.address)}</p><div class="tags"><span class="tag y">${esc(s.power)}</span><span class="tag">${esc(s.sockets)}</span><span class="tag b">EPDK</span></div></div>`).join('')||'<div class="empty">EPDK verisi yok. Üstten EPDK verisini yükle.</div>';$('adminSponsorList').innerHTML=fairSponsors(sponsors(),'admin').map(s=>`<div class="station"><div class="sponsorHead">${sponsorLogoHtml(s)}<div><h4>${esc(s.name)} <span class="tag g">${esc(s.discount)}</span></h4><p>${esc(s.offer)}</p><div class="tags"><span class="tag b">${esc(s.whatsapp||'WP yok')}</span></div></div></div><div class="adminActions"><button class="secondaryBtn" onclick="editSponsor('${esc(s.id)}')">Düzenle</button><button class="secondaryBtn" onclick="deleteSponsor('${esc(s.id)}')">Sil</button></div></div>`).join('')||'<div class="empty">Fırsat yok.</div>'}
@@ -572,7 +802,7 @@ function init(){
   locateSort();
   if(isAdmin) renderAdmin();
 }
-window.addEventListener('load',init);
+window.addEventListener('load',()=>{init();setTimeout(toggleRouteConsumption,400)});
 </script>
 
 
