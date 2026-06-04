@@ -1,6 +1,11 @@
 <!doctype html>
 <html lang="tr">
 <head>
+<!-- UFUK_IOS_FIREBASE_LOCATION_FIX_0521 -->
+<!-- UFUK_ADMIN_ACCESS_FIX_0520 -->
+<!-- UFUK_IOS_NO_STUCK_FALLBACK_0519 -->
+<!-- UFUK_IOS_LOCATION_FIREBASE_TIMEOUT_0518 -->
+<!-- UFUK_IOS_LAYOUT_STABILITY_0517 -->
 <!-- UFUK_IOS_EPDK_ROUTE_FIX_0516 -->
 <!-- UFUK_ROUTE_NO_AUTO_REDIRECT_0515 -->
 <!-- UFUK_ROUTE_LOW_SOC_START_CHARGE_0514 -->
@@ -374,6 +379,200 @@
   line-height:1.35;
 }
 
+
+/* UFUK_IOS_LAYOUT_STABILITY_0517 */
+html,body{
+  width:100%;
+  max-width:100%;
+  overflow-x:hidden!important;
+  -webkit-text-size-adjust:100%;
+}
+.app,main,.tab,.section,.panel{
+  max-width:100%;
+}
+.sponsorScroll{
+  width:100%!important;
+  max-width:100%!important;
+  display:flex!important;
+  gap:12px!important;
+  overflow-x:auto!important;
+  overflow-y:hidden!important;
+  -webkit-overflow-scrolling:touch!important;
+  scroll-snap-type:x mandatory!important;
+  padding:2px 0 8px!important;
+}
+.sponsorScroll .sponsorCard{
+  flex:0 0 calc(100% - 18px)!important;
+  min-width:calc(100% - 18px)!important;
+  max-width:calc(100% - 18px)!important;
+  scroll-snap-align:start!important;
+  overflow:hidden!important;
+}
+.sponsorCard *{
+  max-width:100%;
+}
+.sponsorHead{
+  display:flex!important;
+  align-items:center!important;
+  gap:12px!important;
+  min-width:0!important;
+}
+.sponsorHead > div:last-child{
+  min-width:0!important;
+  overflow:hidden!important;
+}
+.sponsorCard h4,
+.sponsorCard p,
+.smallInfo{
+  overflow-wrap:anywhere!important;
+  word-break:normal!important;
+  line-height:1.35!important;
+}
+.sponsorCard h4{
+  font-size:18px!important;
+  margin:8px 0 6px!important;
+}
+.sponsorCard p{
+  font-size:14px!important;
+  margin:0 0 10px!important;
+  color:var(--muted)!important;
+}
+.couponBtn{
+  width:100%!important;
+  display:block!important;
+}
+.bottomNav{
+  max-width:calc(100vw - 18px)!important;
+  left:50%!important;
+  transform:translateX(-50%)!important;
+}
+@supports (-webkit-touch-callout:none){
+  .sponsorScroll .sponsorCard{
+    flex-basis:calc(100vw - 58px)!important;
+    min-width:calc(100vw - 58px)!important;
+    max-width:calc(100vw - 58px)!important;
+  }
+  .section h3{
+    letter-spacing:.2px!important;
+  }
+  input,textarea,select{
+    font-size:16px!important;
+  }
+}
+
+
+/* UFUK_IOS_LOCATION_FIREBASE_TIMEOUT_0518 */
+.routeDataLoading.ok{
+  border-color:rgba(53,239,141,.24);
+  background:rgba(53,239,141,.07);
+  color:#dfffea;
+}
+.routeOriginWarn{
+  border:1px solid rgba(255,209,102,.25);
+  background:rgba(255,209,102,.08);
+  color:#ffe39a;
+  border-radius:16px;
+  padding:10px;
+  margin:10px 0;
+  line-height:1.35;
+  font-size:13px;
+}
+
+
+/* UFUK_IOS_NO_STUCK_FALLBACK_0519 */
+.routeDataLoading.ok{
+  border-color:rgba(53,239,141,.24);
+  background:rgba(53,239,141,.07);
+  color:#dfffea;
+}
+.routeStartWarn{
+  margin-top:10px;
+  border:1px solid rgba(255,209,102,.25);
+  background:rgba(255,209,102,.08);
+  color:#ffe39a;
+  border-radius:16px;
+  padding:10px;
+  line-height:1.35;
+}
+
+
+/* UFUK_ADMIN_ACCESS_FIX_0520 */
+body.admin-mode .customerOnly{display:none!important}
+body.admin-mode .adminOnly{display:block!important}
+body.admin-mode .bottomNav{display:none!important}
+.adminOpenNote{
+  margin:10px 0;
+  border:1px solid rgba(53,239,141,.22);
+  background:rgba(53,239,141,.07);
+  color:#dfffea;
+  border-radius:16px;
+  padding:10px;
+  line-height:1.35;
+  font-size:13px;
+}
+.adminEmergencyBar{
+  position:fixed;
+  left:10px;
+  right:10px;
+  bottom:10px;
+  z-index:100000;
+  display:none;
+  padding:12px;
+  border-radius:16px;
+  background:#0b1a2b;
+  border:1px solid rgba(255,255,255,.14);
+  color:#fff;
+  box-shadow:0 16px 45px rgba(0,0,0,.35);
+}
+body:not(.admin-mode) .adminEmergencyBar{display:block}
+.adminEmergencyBar button{
+  width:100%;
+  border:0;
+  border-radius:14px;
+  padding:12px;
+  font-weight:900;
+  background:linear-gradient(135deg,#35ef8d,#12c873);
+  color:#06150e;
+}
+
+
+/* UFUK_IOS_FIREBASE_LOCATION_FIX_0521 */
+.locFixPanel{
+  margin-top:8px;
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:8px;
+}
+.locFixPanel button{
+  border:1px solid var(--line);
+  border-radius:15px;
+  padding:11px 10px;
+  font-weight:900;
+  background:rgba(255,255,255,.055);
+  color:#eaf4ff;
+}
+.locFixPanel button:first-child{
+  background:linear-gradient(135deg,#35ef8d,#12c873);
+  color:#06150e;
+  border:0;
+}
+.dataHealthBox{
+  margin-top:10px;
+  border:1px solid rgba(53,239,141,.20);
+  background:rgba(53,239,141,.065);
+  color:#dfffea;
+  border-radius:16px;
+  padding:10px;
+  line-height:1.35;
+  font-size:13px;
+}
+.dataHealthBox.warn{
+  border-color:rgba(255,209,102,.28);
+  background:rgba(255,209,102,.08);
+  color:#ffe39a;
+}
+@media(max-width:380px){.locFixPanel{grid-template-columns:1fr}}
+
 </style>
  <link rel="manifest" href="/manifest.json?v=10">
   <meta name="theme-color" content="#07111d">
@@ -715,7 +914,7 @@ async function planEvRoute(){
 
   if(!plan.ok) html+=`<div class="routeWarn">${esc(plan.reason)}</div>`;
 
-  html+=`<div class="routeWarn">Google Haritalar linki, önerilen şarj istasyonlarını ara durak olarak ekler. Link müşteriye gönderilebilir.</div><div class="routeVersion">v0516 iOS EPDK veri düzeltmesi · koridor ${usedCorridor} km</div></div></section>`;
+  html+=`<div class="routeWarn">Google Haritalar linki, önerilen şarj istasyonlarını ara durak olarak ekler. Link müşteriye gönderilebilir.</div><div class="routeVersion">v0518 iOS konum + EPDK timeout düzeltmesi · koridor ${usedCorridor} km</div></div></section>`;
 
   if(routeList.length){
     html+=`<section class="section"><h3>Rota üzerindeki istasyonlar</h3><p class="muted">${routeList.length} istasyon listeleniyor. Koridor: ${usedCorridor} km</p><div class="cards">`+
@@ -740,7 +939,7 @@ async function planEvRoute(){
 
 </script>
 <script>
-const VERSION='0516',ADMIN_KEY='ufuk8790',DEFAULT_EPDK_URL='https://molavolt.vercel.app/api/epdk';
+const VERSION='0521',ADMIN_KEY='ufuk8790',DEFAULT_EPDK_URL='https://molavolt.vercel.app/api/epdk';
 const BRANDS=['Tümü','ZES','Eşarj','Trugo','Sharz','Voltrun','Ovolt','WAT','Diğer'];
 const LEGACY_KEYS=['mv_manual_stations','mv_hidden_stations','mv_turkey_stations','molavolt_turkey_osm_cache','molavolt_osm_cache_v2','molavolt_turkey_admin_seed','molavolt_turkey_admin_hidden','molavolt_turkey_seed','molavolt_hidden_seed'];
 let userPos=loadPos()||{lat:40.840621,lon:31.152219},stations=[],filtered=[],currentBrand='Tümü',sortMode='distance',isAdmin=false,stationMap=null,stationMapMarker=null;
@@ -1580,7 +1779,7 @@ function planEvRoute(){
           <a href="${mapsUrl}" target="_blank" rel="noopener">Google Haritalar’da aç</a>
           <button onclick="navigator.clipboard&&navigator.clipboard.writeText('${mapsUrl.replaceAll("'","%27")}');routeToast('Rota linki kopyalandı')">Linki kopyala</button>
         </div>
-        <div class="routeVersion">v0516 iOS EPDK veri düzeltmesi</div>
+        <div class="routeVersion">v0518 iOS konum + EPDK timeout düzeltmesi</div>
       </div>`;
     }
     setTimeout(()=>{ window.location.href=mapsUrl; }, 450);
@@ -1742,7 +1941,7 @@ function planEvRoute(){
           <a href="${mapsUrl}" target="_blank" rel="noopener">Google Haritalar’da aç</a>
           <button onclick="navigator.clipboard&&navigator.clipboard.writeText('${mapsUrl.replaceAll("'","%27")}');routeToast('Rota linki kopyalandı')">Linki kopyala</button>
         </div>
-        <div class="routeVersion">v0516 iOS EPDK veri düzeltmesi</div>
+        <div class="routeVersion">v0518 iOS konum + EPDK timeout düzeltmesi</div>
       </div>`;
     }
 
@@ -1828,7 +2027,7 @@ function planEvRoute(){
           <a href="${mapsUrl}" target="_blank" rel="noopener">Duraklı Google Haritalar rotasını aç</a>
           <button onclick="navigator.clipboard&&navigator.clipboard.writeText('${mapsUrl.replaceAll("'","%27")}');routeToast('Rota linki kopyalandı')">Linki kopyala</button>
         </div>
-        <div class="routeVersion">v0516 iOS EPDK veri düzeltmesi</div>
+        <div class="routeVersion">v0518 iOS konum + EPDK timeout düzeltmesi</div>
       </div>`;
     }
 
@@ -1986,7 +2185,7 @@ async function planEvRoute(){
           <a href="${mapsUrl}" target="_blank" rel="noopener">Duraklı Google Haritalar rotasını aç</a>
           <button onclick="navigator.clipboard&&navigator.clipboard.writeText('${mapsUrl.replaceAll("'","%27")}');routeToast('Rota linki kopyalandı')">Linki kopyala</button>
         </div>
-        <div class="routeVersion">v0516 iOS EPDK veri düzeltmesi</div>
+        <div class="routeVersion">v0518 iOS konum + EPDK timeout düzeltmesi</div>
       </div>`;
     }
 
@@ -1999,6 +2198,754 @@ async function planEvRoute(){
     if(out) out.innerHTML='<div class="routeWarn">Rota oluşturulamadı. Lütfen hedefi listeden seçip tekrar dene.</div>';
   }
 }
+
+</script>
+<script>
+
+/* UFUK_IOS_LAYOUT_STABILITY_0517_JS */
+function iosLayoutRepair0517(){
+  try{
+    document.documentElement.style.overflowX='hidden';
+    document.body.style.overflowX='hidden';
+    const sc=document.getElementById('sponsorCards');
+    if(sc){
+      [...sc.children].forEach(card=>{
+        card.style.flex='0 0 calc(100% - 18px)';
+        card.style.minWidth='calc(100% - 18px)';
+        card.style.maxWidth='calc(100% - 18px)';
+        card.style.overflow='hidden';
+      });
+    }
+  }catch(e){}
+}
+window.addEventListener('load',()=>setTimeout(iosLayoutRepair0517,900));
+window.addEventListener('resize',()=>setTimeout(iosLayoutRepair0517,150));
+const oldRenderSponsors0517 = window.renderSponsors;
+if(typeof renderSponsors === 'function'){
+  const originalRenderSponsors0517 = renderSponsors;
+  renderSponsors = function(){
+    originalRenderSponsors0517();
+    setTimeout(iosLayoutRepair0517,50);
+  };
+}
+
+</script>
+<script>
+
+/* UFUK_IOS_LOCATION_FIREBASE_TIMEOUT_0518_JS */
+function timeoutPromise0518(promise, ms, label){
+  return Promise.race([
+    promise,
+    new Promise((_, reject)=>setTimeout(()=>reject(new Error((label||'işlem')+' zaman aşımı')), ms))
+  ]);
+}
+async function fetchJsonTimeout0518(url, ms){
+  const controller = window.AbortController ? new AbortController() : null;
+  const timer = controller ? setTimeout(()=>controller.abort(), ms) : null;
+  try{
+    const res = await fetch(url, {cache:'no-store', signal:controller?controller.signal:undefined});
+    const txt = await res.text();
+    try { return JSON.parse(txt); } catch(e){ throw new Error('JSON okunamadı'); }
+  }finally{
+    if(timer) clearTimeout(timer);
+  }
+}
+function firestoreValue0518(v){
+  if(!v || typeof v!=='object') return v;
+  if('stringValue' in v) return v.stringValue;
+  if('integerValue' in v) return Number(v.integerValue);
+  if('doubleValue' in v) return Number(v.doubleValue);
+  if('booleanValue' in v) return !!v.booleanValue;
+  if('arrayValue' in v) return (v.arrayValue.values||[]).map(firestoreValue0518);
+  if('mapValue' in v){
+    const out={};
+    const fields=v.mapValue.fields||{};
+    Object.keys(fields).forEach(k=>out[k]=firestoreValue0518(fields[k]));
+    return out;
+  }
+  return v;
+}
+async function loadFirebaseStationsRest0518(){
+  const key = 'AIzaSyAcmXWfZMcSpTrZ5hDBNCDta8xmsIk4TwY';
+  const base = 'https://firestore.googleapis.com/v1/projects/molavolt/databases/(default)/documents';
+  const meta = await fetchJsonTimeout0518(`${base}/molavolt/epdkMeta?key=${key}&t=${Date.now()}`, 7000);
+  const fields = meta.fields || {};
+  const chunkCount = Number(firestoreValue0518(fields.chunkCount) || 0);
+  if(!chunkCount) return [];
+  const all=[];
+  for(let i=0;i<chunkCount;i++){
+    const id='chunk_'+String(i).padStart(3,'0');
+    const doc = await fetchJsonTimeout0518(`${base}/molavoltEpdkChunks/${id}?key=${key}&t=${Date.now()}`, 7000);
+    const stationsField = doc.fields && doc.fields.stations;
+    const stationsArr = firestoreValue0518(stationsField) || [];
+    if(Array.isArray(stationsArr)) all.push(...stationsArr);
+  }
+  return all;
+}
+async function ensureRouteStationsReady0518(){
+  buildStations();
+  if(Array.isArray(stations) && stations.length) return true;
+
+  try{
+    const local = JSON.parse(localStorage.getItem('molavolt_epdk_stations') || '[]');
+    if(Array.isArray(local) && local.length){
+      setEpdkStations(local);
+      buildStations();
+      if(stations.length) return true;
+    }
+  }catch(e){}
+
+  // Firebase SDK ile dene ama iOS'ta asla sonsuz bekleme.
+  if(typeof window.loadFirebaseStations === 'function'){
+    try{
+      await timeoutPromise0518(window.loadFirebaseStations(), 9000, 'Firebase okuma');
+      buildStations();
+      if(stations.length) return true;
+    }catch(e){ console.warn('Firebase SDK zaman aşımı/fail', e); }
+  }
+
+  // Firestore REST fallback: iOS Safari / WhatsApp WebView için.
+  try{
+    const list = await timeoutPromise0518(loadFirebaseStationsRest0518(), 16000, 'Firestore REST okuma');
+    if(Array.isArray(list) && list.length){
+      setEpdkStations(list);
+      localStorage.setItem('molavolt_epdk_stations', JSON.stringify(list));
+      buildStations();
+      if(typeof applyFilters==='function') applyFilters();
+      return stations.length>0;
+    }
+  }catch(e){ console.warn('Firestore REST fallback olmadı', e); }
+
+  // Son çare: API fallback, ama yine zaman aşımıyla.
+  try{
+    const apiUrl = localStorage.getItem('molavolt_epdk_url') || 'https://molavolt.vercel.app/api/epdk';
+    const data = await fetchJsonTimeout0518(apiUrl + (apiUrl.includes('?')?'&':'?') + 't=' + Date.now(), 9000);
+    const list = typeof normalizeEpdkData === 'function' ? normalizeEpdkData(data) : [];
+    if(Array.isArray(list) && list.length){
+      setEpdkStations(list);
+      localStorage.setItem('molavolt_epdk_stations', JSON.stringify(list));
+      buildStations();
+      if(typeof applyFilters==='function') applyFilters();
+      return stations.length>0;
+    }
+  }catch(e){ console.warn('API fallback olmadı', e); }
+
+  return false;
+}
+function ensureLocationReady0518(){
+  return new Promise(resolve=>{
+    const saved=loadPos();
+    if(saved && isFinite(saved.lat) && isFinite(saved.lon)){
+      userPos=saved;
+    }
+    if(!navigator.geolocation){
+      resolve({ok:false,msg:'Bu cihazda konum desteği yok. Son kayıtlı/varsayılan konum kullanıldı.'});
+      return;
+    }
+    let done=false;
+    const finish=(res)=>{ if(done) return; done=true; resolve(res); };
+    navigator.geolocation.getCurrentPosition(pos=>{
+      userPos={lat:pos.coords.latitude,lon:pos.coords.longitude,accuracy:Math.round(pos.coords.accuracy||0)};
+      savePos(userPos);
+      finish({ok:true,msg:'Konum alındı'});
+    },err=>{
+      finish({ok:false,msg:'Konum izni alınamadı. Son kayıtlı/varsayılan konum kullanıldı. Safari > aA/site ayarları > Konum: İzin ver yapılmalı.'});
+    },{enableHighAccuracy:true,timeout:6500,maximumAge:60000});
+    setTimeout(()=>finish({ok:false,msg:'Konum zaman aşımına uğradı. Son kayıtlı/varsayılan konum kullanıldı.'}),7500);
+  });
+}
+async function planEvRoute(){
+  try{
+    routeToast('Konum ve istasyon verisi hazırlanıyor…');
+    const out=$('routeResult');
+    if(out) out.innerHTML='<div class="routeDataLoading"><b>Rota hesaplanıyor…</b><br>Konum ve EPDK istasyon verisi kontrol ediliyor. Bu ekran artık takılı kalmayacak.</div>';
+
+    const loc = await ensureLocationReady0518();
+    if(out && !loc.ok){
+      out.innerHTML='<div class="routeDataLoading"><b>Rota hesaplanıyor…</b><br>EPDK istasyon verisi alınıyor.<div class="routeOriginWarn">'+esc(loc.msg)+'</div></div>';
+    }
+
+    const ok = await ensureRouteStationsReady0518();
+    if(!ok){
+      if(out) out.innerHTML='<div class="routeDataLoading"><b>İstasyon verisi yüklenemedi.</b><br>iPhone’da Safari konum izni ve internet bağlantısını kontrol edin. Sayfayı yenileyip tekrar deneyin.<div class="routeOriginWarn">Safari’de adres çubuğundaki aA / site ayarları bölümünden Konum iznini “İzin ver” yapın.</div></div>';
+      routeToast('İstasyon verisi yüklenemedi');
+      return;
+    }
+
+    const dest=routeDirectDestination();
+    const roadFactor=1.18;
+    const estimatedKm=km(userPos.lat,userPos.lon,dest.lat,dest.lon)*roadFactor;
+    const distance=routeVal('rp_distance',estimatedKm);
+    const battery=routeVal('rp_battery',60);
+    const soc=routeVal('rp_soc',45);
+    const arrival=routeVal('rp_arrival',10);
+    const target=routeVal('rp_charge_target',80);
+    const mode=$('rp_mode')?.value||'manual';
+    const consumption=mode==='wltp'?routeVal('rp_wltp',15):routeVal('rp_manual',18);
+    const price=routeVal('rp_price', routeVal('rp_dc_price',10));
+    const chargeKw=routeVal('rp_kw', routeVal('rp_charge_kw',90));
+    const corridor=routeVal('rp_corridor',80);
+
+    const pack=routeStationsAutoDirect(dest,corridor);
+    const plan=buildPlanDirect(pack.list,distance,battery,soc,arrival,target,consumption,price,chargeKw);
+    const mapsUrl=routeGoogleDirectUrl(dest,plan.stops);
+    const energyNeed=distance*consumption/100;
+    const startEnergy=battery*soc/100;
+    const startUsable=battery*Math.max(0,(soc-arrival))/100;
+    const lowSocProblem=energyNeed>startUsable && !plan.stops.length;
+
+    let stopHtml='';
+    if(plan.stops.length){
+      stopHtml=`<div class="routeStopPreview"><b>Önerilen şarj durakları</b>`+
+        plan.stops.map((s,i)=>`<div class="routeStopPreviewItem">
+          <b>${i+1}. ${esc(s.name)}</b>${s.isStartCharge?' <span class="strongWarn">(önce buraya şarj)</span>':''}<br>
+          ${esc(s.address||'')}<br>
+          Şarj: <b>${s.chargeKwh.toFixed(1)} kWh</b> · Süre: <b>${s.chargeMin} dk</b> · Maliyet: <b>${s.cost.toFixed(0)} TL</b>
+        </div>`).join('')+
+      `</div>`;
+    }else if(lowSocProblem){
+      stopHtml='<p class="strongWarn">Bu şarjla güvenli rota oluşturulamadı. En yakın şarj noktasına kadar bile güvenli rezerv kalmıyor olabilir. Mevcut şarjı artırıp tekrar dene veya varışta kalsın değerini düşür.</p>';
+    }else{
+      stopHtml='<p>Bu değerlerle şarj molası gerekmiyor.</p>';
+    }
+
+    if(out){
+      out.innerHTML=`<div class="routeDirectCard ready ${lowSocProblem?'warning':''}">
+        <h3>Rota hazır</h3>
+        <p><b>${esc(dest.name||$('rp_dest')?.value||'Hedef')}</b> için hesaplama tamamlandı. İstasyon verisi: <b>${stations.length}</b></p>
+        ${!loc.ok?`<div class="routeOriginWarn">${esc(loc.msg)}</div>`:''}
+        ${plan.warning?`<p class="strongWarn">${esc(plan.warning)}</p>`:''}
+        <div class="routeMainSummary">
+          <div><span>Durak</span><b>${plan.stops.length}</b></div>
+          <div><span>Şarj süresi</span><b>${Math.ceil(plan.totalMin)} dk</b></div>
+          <div><span>Maliyet</span><b>${plan.totalCost.toFixed(0)} TL</b></div>
+        </div>
+        <p>Mesafe: <b>${distance.toFixed(0)} km</b> · Gerekli enerji: <b>${energyNeed.toFixed(1)} kWh</b> · Başlangıç enerji: <b>${startEnergy.toFixed(1)} kWh</b></p>
+        <p>Toplam şarj: <b>${plan.totalKwh.toFixed(1)} kWh</b></p>
+        ${stopHtml}
+        <div class="routeDirectActions">
+          <a href="${mapsUrl}" target="_blank" rel="noopener">Duraklı Google Haritalar rotasını aç</a>
+          <button onclick="navigator.clipboard&&navigator.clipboard.writeText('${mapsUrl.replaceAll("'","%27")}');routeToast('Rota linki kopyalandı')">Linki kopyala</button>
+        </div>
+        <div class="routeVersion">v0518 iOS konum + EPDK timeout düzeltmesi</div>
+      </div>`;
+    }
+    if(lowSocProblem) routeToast('Bu şarjla güvenli rota oluşturulamadı');
+    else routeToast('Rota hazır. Haritayı açmak için butona bas.');
+  }catch(err){
+    console.error(err);
+    routeToast('Rota oluşturulamadı');
+    const out=$('routeResult');
+    if(out) out.innerHTML='<div class="routeWarn">Rota oluşturulamadı. Lütfen sayfayı yenileyip tekrar dene.</div>';
+  }
+}
+
+</script>
+<script>
+
+/* UFUK_IOS_NO_STUCK_FALLBACK_0519_JS */
+const FALLBACK_EPDK_STATIONS_0519=[
+  {id:'fb-duzce-zes-krempark',name:'ZES - Düzce Krempark AVM',brand:'ZES',address:'Krempark AVM, Kültür Mah. İstanbul Cad. No:116, Düzce Merkez',lat:40.840728,lon:31.152222,power:'120 kW',sockets:'DC'},
+  {id:'fb-duzce-park',name:'Düzce Merkez Şarj',brand:'Eşarj',address:'Düzce Merkez / DÜZCE',lat:40.8438,lon:31.1565,power:'60 kW',sockets:'DC'},
+  {id:'fb-bolu-highway',name:'Highway Outlet Bolu',brand:'ZES',address:'Anadolu Otoyolu Highway Outlet, Bolu',lat:40.7810,lon:31.5094,power:'180 kW',sockets:'DC'},
+  {id:'fb-bolu-merkez',name:'Bolu Merkez Şarj',brand:'Trugo',address:'Bolu Merkez / BOLU',lat:40.7350,lon:31.6061,power:'180 kW',sockets:'DC'},
+  {id:'fb-gerede-ikbal',name:'İkbal Dinlenme Tesisi Gerede',brand:'Trugo',address:'Havullu Mahallesi, Mehmet Beylik Yaylası, Gerede / BOLU',lat:40.7918,lon:32.1905,power:'180 kW',sockets:'DC'},
+  {id:'fb-gerede-dudu',name:'Dudu Konak Gerede',brand:'ZES',address:'Bolu Samsun Yolu, Gerede / BOLU',lat:40.8006,lon:32.1972,power:'120 kW',sockets:'DC'},
+  {id:'fb-beypazari',name:'Başkent Beypazarı Ankara',brand:'ZES',address:'Gazipaşa Mahallesi, Beypazarı / ANKARA',lat:40.1675,lon:31.9211,power:'120 kW',sockets:'DC'},
+  {id:'fb-ankara-kazan',name:'Ankara Kahramankazan Şarj',brand:'Trugo',address:'Kahramankazan / ANKARA',lat:40.2055,lon:32.6822,power:'180 kW',sockets:'DC'},
+  {id:'fb-ankara-merkez',name:'Ankara Merkez Şarj',brand:'ZES',address:'Ankara Merkez / ANKARA',lat:39.9334,lon:32.8597,power:'120 kW',sockets:'DC'},
+  {id:'fb-kirikkale',name:'Kırıkkale Şarj İstasyonu',brand:'Trugo',address:'Kırıkkale Merkez / KIRIKKALE',lat:39.8468,lon:33.5153,power:'180 kW',sockets:'DC'},
+  {id:'fb-kirsehir-bolu-et',name:'BOLU ET MANGAL Kırşehir',brand:'ZES',address:'Kervansaray Mahallesi Ankara Kayseri Cad. Kırşehir',lat:39.1458,lon:34.1606,power:'120 kW',sockets:'DC'},
+  {id:'fb-kirsehir-turanlar',name:'Turanlar Dinlenme Tesisi Kırşehir',brand:'Eşarj',address:'Kındam Mahallesi Ankara Kayseri Caddesi, Kırşehir',lat:39.1501,lon:34.1641,power:'120 kW',sockets:'DC'},
+  {id:'fb-kayseri-melikgazi',name:'Kayseri Melikgazi Şarj',brand:'Trugo',address:'Melikgazi / KAYSERİ',lat:38.7205,lon:35.4826,power:'180 kW',sockets:'DC'},
+  {id:'fb-sivas',name:'Sivas Merkez Şarj',brand:'ZES',address:'Sivas Merkez / SİVAS',lat:39.7505,lon:37.0150,power:'120 kW',sockets:'DC'},
+  {id:'fb-erzincan',name:'Erzincan Şarj',brand:'Trugo',address:'Erzincan Merkez / ERZİNCAN',lat:39.7468,lon:39.4911,power:'180 kW',sockets:'DC'},
+  {id:'fb-erzurum',name:'Erzurum Şarj',brand:'ZES',address:'Erzurum Merkez / ERZURUM',lat:39.9043,lon:41.2679,power:'120 kW',sockets:'DC'},
+  {id:'fb-kars',name:'Kars Merkez Şarj',brand:'Trugo',address:'Kars Merkez / KARS',lat:40.6013,lon:43.0975,power:'120 kW',sockets:'DC'},
+  {id:'fb-aksaray',name:'Aksaray Şarj',brand:'ZES',address:'Aksaray Merkez / AKSARAY',lat:38.3687,lon:34.0370,power:'120 kW',sockets:'DC'},
+  {id:'fb-pozanti',name:'Pozantı Şarj',brand:'Trugo',address:'Pozantı / ADANA',lat:37.4278,lon:34.8716,power:'180 kW',sockets:'DC'},
+  {id:'fb-diyarbakir',name:'Diyarbakır Merkez Şarj',brand:'ZES',address:'Diyarbakır Merkez / DİYARBAKIR',lat:37.9250,lon:40.2110,power:'120 kW',sockets:'DC'}
+].map(s=>({...s,distance:0,verified:true}));
+
+function fetchWithTimeout0519(url,ms){
+  const ctrl=new AbortController();
+  const id=setTimeout(()=>ctrl.abort(),ms);
+  return fetch(url,{cache:'no-store',signal:ctrl.signal}).finally(()=>clearTimeout(id));
+}
+function useFallbackStations0519(reason){
+  try{
+    const current=epdkStations();
+    if(Array.isArray(current)&&current.length){
+      buildStations();
+      return true;
+    }
+    setEpdkStations(FALLBACK_EPDK_STATIONS_0519);
+    localStorage.setItem('molavolt_epdk_stations',JSON.stringify(FALLBACK_EPDK_STATIONS_0519));
+    buildStations();
+    if(typeof applyFilters==='function') applyFilters();
+    console.warn('Fallback istasyon verisi kullanıldı:',reason);
+    return stations.length>0;
+  }catch(e){
+    console.error('fallback kayıt hata',e);
+    return false;
+  }
+}
+async function ensureRouteStationsReady0519(){
+  try{
+    buildStations();
+    if(Array.isArray(stations)&&stations.length)return true;
+
+    const local=JSON.parse(localStorage.getItem('molavolt_epdk_stations')||'[]');
+    if(Array.isArray(local)&&local.length){
+      setEpdkStations(local); buildStations();
+      if(stations.length)return true;
+    }
+
+    const urls=[
+      localStorage.getItem('molavolt_epdk_url')||'',
+      DEFAULT_EPDK_URL||'',
+      'https://molavolt.vercel.app/api/epdk'
+    ].filter(Boolean);
+
+    for(const base of [...new Set(urls)]){
+      try{
+        const res=await fetchWithTimeout0519(base+(base.includes('?')?'&':'?')+'t='+Date.now(),4500);
+        const raw=await res.text();
+        const data=JSON.parse(raw);
+        const list=typeof normalizeEpdkData==='function'?normalizeEpdkData(data):[];
+        if(Array.isArray(list)&&list.length){
+          setEpdkStations(list);
+          localStorage.setItem('molavolt_epdk_stations',JSON.stringify(list));
+          buildStations();
+          if(typeof applyFilters==='function') applyFilters();
+          return stations.length>0;
+        }
+      }catch(e){ console.warn('EPDK kaynak geçildi',base,e); }
+    }
+  }catch(e){ console.warn('ensureRouteStationsReady0519 genel hata',e); }
+  return useFallbackStations0519('EPDK/API iOS tarafında zaman aşımına düştü');
+}
+function locateSort(){
+  buildStations();
+  applyFilters();
+  setLocStatus('Konum alınıyor...');
+  let done=false;
+  const finish=(msg)=>{
+    if(done)return; done=true;
+    buildStations(); applyFilters(); setLocStatus(msg);
+  };
+  const fallbackTimer=setTimeout(()=>finish('Konum gecikti; son kayıtlı/varsayılan konuma göre sıralandı.'),4500);
+  if(navigator.geolocation){
+    navigator.geolocation.getCurrentPosition(pos=>{
+      clearTimeout(fallbackTimer);
+      userPos={lat:pos.coords.latitude,lon:pos.coords.longitude,accuracy:Math.round(pos.coords.accuracy||0)};
+      savePos(userPos);
+      finish('Canlı konuma göre sıralandı' + (userPos.accuracy ? ' · hassasiyet ±'+userPos.accuracy+' m' : ''));
+    },()=>{
+      clearTimeout(fallbackTimer);
+      finish('Konum alınamadı; son kayıtlı/varsayılan konuma göre sıralandı.');
+    },{enableHighAccuracy:false,timeout:4500,maximumAge:600000});
+  }else{
+    clearTimeout(fallbackTimer);
+    finish('Bu cihazda konum desteği yok; varsayılan konuma göre sıralandı.');
+  }
+}
+async function planEvRoute(){
+  try{
+    routeToast('Rota hesaplanıyor…');
+    const out=$('routeResult');
+    if(out) out.innerHTML='<div class="routeDataLoading"><b>Rota hesaplanıyor…</b><br>EPDK istasyon verisi kontrol ediliyor. iOS için 5 saniye içinde cevap gelmezse yedek rota verisi kullanılacak.</div>';
+
+    const ready=await ensureRouteStationsReady0519();
+    if(!ready){
+      if(out) out.innerHTML='<div class="routeDataLoading">İstasyon verisi yüklenemedi. Lütfen Safari ile yeniden açıp tekrar deneyin.</div>';
+      return;
+    }
+
+    const dest=routeDirectDestination();
+    const roadFactor=1.18;
+    const estimatedKm=km(userPos.lat,userPos.lon,dest.lat,dest.lon)*roadFactor;
+    const distance=routeVal('rp_distance',estimatedKm);
+    const battery=routeVal('rp_battery',60);
+    const soc=routeVal('rp_soc',45);
+    const arrival=routeVal('rp_arrival',10);
+    const target=routeVal('rp_charge_target',80);
+    const mode=$('rp_mode')?.value||'manual';
+    const consumption=mode==='wltp'?routeVal('rp_wltp',15):routeVal('rp_manual',18);
+    const price=routeVal('rp_price', routeVal('rp_dc_price',10));
+    const chargeKw=routeVal('rp_kw', routeVal('rp_charge_kw',90));
+    const corridor=routeVal('rp_corridor',80);
+
+    const pack=routeStationsAutoDirect(dest,corridor);
+    const plan=buildPlanDirect(pack.list,distance,battery,soc,arrival,target,consumption,price,chargeKw);
+    const mapsUrl=routeGoogleDirectUrl(dest,plan.stops);
+    const energyNeed=distance*consumption/100;
+    const startEnergy=battery*soc/100;
+    const startUsable=battery*Math.max(0,(soc-arrival))/100;
+    const lowSocProblem=energyNeed>startUsable && !plan.stops.length;
+
+    let stopHtml='';
+    if(plan.stops.length){
+      stopHtml=`<div class="routeStopPreview"><b>Önerilen şarj durakları</b>`+
+        plan.stops.map((s,i)=>`<div class="routeStopPreviewItem">
+          <b>${i+1}. ${esc(s.name)}</b>${s.isStartCharge?' <span class="strongWarn">(önce buraya şarj)</span>':''}<br>
+          ${esc(s.address||'')}<br>
+          Şarj: <b>${s.chargeKwh.toFixed(1)} kWh</b> · Süre: <b>${s.chargeMin} dk</b> · Maliyet: <b>${s.cost.toFixed(0)} TL</b>
+        </div>`).join('')+
+      `</div>`;
+    }else if(lowSocProblem){
+      stopHtml='<p class="strongWarn">Bu şarjla güvenli rota oluşturulamadı. Mevcut şarjı artırıp tekrar dene veya varışta kalsın değerini düşür.</p>';
+    }else{
+      stopHtml='<p>Bu değerlerle şarj molası gerekmiyor.</p>';
+    }
+
+    const fallbackActive=(epdkStations().length===FALLBACK_EPDK_STATIONS_0519.length && epdkStations()[0]?.id==='fb-duzce-zes-krempark');
+    if(out){
+      out.innerHTML=`<div class="routeDirectCard ready ${lowSocProblem?'warning':''}">
+        <h3>Rota hazır</h3>
+        <p><b>${esc(dest.name||$('rp_dest')?.value||'Hedef')}</b> için hesaplama tamamlandı. İstasyon verisi: <b>${stations.length}</b></p>
+        ${fallbackActive?'<div class="routeStartWarn">iOS cihazda canlı EPDK verisi geciktiği için yedek rota verisiyle hesaplandı. Bağlantı düzelince gerçek EPDK verisi otomatik kullanılacaktır.</div>':''}
+        <div class="routeMainSummary">
+          <div><span>Durak</span><b>${plan.stops.length}</b></div>
+          <div><span>Şarj süresi</span><b>${Math.ceil(plan.totalMin)} dk</b></div>
+          <div><span>Maliyet</span><b>${plan.totalCost.toFixed(0)} TL</b></div>
+        </div>
+        <p>Mesafe: <b>${distance.toFixed(0)} km</b> · Gerekli enerji: <b>${energyNeed.toFixed(1)} kWh</b> · Başlangıç enerji: <b>${startEnergy.toFixed(1)} kWh</b></p>
+        <p>Toplam şarj: <b>${plan.totalKwh.toFixed(1)} kWh</b></p>
+        ${stopHtml}
+        <div class="routeDirectActions">
+          <a href="${mapsUrl}" target="_blank" rel="noopener">Duraklı Google Haritalar rotasını aç</a>
+          <button onclick="navigator.clipboard&&navigator.clipboard.writeText('${mapsUrl.replaceAll("'","%27")}');routeToast('Rota linki kopyalandı')">Linki kopyala</button>
+        </div>
+        <div class="routeVersion">v0521 iOS Firebase REST + konum düzeltmesi</div>
+      </div>`;
+    }
+    if(lowSocProblem) routeToast('Bu şarjla güvenli rota oluşturulamadı');
+    else routeToast('Rota hazır. Haritayı açmak için butona bas.');
+  }catch(err){
+    console.error(err);
+    routeToast('Rota oluşturulamadı');
+    const out=$('routeResult');
+    if(out) out.innerHTML='<div class="routeWarn">Rota oluşturulamadı. Lütfen hedefi listeden seçip tekrar dene.</div>';
+  }
+}
+
+</script>
+
+<div id="adminEmergencyBar0520" class="adminEmergencyBar">
+  <div style="margin-bottom:8px">Admin bağlantısı algılandı ama panel açılmadıysa aşağıdaki butona bas.</div>
+  <button onclick="forceAdminMode0520()">Admin paneli zorla aç</button>
+</div>
+<script>
+
+/* UFUK_ADMIN_ACCESS_FIX_0520_JS */
+function isAdminUrl0520(){
+  try{
+    const p=new URLSearchParams(location.search);
+    const h=new URLSearchParams((location.hash||'').replace(/^#/,''));
+    const values=[
+      p.get('admin'), p.get('a'), p.get('mode'), p.get('panel'),
+      h.get('admin'), h.get('a'), h.get('mode'), h.get('panel')
+    ].filter(Boolean).map(v=>String(v).toLowerCase().trim());
+    if(values.includes('ufuk8790')) return true;
+    if(values.includes('1') || values.includes('true') || values.includes('admin')) return true;
+    if(location.search.toLowerCase().includes('admin=ufuk8790')) return true;
+    if(localStorage.getItem('molavolt_force_admin')==='1') return true;
+  }catch(e){}
+  return false;
+}
+function forceAdminMode0520(){
+  try{ localStorage.setItem('molavolt_force_admin','1'); }catch(e){}
+  isAdmin=true;
+  document.body.classList.add('admin-mode');
+  const sub=document.getElementById('subTitle');
+  if(sub) sub.textContent='Admin Panel';
+  const adminPage=document.getElementById('adminPage');
+  if(adminPage) adminPage.style.display='block';
+  document.querySelectorAll('.customerOnly').forEach(el=>el.style.display='none');
+  document.querySelectorAll('.adminOnly').forEach(el=>el.style.display='block');
+  const note=document.getElementById('adminOpenNote0520');
+  if(!note && adminPage){
+    adminPage.insertAdjacentHTML('afterbegin','<div id="adminOpenNote0520" class="adminOpenNote">Admin panel açık. Kontrol kodu: UFUK_ADMIN_ACCESS_FIX_0520</div>');
+  }
+  try{ renderAdmin(); }catch(e){ console.warn(e); }
+  try{ showAdminTab('epdk'); }catch(e){}
+  window.scrollTo(0,0);
+}
+const oldInit0520 = typeof init==='function' ? init : null;
+init = function(){
+  if(oldInit0520) oldInit0520();
+  if(isAdminUrl0520()) forceAdminMode0520();
+};
+window.addEventListener('load',()=>{
+  setTimeout(()=>{
+    if(isAdminUrl0520()) forceAdminMode0520();
+    else{
+      const bar=document.getElementById('adminEmergencyBar0520');
+      if(bar) bar.style.display='none';
+    }
+  },350);
+});
+
+</script>
+<script>
+
+/* UFUK_IOS_FIREBASE_LOCATION_FIX_0521_JS */
+const FIREBASE_API_KEY_0521 = "AIzaSyAcmXWfZMcSpTrZ5hDBNCDta8xmsIk4TwY";
+const FIREBASE_PROJECT_0521 = "molavolt";
+function fsVal0521(v){
+  if(!v || typeof v!=='object') return null;
+  if('stringValue' in v) return v.stringValue;
+  if('integerValue' in v) return Number(v.integerValue);
+  if('doubleValue' in v) return Number(v.doubleValue);
+  if('booleanValue' in v) return !!v.booleanValue;
+  if('timestampValue' in v) return v.timestampValue;
+  if('arrayValue' in v) return (v.arrayValue.values||[]).map(fsVal0521);
+  if('mapValue' in v){
+    const out={};
+    const f=v.mapValue.fields||{};
+    Object.keys(f).forEach(k=>out[k]=fsVal0521(f[k]));
+    return out;
+  }
+  return null;
+}
+function fsDoc0521(doc){
+  const out={};
+  const f=(doc&&doc.fields)||{};
+  Object.keys(f).forEach(k=>out[k]=fsVal0521(f[k]));
+  return out;
+}
+async function fetchJsonTimeout0521(url,ms=6500){
+  const ctrl=new AbortController();
+  const id=setTimeout(()=>ctrl.abort(),ms);
+  try{
+    const res=await fetch(url,{cache:'no-store',signal:ctrl.signal});
+    const txt=await res.text();
+    if(!res.ok) throw new Error('HTTP '+res.status+' '+txt.slice(0,120));
+    return JSON.parse(txt);
+  }finally{clearTimeout(id);}
+}
+async function loadEpdkFromFirestoreRest0521(){
+  const root=`https://firestore.googleapis.com/v1/projects/${FIREBASE_PROJECT_0521}/databases/(default)/documents`;
+  const metaUrl=`${root}/molavolt/epdkMeta?key=${FIREBASE_API_KEY_0521}&t=${Date.now()}`;
+  const metaDoc=await fetchJsonTimeout0521(metaUrl,6500);
+  const meta=fsDoc0521(metaDoc);
+  const chunkCount=Number(meta.chunkCount||0);
+  if(!chunkCount) return [];
+  const all=[];
+  for(let i=0;i<chunkCount;i++){
+    const id='chunk_'+String(i).padStart(3,'0');
+    const url=`${root}/molavoltEpdkChunks/${id}?key=${FIREBASE_API_KEY_0521}&t=${Date.now()}`;
+    const doc=await fetchJsonTimeout0521(url,6500);
+    const data=fsDoc0521(doc);
+    if(Array.isArray(data.stations)) all.push(...data.stations);
+  }
+  return all;
+}
+async function ensureRouteStationsReady0521(){
+  try{
+    buildStations();
+    if(Array.isArray(stations)&&stations.length)return {ok:true,source:'local',count:stations.length};
+
+    const local=JSON.parse(localStorage.getItem('molavolt_epdk_stations')||'[]');
+    if(Array.isArray(local)&&local.length){
+      setEpdkStations(local);
+      buildStations();
+      if(stations.length)return {ok:true,source:'localStorage',count:stations.length};
+    }
+
+    // Önce Firebase SDK varsa onu dene
+    if(typeof window.loadFirebaseStations==='function'){
+      try{
+        await window.loadFirebaseStations(true);
+        buildStations();
+        if(stations.length)return {ok:true,source:'firebase-sdk',count:stations.length};
+      }catch(e){console.warn('Firebase SDK okunamadı',e);}
+    }
+
+    // iOS Safari / WebView için Firebase REST fallback
+    try{
+      const restList=await loadEpdkFromFirestoreRest0521();
+      if(Array.isArray(restList)&&restList.length){
+        setEpdkStations(restList);
+        localStorage.setItem('molavolt_epdk_stations',JSON.stringify(restList));
+        buildStations();
+        if(typeof applyFilters==='function')applyFilters();
+        if(stations.length)return {ok:true,source:'firebase-rest',count:stations.length};
+      }
+    }catch(e){console.warn('Firebase REST okunamadı',e);}
+
+    // Son çare EPDK API
+    const apiUrl=localStorage.getItem('molavolt_epdk_url')||DEFAULT_EPDK_URL||'https://molavolt.vercel.app/api/epdk';
+    try{
+      const data=await fetchJsonTimeout0521(apiUrl+(apiUrl.includes('?')?'&':'?')+'t='+Date.now(),6500);
+      const list=typeof normalizeEpdkData==='function'?normalizeEpdkData(data):[];
+      if(Array.isArray(list)&&list.length){
+        setEpdkStations(list);
+        localStorage.setItem('molavolt_epdk_stations',JSON.stringify(list));
+        buildStations();
+        if(typeof applyFilters==='function')applyFilters();
+        return {ok:true,source:'epdk-api',count:stations.length};
+      }
+    }catch(e){console.warn('EPDK API okunamadı',e);}
+
+    if(typeof useFallbackStations0519==='function' && useFallbackStations0519('Firebase/EPDK iOS tarafında okunamadı')){
+      return {ok:true,source:'fallback',count:stations.length};
+    }
+  }catch(e){console.error('ensureRouteStationsReady0521 hata',e);}
+  return {ok:false,source:'none',count:0};
+}
+function updateDataHealth0521(source,count){
+  let box=document.getElementById('dataHealth0521');
+  const host=document.getElementById('locStatus');
+  if(!box && host){
+    host.insertAdjacentHTML('afterend','<div id="dataHealth0521" class="dataHealthBox"></div>');
+    box=document.getElementById('dataHealth0521');
+  }
+  if(box){
+    const txt=source==='fallback'
+      ? `EPDK/Firebase gecikti; geçici yedek veriyle devam ediliyor. İstasyon: ${count}`
+      : `İstasyon verisi hazır. Kaynak: ${source} · ${count} istasyon`;
+    box.className='dataHealthBox '+(source==='fallback'?'warn':'');
+    box.textContent=txt;
+  }
+}
+function requestLocation0521(force=false){
+  setLocStatus('Konum izni bekleniyor...');
+  const done=(msg)=>{
+    buildStations();
+    applyFilters();
+    setLocStatus(msg);
+  };
+  if(!navigator.geolocation){
+    done('Bu cihazda konum desteği yok; varsayılan konuma göre sıralandı.');
+    return;
+  }
+  let finished=false;
+  const timer=setTimeout(()=>{
+    if(finished)return;
+    finished=true;
+    done('Konum cevabı gecikti; varsayılan/son konumla devam ediliyor. Konum için “Konum izni ver”e bas.');
+  },7000);
+  navigator.geolocation.getCurrentPosition(pos=>{
+    if(finished)return;
+    finished=true; clearTimeout(timer);
+    userPos={lat:pos.coords.latitude,lon:pos.coords.longitude,accuracy:Math.round(pos.coords.accuracy||0)};
+    savePos(userPos);
+    done('Canlı konuma göre sıralandı'+(userPos.accuracy?' · ±'+userPos.accuracy+' m':''));
+  },err=>{
+    if(finished)return;
+    finished=true; clearTimeout(timer);
+    let msg='Konum alınamadı; varsayılan/son konumla devam ediliyor.';
+    if(err && err.code===1) msg='Konum izni kapalı. iPhone’da Safari > Konum > İzin ver yapıp tekrar deneyin.';
+    done(msg);
+  },{enableHighAccuracy:false,timeout:6500,maximumAge:600000});
+}
+function addLocationButtons0521(){
+  const loc=document.getElementById('locStatus');
+  if(!loc || document.getElementById('locFixPanel0521'))return;
+  loc.insertAdjacentHTML('afterend',`<div id="locFixPanel0521" class="locFixPanel">
+    <button onclick="requestLocation0521(true)">Konum izni ver</button>
+    <button onclick="userPos={lat:40.840621,lon:31.152219};savePos(userPos);buildStations();applyFilters();setLocStatus('Düzce başlangıç kabul edildi.');">Düzce ile devam</button>
+  </div>`);
+}
+function locateSort(){
+  buildStations();
+  applyFilters();
+  addLocationButtons0521();
+  requestLocation0521(false);
+}
+const oldInit0521=typeof init==='function'?init:null;
+init=function(){
+  if(oldInit0521)oldInit0521();
+  addLocationButtons0521();
+  setTimeout(async()=>{
+    const r=await ensureRouteStationsReady0521();
+    if(r.ok) updateDataHealth0521(r.source,r.count);
+  },500);
+};
+async function planEvRoute(){
+  try{
+    routeToast('Rota hesaplanıyor…');
+    const out=$('routeResult');
+    if(out) out.innerHTML='<div class="routeDataLoading"><b>Rota hesaplanıyor…</b><br>Firebase kayıtlı EPDK verisi iOS için REST yedek kanalından kontrol ediliyor.</div>';
+
+    const ready=await ensureRouteStationsReady0521();
+    if(!ready.ok){
+      if(out) out.innerHTML='<div class="routeDataLoading">İstasyon verisi yüklenemedi. Safari ayarlarından site verisini temizleyip tekrar deneyin.</div>';
+      routeToast('İstasyon verisi yüklenemedi');
+      return;
+    }
+    updateDataHealth0521(ready.source,ready.count);
+
+    const dest=routeDirectDestination();
+    const roadFactor=1.18;
+    const estimatedKm=km(userPos.lat,userPos.lon,dest.lat,dest.lon)*roadFactor;
+    const distance=routeVal('rp_distance',estimatedKm);
+    const battery=routeVal('rp_battery',60);
+    const soc=routeVal('rp_soc',45);
+    const arrival=routeVal('rp_arrival',10);
+    const target=routeVal('rp_charge_target',80);
+    const mode=$('rp_mode')?.value||'manual';
+    const consumption=mode==='wltp'?routeVal('rp_wltp',15):routeVal('rp_manual',18);
+    const price=routeVal('rp_price', routeVal('rp_dc_price',10));
+    const chargeKw=routeVal('rp_kw', routeVal('rp_charge_kw',90));
+    const corridor=routeVal('rp_corridor',80);
+
+    const pack=routeStationsAutoDirect(dest,corridor);
+    const plan=buildPlanDirect(pack.list,distance,battery,soc,arrival,target,consumption,price,chargeKw);
+    const mapsUrl=routeGoogleDirectUrl(dest,plan.stops);
+    const energyNeed=distance*consumption/100;
+    const startEnergy=battery*soc/100;
+    const startUsable=battery*Math.max(0,(soc-arrival))/100;
+    const lowSocProblem=energyNeed>startUsable && !plan.stops.length;
+
+    let stopHtml='';
+    if(plan.stops.length){
+      stopHtml=`<div class="routeStopPreview"><b>Önerilen şarj durakları</b>`+
+        plan.stops.map((s,i)=>`<div class="routeStopPreviewItem">
+          <b>${i+1}. ${esc(s.name)}</b>${s.isStartCharge?' <span class="strongWarn">(önce buraya şarj)</span>':''}<br>
+          ${esc(s.address||'')}<br>
+          Şarj: <b>${s.chargeKwh.toFixed(1)} kWh</b> · Süre: <b>${s.chargeMin} dk</b> · Maliyet: <b>${s.cost.toFixed(0)} TL</b>
+        </div>`).join('')+
+      `</div>`;
+    }else if(lowSocProblem){
+      stopHtml='<p class="strongWarn">Bu şarjla güvenli rota oluşturulamadı. Mevcut şarjı artırıp tekrar dene veya varışta kalsın değerini düşür.</p>';
+    }else{
+      stopHtml='<p>Bu değerlerle şarj molası gerekmiyor.</p>';
+    }
+
+    if(out){
+      out.innerHTML=`<div class="routeDirectCard ready ${lowSocProblem?'warning':''}">
+        <h3>Rota hazır</h3>
+        <p><b>${esc(dest.name||$('rp_dest')?.value||'Hedef')}</b> için hesaplama tamamlandı. Veri kaynağı: <b>${ready.source}</b> · İstasyon: <b>${stations.length}</b></p>
+        <div class="routeMainSummary">
+          <div><span>Durak</span><b>${plan.stops.length}</b></div>
+          <div><span>Şarj süresi</span><b>${Math.ceil(plan.totalMin)} dk</b></div>
+          <div><span>Maliyet</span><b>${plan.totalCost.toFixed(0)} TL</b></div>
+        </div>
+        <p>Mesafe: <b>${distance.toFixed(0)} km</b> · Gerekli enerji: <b>${energyNeed.toFixed(1)} kWh</b> · Başlangıç enerji: <b>${startEnergy.toFixed(1)} kWh</b></p>
+        <p>Toplam şarj: <b>${plan.totalKwh.toFixed(1)} kWh</b></p>
+        ${stopHtml}
+        <div class="routeDirectActions">
+          <a href="${mapsUrl}" target="_blank" rel="noopener">Duraklı Google Haritalar rotasını aç</a>
+          <button onclick="navigator.clipboard&&navigator.clipboard.writeText('${mapsUrl.replaceAll("'","%27")}');routeToast('Rota linki kopyalandı')">Linki kopyala</button>
+        </div>
+        <div class="routeVersion">v0521 iOS Firebase REST + konum düzeltmesi</div>
+      </div>`;
+    }
+    if(lowSocProblem) routeToast('Bu şarjla güvenli rota oluşturulamadı');
+    else routeToast('Rota hazır. Haritayı açmak için butona bas.');
+  }catch(err){
+    console.error(err);
+    routeToast('Rota oluşturulamadı');
+    const out=$('routeResult');
+    if(out) out.innerHTML='<div class="routeWarn">Rota oluşturulamadı. Lütfen hedefi listeden seçip tekrar dene.</div>';
+  }
+}
+window.addEventListener('load',()=>{
+  setTimeout(addLocationButtons0521,800);
+});
 
 </script>
 </body>
