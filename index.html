@@ -1,653 +1,1316 @@
 <!doctype html>
 <html lang="tr">
 <head>
-<!-- UFUK_ROUTE_PREMIUM_PATCH_0507 -->
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-  <title>MolaVolt</title>
-  <meta name="app-version" content="2026-05-30-1940-mini-icons-no-map-text" />
-  <meta name="theme-color" content="#07111d" />
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-  <style>
-    :root{--bg:#07111d;--panel:#0b1726;--panel2:#102133;--line:rgba(255,255,255,.09);--text:#f4f8ff;--muted:#9bb0c9;--green:#41f08f;--green2:#2ed17b;--blue:#35a9ff;--yellow:#ffd166;--red:#ff6b7a;--shadow:0 18px 42px rgba(0,0,0,.35)}
-    *{box-sizing:border-box;-webkit-tap-highlight-color:transparent} body{margin:0;font-family:Arial,Helvetica,sans-serif;background:radial-gradient(circle at top right,rgba(53,169,255,.18),transparent 24%),radial-gradient(circle at top left,rgba(65,240,143,.13),transparent 25%),linear-gradient(180deg,#07111d,#081420);color:var(--text);min-height:100vh;overflow-x:hidden} button,input,select,textarea{font-family:inherit}.app{max-width:430px;margin:0 auto;min-height:100vh;padding:12px 14px 102px}.header{display:flex;align-items:center;justify-content:space-between;padding:8px 2px 12px}.brand{display:flex;align-items:center;gap:10px;min-width:0}.logo{width:50px;height:50px;border-radius:17px;background:linear-gradient(135deg,#41f08f,#28b8c8);display:grid;place-items:center;box-shadow:var(--shadow);flex:0 0 auto}.logo svg{width:33px;height:33px}.brand h1{margin:0;font-size:29px;line-height:1}.brand h1 span{color:var(--green)}.brand p{margin:4px 0 0;color:var(--muted);font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.iconBtn{width:44px;height:44px;border-radius:15px;border:1px solid var(--line);background:rgba(255,255,255,.035);color:white;font-size:18px}.searchWrap{display:flex;gap:10px;align-items:center;background:rgba(255,255,255,.04);border:1px solid var(--line);border-radius:18px;padding:12px 14px;box-shadow:var(--shadow)}.searchWrap input{flex:1;background:transparent;border:0;outline:0;color:white;font-size:15px;min-width:0}.searchWrap input::placeholder{color:#8aa2be}.chips,.sorts,.molaScroll{display:flex;gap:8px;overflow:auto;scrollbar-width:none}.chips{padding:12px 0 4px}.sorts{padding-bottom:3px;margin-bottom:10px}.chips::-webkit-scrollbar,.sorts::-webkit-scrollbar,.molaScroll::-webkit-scrollbar{display:none}.chip,.sort{border:1px solid var(--line);background:rgba(255,255,255,.03);color:white;border-radius:999px;white-space:nowrap;font-size:14px;flex:0 0 auto}.chip{padding:10px 14px}.sort{padding:10px 14px;border-radius:16px}.chip.active,.sort.active{background:linear-gradient(135deg,var(--green2),var(--green));color:#062012;border-color:transparent}.mapCard{margin-top:12px;background:linear-gradient(180deg,rgba(20,43,70,.9),rgba(9,20,33,.98));border:1px solid var(--line);border-radius:28px;padding:14px;box-shadow:var(--shadow)}.mapHead{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:12px}.mapHead h2{margin:0;font-size:20px}.mapHead p{margin:5px 0 0;color:var(--muted);font-size:12px;line-height:1.3}.mapActions{display:flex;gap:7px}.mapSmallBtn{border:1px solid var(--line);background:rgba(255,255,255,.05);color:white;border-radius:13px;padding:9px 10px;font-size:13px}.map{height:310px;border-radius:22px;position:relative;overflow:hidden;background:#0b1726;border:1px solid rgba(255,255,255,.07);box-shadow:inset 0 0 45px rgba(0,0,0,.28)}#realMap{height:100%;width:100%;background:#0b1726}.leaflet-container{background:#0b1726;font-family:Arial,Helvetica,sans-serif}.leaflet-control-attribution{font-size:9px!important;background:rgba(7,17,29,.65)!important;color:#a8bed2!important}.leaflet-control-zoom{display:none}.stationIcon{width:18px;height:18px;border-radius:999px;background:#35f08b;border:2px solid #07111d;box-shadow:0 2px 7px rgba(0,0,0,.35);display:grid;place-items:center;color:#06150e;font-size:11px;font-weight:900;line-height:1;cursor:pointer}.stationIcon.selected{width:20px;height:20px;background:#41f08f}.stationDivIcon{background:transparent!important;border:0!important}.userBubble{transform:translate(-50%,-50%);width:18px;height:18px;border-radius:50%;background:#35a9ff;border:3px solid white;box-shadow:0 0 0 8px rgba(53,169,255,.20),0 8px 18px rgba(0,0,0,.35)}#locationStatus,.locationStatus,.versionText,.debugText,.mapMeta{display:none!important}.mapOverlay{position:absolute;left:12px;top:12px;z-index:500;display:flex;align-items:center;gap:7px;border-radius:999px;padding:7px 10px;background:rgba(8,20,32,.88);border:1px solid rgba(255,255,255,.09);color:#bfffd8;font-size:12px}.locateBtn{position:absolute;right:12px;bottom:12px;z-index:500;width:44px;height:44px;border:1px solid var(--line);border-radius:15px;background:rgba(8,20,32,.92);color:white;font-size:18px;box-shadow:var(--shadow)}.section{margin-top:18px}.sectionTitle{display:flex;justify-content:space-between;align-items:end;margin-bottom:10px}.sectionTitle h3{margin:0;font-size:24px}.sectionTitle p{margin:4px 0 0;color:var(--muted);font-size:13px}.cards{display:flex;flex-direction:column;gap:12px}.station,.panel{background:rgba(255,255,255,.03);border:1px solid var(--line);border-radius:24px;padding:14px;box-shadow:var(--shadow)}.station{cursor:pointer}.stationTop{display:flex;justify-content:space-between;gap:12px}.station h4{margin:8px 0 4px;font-size:18px}.station p{margin:0;color:var(--muted);font-size:13px;line-height:1.35}.tags{display:flex;flex-wrap:wrap;gap:6px}.tag{font-size:12px;padding:5px 9px;border-radius:999px;background:rgba(255,255,255,.05);border:1px solid var(--line);color:#d8e3f0}.tag.green{background:rgba(65,240,143,.14);border-color:rgba(65,240,143,.22);color:#95ffc4}.tag.blue{background:rgba(53,169,255,.14);border-color:rgba(53,169,255,.22);color:#9bd1ff}.tag.yellow{background:rgba(255,209,102,.14);border-color:rgba(255,209,102,.22);color:#ffe39a}.metrics{display:flex;justify-content:space-between;gap:8px;margin-top:12px;font-size:13px;color:#cfe0f4;align-items:center}.dirLink{border:0;background:transparent;color:#cfe0f4;font:inherit;padding:0;text-decoration:none;cursor:pointer}.dirLink:active{color:#41f08f}.selectedCard{margin-top:12px;background:#0b1726;border:1px solid var(--line);border-radius:24px;padding:14px;box-shadow:var(--shadow)}.selectedCard:empty{display:none}.actions{display:flex;gap:8px;margin-top:12px}.action{border:0;border-radius:14px;padding:10px 12px;font-weight:700;color:#06150e;background:linear-gradient(135deg,var(--green2),var(--green));text-decoration:none;text-align:center}.action.secondary{background:rgba(255,255,255,.06);color:white;border:1px solid var(--line)}.action.full{width:100%}.molaBox{margin-top:12px;border:1px solid rgba(65,240,143,.14);background:rgba(65,240,143,.06);border-radius:20px;padding:12px}.molaBox h4{margin:0 0 7px;font-size:15px}.molaTags{display:flex;flex-wrap:wrap;gap:7px}.molaTags span{font-size:12px;border:1px solid var(--line);background:rgba(255,255,255,.045);border-radius:999px;padding:7px 9px;color:#d8e3f0}.sponsorCard{min-width:270px;max-width:270px;background:linear-gradient(160deg,rgba(65,240,143,.12),rgba(53,169,255,.08),rgba(255,255,255,.035));border:1px solid rgba(65,240,143,.16);border-radius:24px;padding:14px;box-shadow:var(--shadow)}.sponsorHeader{display:flex;align-items:center;gap:10px}.sponsorLogo{width:50px;height:50px;border-radius:16px;background:rgba(255,255,255,.06);border:1px solid var(--line);display:grid;place-items:center;font-size:24px;overflow:hidden}.sponsorLogo img{width:100%;height:100%;object-fit:cover}.sponsorLabel{display:inline-flex;gap:5px;align-items:center;font-size:11px;color:#bfffd8;background:rgba(65,240,143,.12);border:1px solid rgba(65,240,143,.20);border-radius:999px;padding:5px 8px}.sponsorCard h4{margin:10px 0 4px;font-size:18px}.sponsorCard p{margin:0;color:#a9bdd1;font-size:13px;line-height:1.35}.couponBtn{width:100%;margin-top:12px;border:0;border-radius:15px;padding:11px 12px;background:linear-gradient(135deg,#ffd166,#41f08f);color:#06150e;font-weight:900}.bottomNav{position:fixed;left:50%;transform:translateX(-50%);bottom:12px;width:min(402px,calc(100% - 24px));background:rgba(9,19,32,.92);backdrop-filter:blur(12px);border:1px solid var(--line);border-radius:24px;padding:10px 8px;display:grid;grid-template-columns:repeat(5,1fr);gap:4px;z-index:20;box-shadow:var(--shadow)}.navItem{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;border-radius:16px;color:#9bb0c9;padding:8px 4px;font-size:11px;background:transparent;border:0}.navItem.active{color:var(--green);background:rgba(65,240,143,.08)}.tab{display:none}.tab.active{display:block}.modal{position:fixed;inset:0;z-index:60;display:none;background:rgba(0,0,0,.58);align-items:flex-end}.modal.show{display:flex}.sheet{width:100%;max-width:430px;margin:0 auto;background:#081420;border:1px solid var(--line);border-bottom:0;border-radius:28px 28px 0 0;padding:16px;box-shadow:0 -20px 50px rgba(0,0,0,.45);max-height:88vh;overflow:auto}.detailHead{display:flex;justify-content:space-between;gap:12px;align-items:start}.closeBtn{border:1px solid var(--line);background:rgba(255,255,255,.04);color:white;border-radius:14px;width:40px;height:40px;font-size:20px}.couponCode{margin:16px 0;border:1px dashed rgba(65,240,143,.45);background:rgba(65,240,143,.09);border-radius:22px;padding:18px;text-align:center}.couponCode small{display:block;color:#9bb0c9;font-size:12px}.couponCode strong{display:block;margin-top:8px;font-size:27px;letter-spacing:1px;color:#8cffbd;word-break:break-word}.form{display:grid;gap:10px}.form label{font-size:12px;color:#9bb0c9;margin-top:6px}.form input,.form select,.form textarea{width:100%;background:#0a1524;border:1px solid var(--line);color:white;border-radius:16px;padding:12px;outline:0}.form textarea{min-height:72px}.submitBtn{width:100%;margin-top:12px;border-radius:16px;padding:14px 16px;border:0;background:linear-gradient(135deg,var(--green2),var(--green));color:#052112;font-weight:700}.smallBtn{border:1px solid var(--line);background:rgba(255,255,255,.06);color:white;border-radius:12px;padding:9px 10px}.danger{background:rgba(255,107,122,.12);color:#ffb7c0}
-  
-/* UFUK_ROUTE_PREMIUM_PATCH_0507 */
-.bottomNav{
-  width:min(410px,calc(100% - 20px))!important;
-  bottom:10px!important;
-  padding:8px 7px!important;
-  display:grid!important;
-  grid-template-columns:repeat(6,1fr)!important;
-  gap:4px!important;
-  border-radius:28px!important;
-  background:linear-gradient(180deg,rgba(12,25,41,.96),rgba(6,14,26,.98))!important;
-  border:1px solid rgba(255,255,255,.12)!important;
-  box-shadow:0 18px 55px rgba(0,0,0,.46), inset 0 1px 0 rgba(255,255,255,.06)!important;
-}
-.navItem{
-  min-width:0!important;
-  height:58px!important;
-  border-radius:20px!important;
-  padding:6px 2px!important;
-  gap:4px!important;
-  font-size:10px!important;
-  letter-spacing:.1px!important;
-  color:#96aac2!important;
-  transition:all .18s ease!important;
-}
-.navItem .navIcon{
-  width:24px!important;
-  height:24px!important;
-  border-radius:12px!important;
-  display:grid!important;
-  place-items:center!important;
-  color:currentColor!important;
-}
-.navItem svg{width:22px!important;height:22px!important;display:block!important;stroke:currentColor!important}
-.navItem.active{
-  color:#101b24!important;
-  background:linear-gradient(135deg,#35ef8d,#12c873)!important;
-  box-shadow:0 10px 24px rgba(53,239,141,.22)!important;
-  font-weight:800!important;
-}
-.navItem.active .navIcon{color:#07111d!important}
-.navItem span:last-child{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
+<!-- UFUK_NO_LIVE_MAP_ROUTE_PREMIUM_0508 -->
+<!-- UFUK_ROUTE_SIMPLE_PREMIUM_0506 -->
+<!-- UFUK_ROUTE_SIMPLE_PREMIUM_0506 -->
+<!-- UFUK_OFFER_COUNT_FIX_0503 + ROUTE_0504 -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>MolaVolt</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<style>
+:root{--bg:#07111d;--card:#0d1b2c;--line:rgba(255,255,255,.12);--text:#edf5ff;--muted:#91a8bf;--green:#35ef8d;--blue:#39aaff;--yellow:#ffe081;--shadow:0 18px 45px rgba(0,0,0,.30)}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}html,body{margin:0;min-height:100%;font-family:Arial,Helvetica,sans-serif;background:radial-gradient(circle at top left,rgba(54,239,141,.13),transparent 25%),radial-gradient(circle at top right,rgba(57,170,255,.13),transparent 25%),linear-gradient(180deg,#07111d,#081420);color:var(--text);overflow-x:hidden}
+.app{max-width:430px;margin:0 auto;min-height:100vh;padding:16px 14px 105px}.top{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}.brand{display:flex;align-items:center;gap:12px}.logo{width:58px;height:58px;border-radius:20px;background:#07172a;display:grid;place-items:center;box-shadow:var(--shadow);overflow:hidden;border:1px solid rgba(54,239,141,.18)}.logo img{width:100%;height:100%;object-fit:cover}.bolt{font-size:34px;color:var(--green)}h1{font-size:31px;line-height:1;margin:0}.brand p{margin:5px 0 0;color:var(--muted);font-size:13px}.green{color:var(--green)}
+.iconBtn{width:48px;height:48px;border-radius:18px;border:1px solid var(--line);background:rgba(255,255,255,.04);color:#dfeeff;font-size:19px}.search{height:54px;border-radius:22px;border:1px solid var(--line);background:rgba(255,255,255,.04);display:flex;align-items:center;gap:10px;padding:0 16px;box-shadow:var(--shadow)}.search input{flex:1;min-width:0;background:transparent;border:0;outline:0;color:white;font-size:16px}.menuBtn{border:0;background:transparent;color:#dbe9f7;font-size:26px}.chips,.sorts{display:flex;gap:9px;overflow-x:auto;scrollbar-width:none;padding:14px 0 0}.chip,.sort{border:1px solid var(--line);background:rgba(255,255,255,.035);color:#dcecff;border-radius:999px;padding:12px 18px;font-size:15px;white-space:nowrap}.chip.active,.sort.active{background:linear-gradient(135deg,var(--green),#12c873);color:#052112;border-color:transparent;font-weight:800}
+.section{margin-top:22px}.section h3{font-size:25px;margin:0 0 6px}.sectionTitle{display:flex;justify-content:space-between;align-items:flex-end;gap:10px;margin-bottom:10px}.muted{color:var(--muted)}.cards{display:flex;flex-direction:column;gap:12px;margin-top:12px}.station,.panel,.sponsorCard{background:rgba(255,255,255,.035);border:1px solid var(--line);border-radius:24px;padding:15px;box-shadow:var(--shadow)}.station{cursor:pointer}.stationTop{display:flex;justify-content:space-between;gap:12px}.station h4{margin:9px 0 5px;font-size:18px}.station p{margin:0;color:var(--muted);line-height:1.35;font-size:13px}.tags{display:flex;flex-wrap:wrap;gap:6px}.tag{border:1px solid var(--line);background:rgba(255,255,255,.05);border-radius:999px;padding:6px 10px;font-size:12px;color:#dcecff}.tag.g{background:rgba(54,239,141,.13);border-color:rgba(54,239,141,.24);color:#9bffc4}.tag.b{background:rgba(57,170,255,.13);border-color:rgba(57,170,255,.24);color:#9bd4ff}.tag.y{background:rgba(255,224,129,.13);border-color:rgba(255,224,129,.24);color:#ffe9a6}
+.metrics{display:flex;gap:8px;justify-content:space-between;align-items:center;margin-top:14px;color:#d4e5f6;font-size:13px}.routeBtn,.primaryBtn{border:0;text-decoration:none;border-radius:999px;background:linear-gradient(135deg,var(--green),#12c873);color:#052112;font-weight:900;padding:11px 13px;white-space:nowrap;text-align:center}.secondaryBtn{border:1px solid var(--line);background:rgba(255,255,255,.05);color:#e7f2ff;border-radius:999px;padding:10px 12px;text-decoration:none}.cardActions{display:flex;gap:8px;margin-top:14px;align-items:center}.cardActions .routeBtn,.cardActions .secondaryBtn{flex:1;display:block;text-align:center}
+.sponsorScroll{display:flex;gap:12px;overflow-x:auto;scrollbar-width:none;margin-top:12px}.sponsorCard{min-width:270px}.gift{width:58px;height:58px;border-radius:18px;background:rgba(255,255,255,.06);display:grid;place-items:center;font-size:28px}.tab{display:none}.tab.active{display:block}.adminOnly{display:none}.admin-mode .customerOnly{display:none!important}.admin-mode .adminOnly{display:block}
+.bottomNav{position:fixed;left:50%;transform:translateX(-50%);bottom:12px;width:min(402px,calc(100% - 24px));background:rgba(8,18,31,.96);border:1px solid var(--line);backdrop-filter:blur(14px);border-radius:26px;padding:10px 8px;display:grid;grid-template-columns:repeat(6,1fr);gap:4px;z-index:99999;box-shadow:var(--shadow)}.navItem{border:0;background:transparent;color:#9eb1c7;border-radius:18px;padding:8px 4px;display:flex;flex-direction:column;align-items:center;gap:5px;font-size:11px}.navItem span{font-size:20px}.navItem.active{background:rgba(54,239,141,.08);color:var(--green)}
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.58);z-index:100000;display:none;align-items:flex-end}.modal.show{display:flex}.sheet{width:100%;max-width:430px;margin:0 auto;background:#081420;border:1px solid var(--line);border-bottom:0;border-radius:28px 28px 0 0;padding:18px;max-height:88vh;overflow:auto}.close{float:right;border:1px solid var(--line);background:rgba(255,255,255,.05);color:white;width:42px;height:42px;border-radius:16px;font-size:22px}.formBox input,.formBox select,.formBox textarea{width:100%;margin:6px 0 10px;background:#091827;border:1px solid var(--line);color:white;border-radius:15px;padding:12px;outline:0;font-size:14px}.formBox label{display:block;color:var(--muted);font-size:13px;margin-top:8px}.adminActions{display:flex;gap:8px;margin-top:8px}.adminActions button{flex:1}.mapSheetBody{height:72vh;min-height:420px}#stationMap{height:100%;width:100%;border-radius:22px;overflow:hidden;background:#101b2c}.empty{padding:18px;border-radius:22px;background:rgba(255,255,255,.035);border:1px solid var(--line);color:var(--muted)}
 
-.routeHero{
-  margin-top:18px;
-  background:linear-gradient(160deg,rgba(53,239,141,.11),rgba(53,169,255,.08),rgba(255,255,255,.035));
-  border:1px solid rgba(255,255,255,.10);
-  border-radius:26px;
-  padding:15px;
-  box-shadow:var(--shadow);
+.adminTabs{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:14px 0 18px}
+.adminTabBtn{border:1px solid var(--line);background:rgba(255,255,255,.045);color:#dcecff;border-radius:18px;padding:12px 8px;font-weight:800;font-size:13px}
+.adminTabBtn.active{background:linear-gradient(135deg,var(--green),var(--green2));color:#052112;border-color:transparent}
+.adminSection{display:none}
+.adminSection.active{display:block}
+.adminQuick{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+.adminQuick .secondaryBtn,.adminQuick .primaryBtn{display:block;text-align:center;width:100%}
+@media(max-width:380px){.adminTabs{grid-template-columns:1fr}.adminQuick{grid-template-columns:1fr}}
+
+
+/* v0495 müşteri kartında Haritada gör butonu garanti görünür */
+.station .cardActions{display:flex!important;gap:8px!important;margin-top:14px!important;align-items:center!important}
+.station .cardActions button,.station .cardActions a{min-height:44px;display:flex!important;align-items:center;justify-content:center}
+.station .mapShowBtn{border:1px solid var(--line);background:rgba(255,255,255,.055);color:#e7f2ff;border-radius:999px;padding:10px 12px;text-decoration:none;font-weight:800;flex:1}
+.station .routeActionBtn{flex:1}
+
+
+/* v0497: Müşteri istasyon kartlarında Haritada gör butonu zorunlu görünür */
+.station .cardActions{
+  display:flex!important;
+  gap:8px!important;
+  margin-top:14px!important;
+  align-items:center!important;
 }
-.routeHero h3{margin:0 0 5px;font-size:24px}
-.routeHero p{margin:0;color:var(--muted);font-size:13px;line-height:1.35}
-.routeForm{margin-top:12px;display:grid;gap:10px}
-.routeInputBox{
-  position:relative;
-  background:rgba(255,255,255,.04);
-  border:1px solid var(--line);
-  border-radius:20px;
-  padding:12px;
+.station .cardActions button,
+.station .cardActions a{
+  min-height:46px!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  font-size:14px!important;
 }
-.routeInputBox label{display:block;font-size:12px;color:var(--muted);margin-bottom:7px}
-.routeInputBox input,.routeInputBox select{
-  width:100%;
-  background:transparent;
-  border:0;
-  outline:0;
-  color:white;
-  font-size:16px;
+.station .mapShowBtn{
+  border:1px solid var(--line)!important;
+  background:rgba(255,255,255,.06)!important;
+  color:#e7f2ff!important;
+  border-radius:999px!important;
+  padding:11px 12px!important;
+  text-decoration:none!important;
+  font-weight:900!important;
+  flex:1!important;
 }
-.routeInputBox input::placeholder{color:#7f97b2}
-.routeGrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.routeSuggest{
-  position:absolute;
-  left:0;right:0;top:calc(100% + 8px);
-  z-index:50;
-  background:#091827;
-  border:1px solid rgba(255,255,255,.12);
-  border-radius:18px;
-  box-shadow:0 18px 45px rgba(0,0,0,.38);
-  overflow:hidden;
-  display:none;
+.station .routeActionBtn{flex:1!important}
+
+
+/* v0499: mobil hız optimizasyonu */
+.loadMoreBtn{width:100%;margin-top:10px}
+.fastNote{font-size:12px;color:var(--muted);margin-top:8px;line-height:1.35}
+
+
+/* v0500 sponsor senkronizasyonu, logo ve fırsat kodu */
+.sponsorLogo{width:56px;height:56px;border-radius:18px;object-fit:cover;border:1px solid var(--line);background:rgba(255,255,255,.06)}
+.sponsorHead{display:flex;gap:14px;align-items:center}
+.couponBtn{width:100%;margin-top:14px;display:block}
+.smallInfo{font-size:12px;color:var(--muted);line-height:1.35;margin-top:7px}
+
+
+/* v0501 sponsor fırsat kartları oran ve otomatik kayma */
+.sponsorWrap{position:relative;overflow:hidden;margin-top:12px}
+.sponsorScroll{
+  display:flex!important;
+  gap:12px!important;
+  overflow-x:auto!important;
+  scroll-snap-type:x mandatory!important;
+  scroll-behavior:smooth!important;
+  scrollbar-width:none!important;
+  padding:2px 2px 8px!important;
 }
-.routeSuggest.show{display:block}
-.routeSuggest button{
-  width:100%;
-  text-align:left;
-  background:transparent;
-  border:0;
-  color:#eaf4ff;
-  padding:12px 14px;
-  border-bottom:1px solid rgba(255,255,255,.07);
-  font-size:14px;
+.sponsorScroll::-webkit-scrollbar{display:none!important}
+.sponsorCard{
+  flex:0 0 82%!important;
+  min-width:82%!important;
+  max-width:82%!important;
+  min-height:278px!important;
+  display:flex!important;
+  flex-direction:column!important;
+  justify-content:space-between!important;
+  overflow:hidden!important;
 }
-.routeSuggest small{display:block;color:var(--muted);margin-top:3px;font-size:11px}
-.routePrimary{
-  width:100%;
-  border:0;
-  border-radius:18px;
-  padding:14px 16px;
-  color:#06150e;
-  background:linear-gradient(135deg,#35ef8d,#12c873);
-  font-weight:900;
-  font-size:15px;
-  box-shadow:0 12px 30px rgba(53,239,141,.20);
+.sponsorCard h4{
+  margin:8px 0 8px!important;
+  font-size:20px!important;
+  line-height:1.18!important;
+  min-height:48px!important;
+  display:-webkit-box!important;
+  -webkit-line-clamp:2!important;
+  -webkit-box-orient:vertical!important;
+  overflow:hidden!important;
 }
-.routeAdvanced{
-  border:1px solid rgba(255,255,255,.10);
-  background:rgba(255,255,255,.03);
-  border-radius:20px;
-  padding:10px 12px;
+.sponsorCard p{
+  margin:0!important;
+  color:var(--muted)!important;
+  font-size:15px!important;
+  line-height:1.35!important;
+  min-height:62px!important;
+  display:-webkit-box!important;
+  -webkit-line-clamp:3!important;
+  -webkit-box-orient:vertical!important;
+  overflow:hidden!important;
 }
-.routeAdvanced summary{cursor:pointer;color:#dcecff;font-weight:800}
-.routeAdvanced .routeGrid{margin-top:10px}
-.routeResultCard{
-  margin-top:14px;
-  background:rgba(255,255,255,.035);
-  border:1px solid rgba(255,255,255,.10);
-  border-radius:24px;
-  padding:14px;
-  box-shadow:var(--shadow);
+.sponsorCard .couponBtn{margin-top:14px!important}
+.sponsorCard .smallInfo{min-height:34px!important}
+.sponsorHead{min-height:72px!important}
+.sponsorDots{display:flex;justify-content:center;gap:6px;margin-top:8px}
+.sponsorDot{width:7px;height:7px;border-radius:999px;background:rgba(255,255,255,.22)}
+.sponsorDot.active{background:var(--green)}
+@media(min-width:410px){
+  .sponsorCard{flex-basis:78%!important;min-width:78%!important;max-width:78%!important}
 }
+
+
+/* v0502 fırsat kodu takip ve rapor */
+.reportGrid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+.reportBox{background:rgba(255,255,255,.04);border:1px solid var(--line);border-radius:18px;padding:12px}
+.reportBox b{font-size:22px;display:block;margin-top:4px}
+.couponRow{border:1px solid var(--line);border-radius:18px;padding:12px;margin-top:10px;background:rgba(255,255,255,.035)}
+.couponActions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.couponActions button,.couponActions a{flex:1;min-width:120px}
+.statusPill{display:inline-block;border-radius:999px;padding:5px 9px;font-size:12px;border:1px solid var(--line);background:rgba(255,255,255,.05);color:#dcecff}
+.statusPill.ok{background:rgba(54,239,141,.12);border-color:rgba(54,239,141,.25);color:#9bffc4}
+.statusPill.warn{background:rgba(255,224,129,.12);border-color:rgba(255,224,129,.25);color:#ffe9a6}
+@media(max-width:380px){.reportGrid{grid-template-columns:1fr}.couponActions button,.couponActions a{min-width:100%}}
+
+
+/* UFUK_ROUTE_SIMPLE_PREMIUM_0506 */
+.routeForm label{display:block;color:var(--muted);font-size:13px;margin:10px 0 5px}
+.routeForm input,.routeForm select{width:100%;margin:6px 0 10px;background:#091827;border:1px solid var(--line);color:white;border-radius:15px;padding:12px;outline:0;font-size:14px}
+.routeGrid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
 .routeSummary{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}
 .routeMetric{background:rgba(255,255,255,.04);border:1px solid var(--line);border-radius:18px;padding:12px}
-.routeMetric span{display:block;color:var(--muted);font-size:12px}
+.routeMetric span{color:var(--muted);font-size:12px}
 .routeMetric b{display:block;font-size:18px;margin-top:5px}
-.routeStop{
-  margin-top:12px;
-  border:1px solid rgba(53,239,141,.22);
-  background:rgba(53,239,141,.075);
-  border-radius:20px;
-  padding:13px;
-}
-.routeWarn{margin-top:12px;border:1px solid rgba(255,209,102,.25);background:rgba(255,209,102,.08);border-radius:18px;padding:12px;color:#ffe39a;line-height:1.35}
-.routeNote{font-size:12px;color:var(--muted);line-height:1.35;margin:8px 0 0}
-@media(max-width:360px){
+.routeStep{border:1px solid rgba(54,239,141,.20);background:rgba(54,239,141,.07);border-radius:20px;padding:13px;margin-top:12px}
+.routeWarn{border:1px solid rgba(255,224,129,.25);background:rgba(255,224,129,.08);border-radius:18px;padding:12px;margin-top:10px;color:#ffe9a6;line-height:1.35}
+.routeStationNote{font-size:12px;color:var(--muted);margin-top:6px}
+@media(max-width:390px){
   .bottomNav{grid-template-columns:repeat(3,1fr)!important}
   .routeGrid,.routeSummary{grid-template-columns:1fr}
 }
 
+
+/* UFUK_ROUTE_SIMPLE_PREMIUM_0506 */
+.bottomNav{
+  width:min(410px,calc(100% - 18px))!important;
+  bottom:10px!important;
+  padding:8px 7px!important;
+  grid-template-columns:repeat(6,1fr)!important;
+  gap:5px!important;
+  border-radius:28px!important;
+  background:linear-gradient(180deg,rgba(11,24,42,.96),rgba(5,13,24,.98))!important;
+  border:1px solid rgba(255,255,255,.13)!important;
+  box-shadow:0 18px 45px rgba(0,0,0,.48), inset 0 1px 0 rgba(255,255,255,.06)!important;
+}
+.navItem{
+  min-width:0!important;
+  gap:4px!important;
+  padding:7px 2px!important;
+  border-radius:20px!important;
+  font-size:10px!important;
+  font-weight:800!important;
+  letter-spacing:-.15px!important;
+}
+.navItem .navIcon{
+  width:34px!important;
+  height:34px!important;
+  border-radius:15px!important;
+  display:grid!important;
+  place-items:center!important;
+  background:rgba(255,255,255,.045)!important;
+  border:1px solid rgba(255,255,255,.07)!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.05)!important;
+}
+.navItem svg{width:19px;height:19px;stroke:currentColor;stroke-width:2.2;fill:none;stroke-linecap:round;stroke-linejoin:round}
+.navItem.active{
+  color:var(--green)!important;
+  background:linear-gradient(180deg,rgba(54,239,141,.15),rgba(54,239,141,.05))!important;
+}
+.navItem.active .navIcon{
+  background:linear-gradient(135deg,rgba(54,239,141,.28),rgba(57,170,255,.12))!important;
+  border-color:rgba(54,239,141,.22)!important;
+}
+.routeHero{
+  background:linear-gradient(160deg,rgba(54,239,141,.11),rgba(57,170,255,.08),rgba(255,255,255,.035));
+  border:1px solid rgba(255,255,255,.11);
+  border-radius:26px;
+  padding:15px;
+  box-shadow:var(--shadow);
+}
+.routeHeroTitle{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.routeHeroTitle .bigIcon{width:45px;height:45px;border-radius:17px;display:grid;place-items:center;background:linear-gradient(135deg,var(--green),var(--blue));color:#06150e;font-weight:900}
+.routeSimple label{display:block;color:var(--muted);font-size:12px;margin:10px 0 5px}
+.routeSimple input,.routeSimple select{
+  width:100%;
+  background:#091827;
+  border:1px solid var(--line);
+  color:white;
+  border-radius:17px;
+  padding:13px 13px;
+  outline:0;
+  font-size:15px;
+}
+.routeSearchBox{position:relative}
+.routeSuggest{
+  display:none;
+  position:absolute;
+  z-index:100;
+  left:0;right:0;top:calc(100% + 6px);
+  background:#081420;
+  border:1px solid var(--line);
+  border-radius:18px;
+  overflow:hidden;
+  box-shadow:0 18px 40px rgba(0,0,0,.45);
+  max-height:230px;
+  overflow-y:auto;
+}
+.routeSuggest.show{display:block}
+.routeSuggest button{
+  width:100%;
+  border:0;
+  border-bottom:1px solid rgba(255,255,255,.07);
+  background:transparent;
+  color:white;
+  padding:12px 13px;
+  text-align:left;
+  font-size:14px;
+}
+.routeSuggest button small{display:block;color:var(--muted);font-size:11px;margin-top:3px}
+.routeQuickGrid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:10px}
+.routeMiniGrid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.routeAdvanced{display:none;margin-top:10px}
+.routeAdvanced.show{display:block}
+.routeAdvBtn{width:100%;margin-top:10px}
+.routePrimaryBig{width:100%;margin-top:14px;padding:14px 16px!important;border-radius:18px!important;font-size:16px!important}
+.routeResultCard{margin-top:14px}
+.routeSummary{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}
+.routeMetric{background:rgba(255,255,255,.04);border:1px solid var(--line);border-radius:18px;padding:12px}
+.routeMetric span{color:var(--muted);font-size:12px}
+.routeMetric b{display:block;font-size:18px;margin-top:5px}
+.routeStep{border:1px solid rgba(54,239,141,.20);background:rgba(54,239,141,.07);border-radius:20px;padding:13px;margin-top:12px}
+.routeWarn{border:1px solid rgba(255,224,129,.25);background:rgba(255,224,129,.08);border-radius:18px;padding:12px;margin-top:10px;color:#ffe9a6;line-height:1.35}
+@media(max-width:390px){
+  .bottomNav{grid-template-columns:repeat(6,1fr)!important}
+  .navItem{font-size:9px!important}
+  .navItem .navIcon{width:30px!important;height:30px!important;border-radius:13px!important}
+  .navItem svg{width:17px;height:17px}
+  .routeQuickGrid{grid-template-columns:1fr 1fr}
+  .routeMiniGrid,.routeSummary{grid-template-columns:1fr}
+}
+
 </style>
+ <link rel="manifest" href="/manifest.json?v=10">
+  <meta name="theme-color" content="#07111d">
+  <link rel="apple-touch-icon" href="/icon-192.png">
 </head>
 <body>
 <div class="app">
-  <div class="header">
-    <div class="brand"><div class="logo"><svg viewBox="0 0 64 64" fill="none"><path d="M33 5 14 36h15l-4 23 25-35H34l-1-19Z" fill="#06150e"/><path d="M18 49c7 5 21 5 28 0" stroke="#06150e" stroke-width="4" stroke-linecap="round"/></svg></div><div><h1>Mola<span>Volt</span></h1><p id="subTitle">Yakındaki şarj istasyonları</p></div></div>
-    <button class="iconBtn" onclick="startRealSearch()">↻</button>
+  <div class="top">
+    <div class="brand"><div class="logo"><img src="logo.png" onerror="this.onerror=null;this.src='icon-192.png';this.onerror=()=>{this.style.display='none';this.parentNode.innerHTML='<span class=bolt>⚡</span>'}"></div><div><h1>Mola<span class="green">Volt</span></h1><p id="subTitle">Yakındaki şarj istasyonları</p></div></div>
+    <button class="iconBtn customerOnly" onclick="hardRefresh()">↻</button>
+    <button class="iconBtn adminOnly" onclick="renderAdmin()">↻</button>
   </div>
 
-  <div id="tab-home" class="tab active">
-    <div class="searchWrap"><span>🔎</span><input id="searchInput" placeholder="Konum veya istasyon ara"><span>☰</span></div>
+  <main class="customerOnly">
+    <div class="search"><span>🔎</span><input id="searchInput" placeholder="Konum veya istasyon ara" autocomplete="off" autocapitalize="off" spellcheck="false" oninput="stableSearch()" onkeyup="stableSearch()" onchange="stableSearch()"><button class="menuBtn" onclick="openModal('infoModal')">≡</button></div>
     <div class="chips" id="brandChips"></div>
+    <div class="tab active" id="tab-home">
+      <section class="section"><h3>Şarj molası fırsatları</h3><p class="muted">Kodu al, kasada göster, indirim kazan</p><div class="sponsorWrap"><div class="sponsorScroll" id="sponsorCards"></div></div><div class="sponsorDots" id="sponsorDots"></div></section>
+      <section class="section"><h3>Yakındaki istasyonlar</h3><p class="muted" id="countText">Yakındaki istasyonlar</p><p class="muted" id="locStatus" style="font-size:13px;margin-top:4px">Konumuna yakın istasyonları görmek için arama yapabilir veya konum izni verebilirsin.</p><div class="sorts"><button id="sortDistance" class="sort active" onclick="setSort('distance')">En yakın</button><button id="sortName" class="sort" onclick="setSort('name')">A-Z</button></div><div class="cards" id="homeCards"></div></section>
+    </div>
+    <div class="tab" id="tab-stations"><section class="section"><h3>İstasyonlar</h3><p class="muted">Marka seçerek veya arama yaparak filtreleyebilirsin.</p><div class="cards" id="stationCards"></div></section></div>
 
-    <div class="mapCard">
-      <div class="mapHead">
-        <div><h2>Canlı harita</h2><p id="mapText">Türkiye geneli istasyon verisi yükleniyor</p></div>
-        <div class="mapActions"><button class="mapSmallBtn" onclick="centerUser()">Konum</button><button class="mapSmallBtn" onclick="fitStations()">Tümü</button></div>
-      </div>
-      <div class="map"><div id="realMap"></div><div class="mapOverlay" id="locBadge">● Konum bekleniyor</div><button class="locateBtn" onclick="startRealSearch(true)">⌖</button></div>
+    
+<div class="tab" id="tab-route">
+      <section class="section">
+        <div class="routeHero">
+          <div class="routeHeroTitle">
+            <div class="bigIcon">🧭</div>
+            <div>
+              <h3 style="margin:0">Rota Planla</h3>
+              <p class="muted" style="margin:4px 0 0">Nereye gideceğini yaz, şarj molasını hesaplayalım</p>
+            </div>
+          </div>
+
+          <div class="routeSimple">
+            <label>Nereye gidiyorsun?</label>
+            <div class="routeSearchBox">
+              <input id="rp_dest" placeholder="İl, ilçe veya tam adres yaz" value="Ankara" autocomplete="off" oninput="routeSuggestInput()" onfocus="routeSuggestInput()">
+              <div class="routeSuggest" id="routeSuggest"></div>
+            </div>
+
+            <div class="routeQuickGrid">
+              <div>
+                <label>Şarjım %</label>
+                <input id="rp_soc" type="number" inputmode="decimal" value="45">
+              </div>
+              <div>
+                <label>Batarya</label>
+                <input id="rp_battery" type="number" inputmode="decimal" value="60">
+              </div>
+              <div>
+                <label>Tüketim</label>
+                <input id="rp_manual" type="number" inputmode="decimal" value="18">
+              </div>
+            </div>
+
+            <button class="secondaryBtn routeAdvBtn" onclick="toggleRouteAdvanced()">Ayarlar: WLTP, fiyat, varış şarjı</button>
+
+            <div class="routeAdvanced" id="routeAdvanced">
+              <label>Tüketim hesabı</label>
+              <select id="rp_mode" onchange="toggleRouteConsumption()">
+                <option value="manual">Benim kullanım ortalamam</option>
+                <option value="wltp">WLTP</option>
+              </select>
+
+              <div class="routeMiniGrid">
+                <div>
+                  <label>WLTP kWh/100 km</label>
+                  <input id="rp_wltp" type="number" inputmode="decimal" value="15">
+                </div>
+                <div>
+                  <label>Varışta kalsın %</label>
+                  <input id="rp_arrival" type="number" inputmode="decimal" value="10">
+                </div>
+              </div>
+
+              <div class="routeMiniGrid">
+                <div>
+                  <label>DC fiyat TL/kWh</label>
+                  <input id="rp_dc_price" type="number" inputmode="decimal" value="10">
+                </div>
+                <div>
+                  <label>Şarj hızı kW</label>
+                  <input id="rp_charge_kw" type="number" inputmode="decimal" value="90">
+                </div>
+              </div>
+
+              <div class="routeMiniGrid">
+                <div>
+                  <label>Mesafe km</label>
+                  <input id="rp_distance" type="number" inputmode="decimal" placeholder="Otomatik tahmin">
+                </div>
+                <div>
+                  <label>Rota sapma km</label>
+                  <input id="rp_corridor" type="number" inputmode="decimal" value="25">
+                </div>
+              </div>
+              <input id="rp_charge_target" type="hidden" value="80">
+            </div>
+
+            <button class="primaryBtn routePrimaryBig" onclick="planEvRoute()">Rota planla</button>
+          </div>
+        </div>
+
+        <div id="routeResult"></div>
+      </section>
     </div>
 
-    <div class="selectedCard" id="featuredCard"></div>
-    <div class="section"><div class="sectionTitle"><div><h3>Şarj molası fırsatları</h3><p>Kodu al, kasada göster, indirim kazan</p></div></div><div class="molaScroll" id="sponsorCards"></div></div>
-    <div class="section"><div class="sectionTitle"><div><h3>Yakındaki istasyonlar</h3><p id="countText">İstasyonlar yükleniyor</p></div></div><div class="sorts"><button class="sort active" data-sort="near">En yakın</button><button class="sort" data-sort="name">A-Z</button></div><div class="cards" id="homeCards"></div></div>
-  </div>
+    <div class="tab" id="tab-favorites"><section class="section"><h3>Favoriler</h3><div class="cards" id="favCards"></div></section></div>
+    <div class="tab" id="tab-report"><section class="section"><h3>Eksik istasyon bildir</h3><p class="muted">Görünmeyen şarj noktasını bize gönder</p><div class="panel"><a class="routeBtn" style="display:block;padding:14px" href="https://wa.me/905327664404?text=MolaVolt%20eksik%20%C5%9Farj%20istasyonu%20bildirimi:%0A%C4%B0stasyon%20ad%C4%B1:%0AMarka:%0AKonum%20linki:%0ANot:" target="_blank" rel="noopener">WhatsApp ile bildir</a></div></section></div>
+    <div class="tab" id="tab-profile"><section class="section"><h3>Profil</h3><p class="muted">MolaVolt</p><div class="panel"><b>MolaVolt</b><p class="muted">Yakındaki şarj istasyonlarını bul, haritada gör ve yol tarifini hemen al.</p></div><div class="panel" style="margin-top:12px"><h3 style="font-size:18px">Destek</h3><p class="muted">Öneri, hata bildirimi veya destek için bize ulaş.</p><a class="routeBtn" style="display:block;text-align:center;margin-top:8px" href="https://wa.me/905327664404?text=MolaVolt%20destek%20talebi:%20" target="_blank" rel="noopener">WhatsApp destek</a></div><div class="panel" style="margin-top:12px"><h3 style="font-size:18px">Fırsat kodlarım</h3><p class="muted">Kullandığın fırsatı buradan onaylayabilirsin.</p><div id="myCouponCards"></div></div></section></div>
+  </main>
 
-  <div id="tab-stations" class="tab"><div class="sectionTitle"><div><h3>İstasyonlar</h3><p>Konumuna göre kayıtlar.</p></div></div><div class="cards" id="stationCards"></div></div>
+  <main class="adminOnly" id="adminPage">
+    <section class="section" style="margin-top:6px">
+      <h3>Admin Panel</h3>
+      <p class="muted">EPDK verisi, istasyon listesi ve sponsor/fırsat yönetimi</p>
+    </section>
 
-  <div id="tab-route" class="tab">
-    <div class="routeHero">
-      <h3>Rota Planla</h3>
-      <p>Hedefini yaz, batarya ve tüketimine göre nerede kaç dakika şarj edeceğini hesapla.</p>
-
-      <div class="routeForm">
-        <div class="routeInputBox">
-          <label>Hedef adres / il / ilçe</label>
-          <input id="rp_dest" placeholder="Örn: Ankara, Kızılay veya tam adres" autocomplete="off" oninput="routeSearchInput()" onfocus="routeSearchInput()">
-          <div id="routeSuggest" class="routeSuggest"></div>
-        </div>
-
-        <div class="routeGrid">
-          <div class="routeInputBox">
-            <label>Mevcut şarj</label>
-            <input id="rp_soc" type="number" inputmode="decimal" value="45" placeholder="%">
-          </div>
-          <div class="routeInputBox">
-            <label>Batarya</label>
-            <input id="rp_battery" type="number" inputmode="decimal" value="60" placeholder="kWh">
-          </div>
-        </div>
-
-        <div class="routeGrid">
-          <div class="routeInputBox">
-            <label>Tüketim tipi</label>
-            <select id="rp_mode" onchange="routeModeChanged()">
-              <option value="manual">Benim ortalamam</option>
-              <option value="wltp">WLTP</option>
-            </select>
-          </div>
-          <div class="routeInputBox">
-            <label id="rp_consumption_label">Tüketim kWh/100 km</label>
-            <input id="rp_consumption" type="number" inputmode="decimal" value="18">
-          </div>
-        </div>
-
-        <button class="routePrimary" onclick="planEvRoute()">Rota planla</button>
-
-        <details class="routeAdvanced">
-          <summary>Gelişmiş ayarlar</summary>
-          <div class="routeGrid">
-            <div class="routeInputBox"><label>Varışta kalsın</label><input id="rp_arrival" type="number" inputmode="decimal" value="10"></div>
-            <div class="routeInputBox"><label>Şarj hedefi</label><input id="rp_target" type="number" inputmode="decimal" value="80"></div>
-          </div>
-          <div class="routeGrid">
-            <div class="routeInputBox"><label>DC fiyat TL/kWh</label><input id="rp_price" type="number" inputmode="decimal" value="10"></div>
-            <div class="routeInputBox"><label>Ortalama şarj hızı kW</label><input id="rp_kw" type="number" inputmode="decimal" value="90"></div>
-          </div>
-          <div class="routeGrid">
-            <div class="routeInputBox"><label>Rota sapma limiti km</label><input id="rp_corridor" type="number" inputmode="decimal" value="25"></div>
-            <div class="routeInputBox"><label>Mesafe km, isteğe bağlı</label><input id="rp_distance" type="number" inputmode="decimal" placeholder="Boş bırak"></div>
-          </div>
-        </details>
-      </div>
+    <div class="adminTabs">
+      <button class="adminTabBtn active" id="adminTab-epdk" onclick="showAdminTab('epdk')">EPDK Veri</button>
+      <button class="adminTabBtn" id="adminTab-stations" onclick="showAdminTab('stations')">İstasyonlar</button>
+      <button class="adminTabBtn" id="adminTab-sponsor" onclick="showAdminTab('sponsor')">Sponsor / Fırsat</button>
+      <button class="adminTabBtn" id="adminTab-reports" onclick="showAdminTab('reports');loadCouponReports()">Raporlar</button>
     </div>
 
-    <div id="routeResult"></div>
-  </div>
+    <section class="adminSection active" id="adminSection-epdk">
+      <div class="panel formBox">
+        <h3>EPDK Türkiye verisi</h3>
+        <p class="muted">Eski/manuel/sabit kayıt gösterilmez. Liste sadece EPDK API’den gelen veridir. Firebase bağlı: EPDK verisi parça parça ortak veritabanına kaydedilir.</p>
+        <label>EPDK / Vercel API URL</label>
+        <input id="epdkUrl" placeholder="https://molavolt.vercel.app/api/epdk">
+        <button class="primaryBtn" style="width:100%;margin-top:8px" onclick="loadEpdk()">EPDK verisini yükle</button>
+        <div class="adminQuick">
+          <button class="secondaryBtn" onclick="loadFirebaseStations()">Firebase’den oku</button>
+          <button class="secondaryBtn" onclick="clearEpdk()">Cihazdaki EPDK’yi temizle</button>
+        </div>
+        <button class="secondaryBtn" style="display:block;text-align:center;margin-top:8px" onclick="clearLegacy()">Eski kayıtları temizle</button>
+        <p class="muted" id="adminStatus" style="font-size:13px;margin-top:10px">Hazır.</p>
+      </div>
 
-  <div id="tab-fav" class="tab"><div class="sectionTitle"><div><h3>Favoriler</h3><p>Kaydettiğin istasyonlar burada olacak.</p></div></div><div class="panel">Şimdilik favori ekleme kapalı.</div></div>
-  <div id="tab-report" class="tab"><div class="sectionTitle"><div><h3>Bildirim</h3><p>Eksik istasyon veya sponsor başvurusu bildir.</p></div></div><div class="panel form"><label>Bildirim tipi</label><select><option>İstasyon arızalı</option><option>Eksik istasyon</option><option>Sponsor olmak istiyorum</option><option>İndirim kodu kullanıldı</option></select><label>Not</label><textarea placeholder="Not yaz"></textarea><button class="submitBtn" onclick="alert('Bildirim alındı')">Gönder</button></div></div>
-  <div id="tab-profile" class="tab"><div class="sectionTitle"><div><h3>Profil</h3><p>Uygulama ve admin</p></div></div><div class="panel"><div class="tags"><span class="tag green">Türkiye geneli canlı veri</span><span class="tag yellow">Admin aynı dosyada</span></div><button class="submitBtn" onclick="openAdmin()">Admin Panelini Aç</button><button class="smallBtn" style="margin-top:10px;width:100%" onclick="startRealSearch()">Konumla tekrar ara</button><button class="smallBtn" style="margin-top:10px;width:100%" onclick="resetAll()">Kayıtları sıfırla</button></div></div>
+      <div class="panel" style="margin-top:12px">
+        <h3 style="font-size:20px">Durum</h3>
+        <p class="muted" id="adminSummary">EPDK kayıtları hazırlanıyor.</p>
+      </div>
+    </section>
+
+    <section class="adminSection" id="adminSection-stations">
+      <div class="panel formBox">
+        <h3>İstasyon ara</h3>
+        <input id="adminSearch" placeholder="Şehir, marka, soket veya istasyon adı" oninput="renderAdmin()">
+      </div>
+      <section class="section"><h3>EPDK istasyon listesi</h3><div class="cards" id="adminStationList"></div></section>
+    </section>
+
+    <section class="adminSection" id="adminSection-sponsor">
+      <div class="panel formBox">
+        <h3>Fırsat / sponsor ekle</h3>
+        <input id="sp_id" type="hidden">
+        <label>Bağlı istasyon</label>
+        <select id="sp_station"></select>
+        <p class="muted" style="font-size:12px;margin:0 0 8px">Boş bırakırsan fırsat tüm istasyon kartlarında görünür.</p>
+        <label>İşletme adı</label>
+        <input id="sp_name" placeholder="Krempark Oto Yıkama">
+        <label>İndirim</label>
+        <input id="sp_discount" placeholder="%10">
+        <label>Kampanya metni</label>
+        <textarea id="sp_offer" placeholder="MolaVolt kullanıcılarına özel fırsat"></textarea>
+        <label>WhatsApp</label>
+        <input id="sp_whatsapp" placeholder="905327664404">
+        <label>Logo URL <span class="muted">(isteğe bağlı)</span></label>
+        <input id="sp_logo" placeholder="https://.../logo.png">
+        <button class="primaryBtn" style="width:100%;margin-top:8px" onclick="saveSponsor()">Fırsatı kaydet</button>
+        <button class="secondaryBtn" style="display:block;text-align:center;margin-top:8px" onclick="clearSponsorForm()">Formu temizle</button>
+      </div>
+      <section class="section"><h3>Fırsatlar</h3><div class="cards" id="adminSponsorList"></div></section>
+    </section>
+
+    <section class="adminSection" id="adminSection-reports">
+      <div class="panel">
+        <h3>Fırsat kodu raporları</h3>
+        <p class="muted">Kod üretimi, müşteri onayı ve sponsor satış onaylarını takip et.</p>
+        <button class="primaryBtn" style="width:100%;margin-top:8px" onclick="loadCouponReports()">Raporu yenile</button>
+        <div class="reportGrid" id="couponReportSummary"></div>
+      </div>
+      <section class="section"><h3>Sponsor dönüşüm tablosu</h3><div class="cards" id="couponSponsorReport"></div></section>
+      <section class="section"><h3>Son kodlar</h3><div class="cards" id="couponRecentList"></div></section>
+    </section>
+  </main>
 </div>
-
-<div class="bottomNav">
-  <button class="navItem active" data-tab="home"><span class="navIcon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M3 11.5 12 4l9 7.5"/><path d="M5.5 10.5V20h13v-9.5"/><path d="M9.5 20v-5h5v5"/></svg></span><span>Ana Sayfa</span></button>
-  <button class="navItem" data-tab="stations"><span class="navIcon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M12 21s6-5.4 6-11a6 6 0 1 0-12 0c0 5.6 6 11 6 11Z"/><circle cx="12" cy="10" r="2.4"/></svg></span><span>İstasyon</span></button>
-  <button class="navItem" data-tab="route"><span class="navIcon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M6 19a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z"/><path d="M18 11a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z"/><path d="M8.5 16h3.2a3.8 3.8 0 0 0 0-7.6H9.5"/></svg></span><span>Rota</span></button>
-  <button class="navItem" data-tab="fav"><span class="navIcon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M20.8 5.8a5.2 5.2 0 0 0-7.4 0L12 7.2l-1.4-1.4a5.2 5.2 0 1 0-7.4 7.4L12 22l8.8-8.8a5.2 5.2 0 0 0 0-7.4Z"/></svg></span><span>Favori</span></button>
-  <button class="navItem" data-tab="report"><span class="navIcon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M18 9a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9Z"/><path d="M10 21h4"/></svg></span><span>Bildir</span></button>
-  <button class="navItem" data-tab="profile"><span class="navIcon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg></span><span>Profil</span></button>
-</div>
-
-<div class="modal" id="detailModal"><div class="sheet"><div class="detailHead"><div><div class="tags" id="detailTags"></div><h3 id="detailName" style="margin:10px 0 4px;font-size:22px"></h3><p id="detailAddress" class="muted" style="margin:0;font-size:13px;line-height:1.4"></p></div><button class="closeBtn" onclick="closeModal('detailModal')">×</button></div><div class="metrics" style="margin-top:14px"><span id="detailKm"></span><span id="detailSocket"></span><span id="detailPower"></span></div><div class="actions"><button class="action full" id="detailDirectionsBtn" type="button">Yol tarifi al</button></div><div class="molaBox"><h4>Şarj olurken yakınında</h4><div class="molaTags" id="detailAmenities"></div></div><div class="sectionTitle" style="margin-top:16px"><div><h3 style="font-size:20px">İndirimli sponsorlar</h3><p>Kodu al, kasada göster</p></div></div><div class="cards" id="detailSponsors"></div></div></div>
-<div class="modal" id="couponModal"><div class="sheet"><div class="detailHead"><div><div class="tag green">🎟️ İndirim kodun hazır</div><h3 id="couponSponsorName" style="margin:10px 0 4px;font-size:22px"></h3><p id="couponOffer" class="muted" style="margin:0;font-size:13px;line-height:1.4"></p></div><button class="closeBtn" onclick="closeModal('couponModal')">×</button></div><div class="couponCode"><small>Kasada bu kodu göster</small><strong id="couponCodeText">MOLA-0000</strong></div><div class="panel" id="couponRules"></div><div class="actions"><button class="action full" id="sendWpBtn">WhatsApp ile işletmeye gönder</button></div><div class="actions"><button class="action secondary full" onclick="copyCoupon()">Kodu kopyala</button></div></div></div>
-<div class="modal" id="adminModal"><div class="sheet"><div class="detailHead"><div><div class="tag green">⚙️ Admin Panel</div><h3 style="margin:10px 0 4px;font-size:22px">Sponsor Kampanya Yönetimi</h3><p class="muted" style="margin:0;font-size:13px">Krempark Oto Yıkama kampanyasını buradan düzenle.</p></div><button class="closeBtn" onclick="closeModal('adminModal')">×</button></div><div class="panel form" style="margin-top:14px"><input type="hidden" id="a_id"><label>Aktif</label><select id="a_active"><option value="true">Aktif</option><option value="false">Pasif</option></select><label>İstasyon</label><select id="a_stationId"></select><label>İşletme adı</label><input id="a_name"><label>İşletme türü</label><input id="a_type"><label>İkon</label><input id="a_icon"><label>Logo URL</label><input id="a_logoUrl" placeholder="https://.../logo.png"><label>İşletme WhatsApp numarası</label><input id="a_whatsapp" placeholder="905xxxxxxxxx"><label>Yakınlık</label><input id="a_distance"><label>İndirim</label><input id="a_discount"><label>Kampanya metni</label><textarea id="a_offer"></textarea><label>Kod prefix</label><input id="a_codePrefix"><label>Kural</label><textarea id="a_rules"></textarea><button class="submitBtn" onclick="saveSponsor()">Kaydet</button><button class="smallBtn" onclick="newSponsor()">Yeni kayıt</button></div><div class="section"><div class="sectionTitle"><div><h3 style="font-size:20px">Sponsorlar</h3><p>Aktif kampanyalar</p></div></div><div class="cards" id="adminSponsorList"></div></div><div class="section"><div class="sectionTitle"><div><h3 style="font-size:20px">Kod kayıtları</h3><p>Bu cihazda oluşan kodlar</p></div></div><div class="cards" id="adminCouponLogs"></div></div></div></div>
+<nav class="bottomNav customerOnly">
+  <button class="navItem active" id="nav-home" onclick="showTab('home')"><span class="navIcon"><svg viewBox="0 0 24 24"><path d="M3 11.5 12 4l9 7.5"/><path d="M5.5 10.5V20h13v-9.5"/><path d="M9.5 20v-6h5v6"/></svg></span><span>Ana</span></button>
+  <button class="navItem" id="nav-stations" onclick="showTab('stations')"><span class="navIcon"><svg viewBox="0 0 24 24"><path d="M12 21s6-5.4 6-11a6 6 0 1 0-12 0c0 5.6 6 11 6 11Z"/><circle cx="12" cy="10" r="2.5"/></svg></span><span>İstasyon</span></button>
+  <button class="navItem" id="nav-route" onclick="showTab('route')"><span class="navIcon"><svg viewBox="0 0 24 24"><path d="M9 18H5a3 3 0 0 1 0-6h14a3 3 0 0 0 0-6h-4"/><path d="M9 14l3 4-3 4"/><path d="M15 10l-3-4 3-4"/></svg></span><span>Rota</span></button>
+  <button class="navItem" id="nav-favorites" onclick="showTab('favorites')"><span class="navIcon"><svg viewBox="0 0 24 24"><path d="M20.8 5.6a5.2 5.2 0 0 0-7.4 0L12 7l-1.4-1.4a5.2 5.2 0 1 0-7.4 7.4L12 21l8.8-8a5.2 5.2 0 0 0 0-7.4Z"/></svg></span><span>Favori</span></button>
+  <button class="navItem" id="nav-report" onclick="showTab('report')"><span class="navIcon"><svg viewBox="0 0 24 24"><path d="M12 22a2.5 2.5 0 0 0 2.4-2h-4.8A2.5 2.5 0 0 0 12 22Z"/><path d="M18 16v-5a6 6 0 1 0-12 0v5l-2 2h16l-2-2Z"/></svg></span><span>Bildir</span></button>
+  <button class="navItem" id="nav-profile" onclick="showTab('profile')"><span class="navIcon"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg></span><span>Profil</span></button>
+</nav>
+<div class="modal" id="mapModal"><div class="sheet"><button class="close" onclick="closeStationMap()">×</button><h2 id="mapModalTitle">Haritada gör</h2><p class="muted" id="mapModalText">İstasyon konumu</p><div class="mapSheetBody"><div id="stationMap"></div></div><div class="cardActions"><button class="secondaryBtn" onclick="closeStationMap()">Kapat</button><a class="routeBtn" id="mapModalRoute" href="#" target="_blank" rel="noopener">Yol tarifi</a></div></div></div>
+<div class="modal" id="detailModal"><div class="sheet"><button class="close" onclick="closeModal('detailModal')">×</button><div id="detailContent"></div></div></div>
+<div class="modal" id="infoModal"><div class="sheet"><button class="close" onclick="closeModal('infoModal')">×</button><h2>MolaVolt</h2><p class="muted">Yakındaki şarj istasyonlarını kolayca bul, haritada gör ve yol tarifi al.</p><div>UFUK_OFFER_COUNT_FIX_0503 + UFUK_ROUTE_SIMPLE_PREMIUM_0506</div></div></div>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
-const APP_VERSION="2026-05-30-1940-mini-icons-no-map-text";
-const ALLOWED_BRANDS=["Tümü","ZES","Eşarj","Trugo","Sharz","Voltrun","Ovolt","WAT","Diğer"];
-const VERIFIED_STATIONS=[
- {id:"trugo-karasu-shell",name:"Trugo Shell Karasu",brand:"Trugo",type:"DC",status:"Açık",address:"Yalı Mah. 135. Sok. No:8/A, Karasu / Sakarya",lat:41.110129,lon:30.673532,distance:0,power:"",sockets:"CCS2",price:"Trugo uygulamasında",amenities:["⛽ Shell","🚻 WC","🛒 Market"],source:"verified"},
- {id:"trugo-karasu-istanbul110",name:"Togg Trugo Karasu",brand:"Trugo",type:"DC",status:"Açık",address:"İstanbul Cad. No:110, Karasu / Sakarya",lat:41.110163,lon:30.672499,distance:0,power:"",sockets:"CCS2",price:"Trugo uygulamasında",amenities:["🚻 WC","🛒 Market"],source:"verified"},
- {id:"esarj-karasu-otopratik",name:"Eşarj Oto Pratik Karasu",brand:"Eşarj",type:"AC",status:"Açık",address:"Yalı Mah. İstanbul Cad. No:74, Karasu / Sakarya",lat:41.108315,lon:30.679326,distance:0,power:"11 kW",sockets:"Type2",price:"Eşarj uygulamasında",amenities:["🔧 Oto Pratik","🚻 WC","🛒 Market"],source:"verified"},
- {id:"esarj-karasu-istanbul62",name:"Eşarj Karasu İstanbul Caddesi",brand:"Eşarj",type:"AC",status:"Açık",address:"İstanbul Cad. No:62, Karasu / Sakarya",lat:41.10775,lon:30.68120,distance:0,power:"",sockets:"Type2",price:"Eşarj uygulamasında",amenities:["🏙️ Merkez"],source:"verified"},
- {id:"ovolt-karasu",name:"Ovolt Karasu",brand:"Ovolt",type:"AC",status:"Açık",address:"Aziziye Mah. Ankara Cad. No:178, Karasu / Sakarya",lat:41.09189815297405,lon:30.725878317941078,distance:0,power:"",sockets:"Type2",price:"Ovolt uygulamasında",amenities:["🚻 WC","🛒 Alışveriş"],source:"verified"},
- {id:"wat-karasu-sahilpark",name:"WAT Sahilpark Otopark",brand:"WAT",type:"AC",status:"Açık",address:"Karasu Plaj Taksi, Yalı Mah. Doğu Karadeniz Cad., Karasu / Sakarya",lat:41.103728,lon:30.710139,distance:0,power:"",sockets:"Type2",price:"WAT Mobilite uygulamasında",amenities:["🏖️ Sahil","🅿️ Otopark"],source:"verified"},
- {id:"zes-krempark",name:"ZES - Düzce Krempark AVM",brand:"ZES",type:"AC/DC",status:"Açık",address:"Krempark AVM, Kültür Mah. İstanbul Cad. No:116, Düzce Merkez",lat:40.840621,lon:31.152219,distance:0,power:"",sockets:"AC + DC",price:"ZES uygulamasında",amenities:["☕ Kafe","🚻 WC","🚗 Oto Yıkama","🛍️ AVM"],source:"verified"},
- {id:"highway",name:"Highway Outlet Şarj",brand:"Trugo",type:"DC",status:"Açık",address:"Highway Outlet, Bolu",lat:40.7540,lon:31.5150,distance:0,power:"",sockets:"CCS2",price:"Operatör uygulamasında",amenities:["🍔 Restoran","🚻 WC","🛒 Market","🛍️ Outlet"],source:"verified"},
- {id:"sapanca",name:"Sapanca Oksijen Dinlenme",brand:"Eşarj",type:"DC",status:"Açık",address:"Sapanca, Sakarya",lat:40.7070,lon:30.2740,distance:0,power:"",sockets:"CCS2",price:"Operatör uygulamasında",amenities:["☕ Kafe","🚻 WC","🛒 Market"],source:"verified"},
- {id:"izmit-symbol",name:"İzmit Symbol AVM",brand:"Voltrun",type:"AC/DC",status:"Açık",address:"İzmit, Kocaeli",lat:40.7640,lon:29.9300,distance:0,power:"",sockets:"CCS2 / Type2",price:"Operatör uygulamasında",amenities:["🛍️ AVM","🍔 Restoran","🚻 WC"],source:"verified"}
-];
-const DEFAULT_SPONSORS=[
- {id:"krempark-oto-yikama",active:true,stationId:"zes-krempark",stationName:"ZES - Düzce Krempark AVM",name:"Krempark Oto Yıkama",type:"Oto Yıkama",icon:"🚗",logoUrl:"",whatsapp:"905000000000",distance:"Otopark içinde",discount:"%10",offer:"MolaVolt kullanıcılarına iç-dış yıkamada %10 indirim",codePrefix:"MOLA-YIKA",rules:"Kod 30 dakika geçerlidir. Kampanya aynı gün içinde bir kez kullanılabilir."},
- {id:"krempark-kahve",active:true,stationId:"zes-krempark",stationName:"ZES - Düzce Krempark AVM",name:"Krempark Kahve Molası",type:"Kafe",icon:"☕",logoUrl:"",whatsapp:"905000000000",distance:"2 dk yürüme",discount:"%15",offer:"Kahve + tatlı menüsünde %15 indirim",codePrefix:"MOLA-KAHVE",rules:"Kod 30 dakika geçerlidir."}
-];
-let stations=[],filtered=[],currentBrand="Tümü",currentSort="near",selectedStation=null,userPos={lat:41.1080,lon:30.6800},realMap=null,markerLayer=null,userMarker=null,lastCoupon="",watchId=null,locationReady=false,lastAccuracy=null,lastLocationTime=null,isLocating=false;
-function esc(t){return String(t||"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]))}
-function km(lat1,lon1,lat2,lon2){const R=6371,dLat=(lat2-lat1)*Math.PI/180,dLon=(lon2-lon1)*Math.PI/180;const a=Math.sin(dLat/2)**2+Math.cos(lat1*Math.PI/180)*Math.cos(lat2*Math.PI/180)*Math.sin(dLon/2)**2;return R*2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a))}
-function normalizeBrand(text){const t=String(text||"").toLowerCase();if(t.includes("zes")||t.includes("zorlu"))return"ZES";if(t.includes("trugo"))return"Trugo";if(t.includes("eşarj")||t.includes("esarj"))return"Eşarj";if(t.includes("voltrun"))return"Voltrun";if(t.includes("sharz"))return"Sharz";if(t.includes("ovolt"))return"Ovolt";if(t.includes("wat")||t.includes("watt"))return"WAT";return"Diğer"}
-function getSponsors(){try{const x=localStorage.getItem("molavolt_sponsors");if(x)return JSON.parse(x).filter(s=>s.active!==false)}catch(e){}return DEFAULT_SPONSORS.filter(s=>s.active!==false)}
-function getAllSponsors(){try{const x=localStorage.getItem("molavolt_sponsors");if(x)return JSON.parse(x)}catch(e){}return DEFAULT_SPONSORS}
-function setSponsors(arr){localStorage.setItem("molavolt_sponsors",JSON.stringify(arr))}
-function saveCouponLog(log){try{const arr=JSON.parse(localStorage.getItem("molavolt_coupon_logs")||"[]");arr.unshift(log);localStorage.setItem("molavolt_coupon_logs",JSON.stringify(arr.slice(0,200)))}catch(e){}}
-function getLogs(){try{return JSON.parse(localStorage.getItem("molavolt_coupon_logs")||"[]")}catch(e){return[]}}
-function initMap(){if(realMap)return;realMap=L.map("realMap",{zoomControl:false}).setView([userPos.lat,userPos.lon],12);L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",{maxZoom:19,attribution:"&copy; OSM"}).addTo(realMap);markerLayer=L.layerGroup().addTo(realMap);setTimeout(()=>realMap.invalidateSize(),300)}
-function stationMapIcon(s,active){
-  const size=active?20:18;
-  return L.divIcon({className:"stationDivIcon",html:`<div class="stationIcon ${active?'selected':''}" title="Yol tarifi">⚡</div>`,iconSize:[size,size],iconAnchor:[size/2,size/2]});
+const VERSION='0506',ADMIN_KEY='ufuk8790',DEFAULT_EPDK_URL='https://molavolt.vercel.app/api/epdk';
+const BRANDS=['Tümü','ZES','Eşarj','Trugo','Sharz','Voltrun','Ovolt','WAT','Diğer'];
+const LEGACY_KEYS=['mv_manual_stations','mv_hidden_stations','mv_turkey_stations','molavolt_turkey_osm_cache','molavolt_osm_cache_v2','molavolt_turkey_admin_seed','molavolt_turkey_admin_hidden','molavolt_turkey_seed','molavolt_hidden_seed'];
+let userPos=loadPos()||{lat:40.840621,lon:31.152219},stations=[],filtered=[],currentBrand='Tümü',sortMode='distance',isAdmin=false,stationMap=null,stationMapMarker=null;
+let homeLimit=40, stationLimit=80, activeCustomerTab='home';
+let searchTimer=null;
+function stableSearch(){
+  if(searchTimer) clearTimeout(searchTimer);
+  searchTimer=setTimeout(()=>applyFilters(),35);
 }
-function renderMap(){
-  initMap();
-  markerLayer.clearLayers();
-  if(userMarker)realMap.removeLayer(userMarker);
-  userMarker=L.marker([userPos.lat,userPos.lon],{icon:L.divIcon({className:"",html:`<div class="userBubble"></div>`,iconSize:[18,18],iconAnchor:[9,9]})}).addTo(realMap);
-  filtered.slice(0,40).forEach(s=>{
-    const active=selectedStation&&selectedStation.id===s.id;
-    const m=L.marker([s.lat,s.lon],{icon:stationMapIcon(s,active),riseOnHover:true}).addTo(markerLayer);
-    m.on("click",()=>openDirections(s));
-  });
-  setTimeout(()=>realMap.invalidateSize(),100);
+function setLocStatus(msg){
+  const el=document.getElementById('locStatus');
+  if(el) el.textContent=msg;
 }
-function centerUser(){startRealSearch(true)}
-function fitStations(){if(!realMap||!filtered.length)return;const pts=[[userPos.lat,userPos.lon],...filtered.slice(0,30).map(s=>[s.lat,s.lon])];try{realMap.fitBounds(pts,{padding:[36,36],maxZoom:13})}catch(e){}}
-function osmStation(el){
-  const tags=el.tags||{}, lat=el.lat||el.center?.lat, lon=el.lon||el.center?.lon;
-  const rawName=tags.name||tags.operator||tags.network||"Şarj istasyonu";
-  const brand=normalizeBrand((tags.operator||"")+" "+(tags.network||"")+" "+rawName);
-  const socketParts=[];
-  if(tags["socket:type2"]||tags["socket:type2_combo"])socketParts.push("Type2/CCS2");
-  if(tags["socket:chademo"])socketParts.push("CHAdeMO");
-  if(tags["socket:tesla_supercharger"])socketParts.push("Tesla");
-  const power=tags["capacity"]?`${tags["capacity"]} ünite`:tags["maxpower"]||tags["socket:type2:output"]||tags["socket:type2_combo:output"]||"";
-  const city=tags["addr:city"]||tags["addr:province"]||tags["is_in:city"]||"";
-  const address=[tags["addr:street"],tags["addr:housenumber"],tags["addr:district"],city].filter(Boolean).join(", ")||"Adres bilgisi yok";
-  return{id:"osm-"+el.type+"-"+el.id,name:rawName,brand,type:power&&String(power).toLowerCase().includes("kw")?"Şarj":"Şarj",status:"Açık",address,lat,lon,distance:km(userPos.lat,userPos.lon,lat,lon),power,sockets:socketParts.join(" / ")||"Soket bilgisi uygulamada",price:"Operatör uygulamasında",amenities:["📍 Harita kaydı"],source:"osm"}
-}
-function mergeStations(remote=[]){
-  const base=VERIFIED_STATIONS.map(s=>({...s,distance:km(userPos.lat,userPos.lon,s.lat,s.lon)}));
-  const all=[...base,...remote.filter(s=>s.lat&&s.lon).map(s=>({...s,distance:km(userPos.lat,userPos.lon,s.lat,s.lon)}))];
-  const seen=[];
-  return all.filter(s=>{
-    if(!ALLOWED_BRANDS.includes(s.brand))s.brand="Diğer";
-    const near=seen.some(x=>km(x.lat,x.lon,s.lat,s.lon)<.10 || (x.brand===s.brand&&String(x.name).toLowerCase()===String(s.name).toLowerCase()));
-    if(near)return false;
-    seen.push(s);
-    return true
-  }).sort((a,b)=>a.distance-b.distance)
-}
-async function overpassQuery(q,timeoutMs=45000){
-  const ctrl=new AbortController();
-  const timer=setTimeout(()=>ctrl.abort(),timeoutMs);
-  try{
-    const res=await fetch("https://overpass-api.de/api/interpreter",{method:"POST",body:q,signal:ctrl.signal});
-    if(!res.ok)throw new Error("Overpass hata");
-    return await res.json();
-  }finally{clearTimeout(timer)}
-}
-function clearOldAppCaches(){
-  try{
-    const old=localStorage.getItem("molavolt_app_version");
-    if(old!==APP_VERSION){
-      localStorage.setItem("molavolt_app_version",APP_VERSION);
-      localStorage.removeItem("molavolt_turkey_osm_cache");
-      localStorage.removeItem("molavolt_osm_cache_v2");
-    }
-    if("serviceWorker" in navigator)navigator.serviceWorker.getRegistrations().then(rs=>rs.forEach(r=>r.unregister())).catch(()=>{});
-    if("caches" in window)caches.keys().then(keys=>keys.forEach(k=>caches.delete(k))).catch(()=>{});
-  }catch(e){}
-}
-function getOsmCache(key,maxAgeHours){
-  try{
-    const c=JSON.parse(localStorage.getItem(key)||"null");
-    if(c&&c.version===APP_VERSION&&c.savedAt&&Date.now()-c.savedAt<maxAgeHours*60*60*1000&&Array.isArray(c.items))return c.items;
-  }catch(e){}
-  return null;
-}
-function setOsmCache(key,items){try{localStorage.setItem(key,JSON.stringify({version:APP_VERSION,savedAt:Date.now(),items}))}catch(e){}}
-async function overpassQueryAny(q,timeoutMs=45000){
-  const endpoints=["https://overpass-api.de/api/interpreter","https://overpass.kumi.systems/api/interpreter","https://overpass.openstreetmap.ru/api/interpreter"];
-  let lastErr=null;
-  for(const url of endpoints){
-    const ctrl=new AbortController();
-    const timer=setTimeout(()=>ctrl.abort(),timeoutMs);
-    try{
-      const res=await fetch(url,{method:"POST",body:q,signal:ctrl.signal,headers:{"Content-Type":"text/plain;charset=UTF-8"}});
-      clearTimeout(timer);
-      if(!res.ok)throw new Error("Overpass hata: "+res.status);
-      return await res.json();
-    }catch(e){clearTimeout(timer);lastErr=e}
-  }
-  throw lastErr||new Error("Overpass erişilemedi");
-}
-async function fetchBboxOsmStations(south,west,north,east,timeout=30000){
-  const q=`[out:json][timeout:25];(node["amenity"="charging_station"](${south},${west},${north},${east});way["amenity"="charging_station"](${south},${west},${north},${east});relation["amenity"="charging_station"](${south},${west},${north},${east}););out center tags;`;
-  const data=await overpassQueryAny(q,timeout);
-  return(data.elements||[]).map(osmStation).filter(s=>s.lat&&s.lon)
-}
-async function fetchLocalOsmStations(radiusDeg=1.35){
-  const key=`molavolt_osm_local_${APP_VERSION}_${userPos.lat.toFixed(1)}_${userPos.lon.toFixed(1)}`;
-  const cached=getOsmCache(key,6);
-  if(cached)return cached;
-  const r=radiusDeg;
-  const items=await fetchBboxOsmStations(userPos.lat-r,userPos.lon-r,userPos.lat+r,userPos.lon+r,30000);
-  setOsmCache(key,items);
-  return items;
-}
-async function fetchTurkeyOsmStations(){
-  const cached=getOsmCache("molavolt_turkey_osm_cache",24);
-  if(cached)return cached;
-  setLocationText("Türkiye geneli istasyonlar yükleniyor...",`Sürüm ${APP_VERSION} · Türkiye verisi parça parça indiriliyor. İlk açılış 30-90 sn sürebilir.`);
-  const boxes=[
-    [35.75,25.50,42.30,30.60],
-    [35.75,30.60,42.30,35.70],
-    [35.75,35.70,42.30,41.00],
-    [35.75,41.00,42.30,44.90]
-  ];
-  let all=[];
-  for(let i=0;i<boxes.length;i++){
-    const [s,w,n,e]=boxes[i];
-    try{
-      setLocationText("Türkiye geneli istasyonlar yükleniyor...",`Bölge ${i+1}/4 indiriliyor. Bulunan kayıt: ${all.length}`);
-      const part=await fetchBboxOsmStations(s,w,n,e,45000);
-      all=all.concat(part);
-    }catch(e){}
-  }
-  setOsmCache("molavolt_turkey_osm_cache",all);
-  return all;
-}
-async function fetchOsmStations(){
-  let local=[];
-  try{local=await fetchLocalOsmStations(1.6)}catch(e){}
-  fetchTurkeyOsmStations().then(items=>{
-    stations=mergeStations(items.concat(local));
-    selectedStation=stations[0]||selectedStation;
-    applyFilters();
-    setLocationText("Konumuna yakın şarj istasyonları",`Sürüm ${APP_VERSION} · Türkiye genelinden ${stations.length} istasyon yüklendi.`);
-  }).catch(()=>{});
-  return local;
-}
-function locationOptions(){return{enableHighAccuracy:true,timeout:30000,maximumAge:0}}
-function setLocationText(txt,detail=""){
-  const m=document.getElementById("mapText");if(m)m.textContent=txt;
-  const s=document.getElementById("subTitle");if(s)s.textContent=txt;
-  const b=document.getElementById("locBadge");if(b)b.textContent=locationReady?"● Canlı konum":"● Konum bekleniyor";
-}
-function locationDetail(pos){
-  const acc=Math.round(pos.coords.accuracy||0);
-  const la=Number(pos.coords.latitude).toFixed(5), lo=Number(pos.coords.longitude).toFixed(5);
-  return `Konum: ${la}, ${lo} · hassasiyet ±${acc} m`;
-}
-function shouldUsePosition(pos){
-  const acc=pos.coords.accuracy||999999;
-  if(!locationReady)return true;
-  if(lastAccuracy===null)return true;
-  const moved=km(userPos.lat,userPos.lon,pos.coords.latitude,pos.coords.longitude);
-  return acc<=lastAccuracy*1.4 || moved>.3 || acc<250;
-}
-function applyNewPosition(pos,center){
-  if(!pos||!pos.coords)return;
-  if(!shouldUsePosition(pos))return;
-  userPos={lat:pos.coords.latitude,lon:pos.coords.longitude};
-  lastAccuracy=pos.coords.accuracy||null;
-  lastLocationTime=Date.now();
-  locationReady=true;
-  const acc=Math.round(lastAccuracy||0);
-  const warning=acc>1500?"Konum hassas değil. Telefon ayarlarından Kesin konum/GPS açık olmalı.":"Konumuna yakın şarj istasyonları";
-  setLocationText(warning,locationDetail(pos));
-  refreshStations(center);
-}
-function getPositionOnce(){
-  return new Promise((resolve,reject)=>navigator.geolocation.getCurrentPosition(resolve,reject,locationOptions()));
-}
-async function improveLocation(center=false){
-  if(isLocating)return;
-  isLocating=true;
-  let best=null;
-  for(let i=0;i<5;i++){
-    try{
-      const pos=await getPositionOnce();
-      if(!best || (pos.coords.accuracy||999999)<(best.coords.accuracy||999999))best=pos;
-      applyNewPosition(best,center && i===0);
-      if((best.coords.accuracy||999999)<80)break;
-    }catch(e){break}
-    await new Promise(r=>setTimeout(r,1800));
-  }
-  if(best)applyNewPosition(best,center);
-  isLocating=false;
-}
-async function refreshStations(center=false){
-  let remote=[];
-  try{remote=await fetchOsmStations()}catch(e){}
-  stations=mergeStations(remote);
-  selectedStation=stations[0]||null;
-  applyFilters();
-  const detail=locationReady?`Sürüm ${APP_VERSION} · Konumuna göre sıralandı. Şu an ${stations.length} istasyon gösteriliyor. Türkiye verisi arka planda tamamlanır.`:`Sürüm ${APP_VERSION} · ${stations.length} istasyon gösteriliyor.`;
-  setLocationText("Konumuna yakın şarj istasyonları",detail);
-  if(realMap){center?centerUserOnly():fitStations()}
-}
-function centerUserOnly(){if(realMap)realMap.setView([userPos.lat,userPos.lon],14,{animate:true})}
-function startLocationWatch(){
-  if(!navigator.geolocation)return;
-  if(watchId!==null){try{navigator.geolocation.clearWatch(watchId)}catch(e){}watchId=null}
-  watchId=navigator.geolocation.watchPosition(pos=>applyNewPosition(pos,false),err=>{},locationOptions());
-}
-async function startRealSearch(center=false){
-  if(!navigator.geolocation){setLocationText("Konum izni yok, varsayılan liste gösteriliyor");refreshStations(false);return}
-  setLocationText("Konum güncelleniyor...","Telefon GPS verisi bekleniyor. Bu işlem birkaç saniye sürebilir.");
-  startLocationWatch();
-  improveLocation(center).catch(()=>{
-    setLocationText("Konum alınamadı, izinleri kontrol et","Chrome site ayarlarından konum iznini ve telefonda GPS/Kesin konum ayarını aç.");
-    refreshStations(false);
-    if(center)alert("Konum alınamadı. Chrome > Site ayarları > Konum: İzin ver. Android ayarlarında Chrome için Kesin konum açık olsun.")
-  });
-}
-function renderBrandChips(){document.getElementById("brandChips").innerHTML=ALLOWED_BRANDS.map(b=>`<button class="chip ${b===currentBrand?'active':''}" data-brand="${esc(b)}">${esc(b)}</button>`).join("");document.querySelectorAll(".chip").forEach(btn=>btn.onclick=()=>{currentBrand=btn.dataset.brand;renderBrandChips();applyFilters()})}
-function applyFilters(){const q=document.getElementById("searchInput").value.trim().toLowerCase();filtered=stations.filter(s=>(currentBrand==="Tümü"||s.brand===currentBrand)&&(!q||(s.name+s.brand+s.address).toLowerCase().includes(q)));filtered.sort((a,b)=>currentSort==="name"?a.name.localeCompare(b.name,"tr"):a.distance-b.distance);renderAll()}
-function renderAll(){renderBrandChips();renderCards();renderFeatured();renderSponsors();renderMap();renderAdminLists();document.getElementById("countText").textContent=`${filtered.length} istasyon gösteriliyor`;document.getElementById("stationCards").innerHTML=document.getElementById("homeCards").innerHTML}
 
-function mapsUrl(s){
-  return `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(s.lat+","+s.lon)}&travelmode=driving`;
+function $(id){return document.getElementById(id)}function esc(t){return String(t??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]))}
+function loadPos(){try{return JSON.parse(localStorage.getItem('mv_pos')||'null')}catch(e){return null}}function savePos(p){localStorage.setItem('mv_pos',JSON.stringify(p))}
+function km(a,b,c,d){const R=6371,toRad=x=>x*Math.PI/180;const dLat=toRad(c-a),dLon=toRad(d-b);const x=Math.sin(dLat/2)**2+Math.cos(toRad(a))*Math.cos(toRad(c))*Math.sin(dLon/2)**2;return R*2*Math.atan2(Math.sqrt(x),Math.sqrt(1-x))}
+function getJson(k,d){try{return JSON.parse(localStorage.getItem(k)||JSON.stringify(d))}catch(e){return d}}function setJson(k,v){localStorage.setItem(k,JSON.stringify(v))}
+function epdkStations(){return getJson('molavolt_epdk_stations',[])}function setEpdkStations(v){setJson('molavolt_epdk_stations',v||[])}
+function sponsors(){return getJson('mv_sponsors',[{id:'sp-krempark-yikama',stationId:'',name:'Krempark Oto Yıkama',discount:'%10',offer:'MolaVolt kullanıcılarına oto yıkamada özel indirim',whatsapp:'905327664404',logo:''}])}
+function setSponsors(v){
+  setJson('mv_sponsors',v||[]);
+  if(window.saveSponsorsToFirebase) window.saveSponsorsToFirebase(v||[]);
 }
-function openDirectionsById(id,ev){
-  if(ev){ev.preventDefault();ev.stopPropagation();}
-  const s=stations.find(x=>String(x.id)===String(id))||filtered.find(x=>String(x.id)===String(id));
-  if(!s||!s.lat||!s.lon){alert("Bu istasyon için konum bilgisi yok.");return;}
-  const url=mapsUrl(s);
-  const w=window.open(url,"_blank","noopener,noreferrer");
-  if(!w){window.location.href=url;}
-}
-function cardHtml(s){return `<div class="station" onclick="selectStationById('${esc(s.id)}')"><div class="stationTop"><div><div class="tags"><span class="tag green">${esc(s.brand)}</span><span class="tag blue">${esc(s.status)}</span>${s.source==='verified'?'<span class="tag yellow">Sabit kayıt</span>':''}</div><h4>${esc(s.name)}</h4><p>${esc(s.address)}</p></div><div style="text-align:right"><b>${Number(s.distance).toFixed(1)} km</b><p>${esc(s.sockets)}</p></div></div><div class="metrics"><span>${esc(s.type)}</span><span>${getSponsors().filter(x=>x.stationId===s.id).length} fırsat</span><button class="dirLink" type="button" onclick="openDirectionsById('${esc(s.id)}',event)">Yol tarifi</button></div></div>`}
-function renderCards(){const shown=filtered.slice(0,150);const more=filtered.length>shown.length?`<div class="panel">${filtered.length-shown.length} istasyon daha var. Arama kutusundan şehir/marka adı yazabilirsin.</div>`:"";const html=shown.map(cardHtml).join("")+more||'<div class="panel">Bu filtrede istasyon bulunamadı.</div>';document.getElementById("homeCards").innerHTML=html;document.getElementById("stationCards").innerHTML=html}
-function selectStationById(id){const s=stations.find(x=>x.id===id);if(s)selectStation(s,true)}
-function selectStation(s,open=false){selectedStation=s;renderFeatured();renderMap();if(open)openDetail(s)}
-function renderFeatured(){const s=selectedStation||filtered[0];if(!s){document.getElementById("featuredCard").innerHTML="";return}document.getElementById("featuredCard").innerHTML=`<div class="tags"><span class="tag green">${esc(s.brand)}</span><span class="tag blue">${esc(s.status)}</span></div><h3 style="margin:10px 0 4px">${esc(s.name)}</h3><p class="muted" style="margin:0;font-size:13px">${esc(s.address)}</p><div class="metrics"><span>${Number(s.distance).toFixed(1)} km</span><span>${esc(s.sockets)}</span><span>${getSponsors().filter(x=>x.stationId===s.id).length} fırsat</span></div><div class="actions"><button class="action" onclick="openDetailById('${esc(s.id)}')">Detay</button><button class="action secondary" type="button" onclick="openDirectionsById('${esc(s.id)}',event)">Yol tarifi</button></div>`}
-function openDetailById(id){const s=stations.find(x=>x.id===id);if(s)openDetail(s)}
-function openDetail(s){selectedStation=s;document.getElementById("detailTags").innerHTML=`<span class="tag green">${esc(s.brand)}</span><span class="tag blue">${esc(s.status)}</span>`;document.getElementById("detailName").textContent=s.name;document.getElementById("detailAddress").textContent=s.address;document.getElementById("detailKm").textContent=Number(s.distance).toFixed(1)+" km";document.getElementById("detailSocket").textContent=s.sockets;document.getElementById("detailPower").textContent=s.price;document.getElementById("detailAmenities").innerHTML=(s.amenities||[]).map(a=>`<span>${esc(a)}</span>`).join("");const dirBtn=document.getElementById("detailDirectionsBtn");if(dirBtn)dirBtn.onclick=(ev)=>openDirectionsById(s.id,ev);document.getElementById("detailSponsors").innerHTML=getSponsors().filter(x=>x.stationId===s.id).map(sp=>sponsorHtml(sp,false)).join("")||'<div class="panel">Bu istasyonda sponsor fırsatı yok.</div>';openModal("detailModal")}
-function sponsorHtml(sp,wide){return `<div class="${wide?'sponsorCard':'station'}"><div class="sponsorHeader"><div class="sponsorLogo">${sp.logoUrl?`<img src="${esc(sp.logoUrl)}">`:esc(sp.icon||'🏪')}</div><div><span class="sponsorLabel">${esc(sp.discount)} indirim</span><h4>${esc(sp.name)}</h4></div></div><p>${esc(sp.offer)}</p><div class="metrics"><span>${esc(sp.type)}</span><span>${esc(sp.distance)}</span></div><button class="couponBtn" onclick="makeCoupon('${esc(sp.id)}')">Kod al</button></div>`}
-function renderSponsors(){const arr=getSponsors();document.getElementById("sponsorCards").innerHTML=arr.map(sp=>sponsorHtml(sp,true)).join("")||'<div class="panel">Sponsor yok.</div>'}
-function makeCoupon(id){const sp=getAllSponsors().find(x=>x.id===id);if(!sp)return;const n=Math.floor(1000+Math.random()*9000);lastCoupon=`${sp.codePrefix||"MOLA"}-${n}`;saveCouponLog({code:lastCoupon,sponsorName:sp.name,station:sp.stationName,createdAt:new Date().toISOString(),whatsapp:sp.whatsapp});document.getElementById("couponSponsorName").textContent=sp.name;document.getElementById("couponOffer").textContent=sp.offer;document.getElementById("couponCodeText").textContent=lastCoupon;document.getElementById("couponRules").textContent=sp.rules||"Kod 30 dakika geçerlidir.";document.getElementById("sendWpBtn").onclick=()=>sendWhatsapp(sp,lastCoupon);openModal("couponModal");renderAdminLists()}
-function sendWhatsapp(sp,code){const phone=(sp.whatsapp||"").replace(/[^0-9]/g,"");if(!phone||phone==="905000000000"){alert("Admin panelden işletme WhatsApp numarasını gerçek numara ile değiştir.");return}const msg=`MolaVolt indirim kodu:%0A${encodeURIComponent(code)}%0A%0Aİşletme: ${encodeURIComponent(sp.name)}%0AKampanya: ${encodeURIComponent(sp.offer)}%0Aİstasyon: ${encodeURIComponent(sp.stationName||"")}%0A%0AMüşteri bu kodu kasada gösterecek.`;window.open(`https://wa.me/${phone}?text=${msg}`,"_blank")}
-function copyCoupon(){if(!lastCoupon)return;navigator.clipboard?.writeText(lastCoupon).then(()=>alert("Kod kopyalandı: "+lastCoupon)).catch(()=>alert("Kod: "+lastCoupon))}
-function openModal(id){document.getElementById(id).classList.add("show")}function closeModal(id){document.getElementById(id).classList.remove("show")}
-function openAdmin(){openModal("adminModal");initAdminForm();renderAdminLists()}
-function initAdminForm(){document.getElementById("a_stationId").innerHTML=stations.map(s=>`<option value="${esc(s.id)}">${esc(s.name)}</option>`).join("");if(!document.getElementById("a_id").value){editSponsor("krempark-oto-yikama")}}
-function newSponsor(){["a_id","a_name","a_type","a_icon","a_logoUrl","a_whatsapp","a_distance","a_discount","a_offer","a_codePrefix","a_rules"].forEach(id=>document.getElementById(id).value="");document.getElementById("a_active").value="true"}
-function editSponsor(id){const s=getAllSponsors().find(x=>x.id===id);if(!s)return;document.getElementById("a_id").value=s.id;document.getElementById("a_active").value=String(s.active!==false);document.getElementById("a_stationId").value=s.stationId;["name","type","icon","logoUrl","whatsapp","distance","discount","offer","codePrefix","rules"].forEach(k=>document.getElementById("a_"+k).value=s[k]||"")}
-function saveSponsor(){let arr=getAllSponsors();let id=document.getElementById("a_id").value||("sponsor-"+Date.now());const st=stations.find(s=>s.id===document.getElementById("a_stationId").value)||stations[0];const obj={id,active:document.getElementById("a_active").value==="true",stationId:st.id,stationName:st.name,name:document.getElementById("a_name").value||"Sponsor İşletme",type:document.getElementById("a_type").value||"İşletme",icon:document.getElementById("a_icon").value||"🏪",logoUrl:document.getElementById("a_logoUrl").value,whatsapp:document.getElementById("a_whatsapp").value,distance:document.getElementById("a_distance").value||"Yakında",discount:document.getElementById("a_discount").value||"İndirim",offer:document.getElementById("a_offer").value||"MolaVolt kullanıcılarına özel fırsat",codePrefix:document.getElementById("a_codePrefix").value||"MOLA",rules:document.getElementById("a_rules").value||"Kod 30 dakika geçerlidir."};const i=arr.findIndex(x=>x.id===id);if(i>=0)arr[i]=obj;else arr.unshift(obj);setSponsors(arr);document.getElementById("a_id").value=id;renderAll();alert("Kaydedildi")}
-function deleteSponsor(id){if(!confirm("Silinsin mi?"))return;setSponsors(getAllSponsors().filter(x=>x.id!==id));renderAll()}
-function renderAdminLists(){const a=document.getElementById("adminSponsorList"),l=document.getElementById("adminCouponLogs");if(!a||!l)return;a.innerHTML=getAllSponsors().map(s=>`<div class="station"><h4>${esc(s.name)}</h4><p>${esc(s.offer)}</p><div class="actions"><button class="smallBtn" onclick="editSponsor('${esc(s.id)}')">Düzenle</button><button class="smallBtn danger" onclick="deleteSponsor('${esc(s.id)}')">Sil</button></div></div>`).join("");l.innerHTML=getLogs().slice(0,20).map(x=>`<div class="station"><h4>${esc(x.code)}</h4><p>${esc(x.sponsorName)} · ${new Date(x.createdAt).toLocaleString('tr-TR')}</p></div>`).join("")||'<div class="panel">Kod kaydı yok.</div>'}
-function resetAll(){localStorage.removeItem("molavolt_sponsors");localStorage.removeItem("molavolt_coupon_logs");localStorage.removeItem("molavolt_turkey_osm_cache");localStorage.removeItem("molavolt_osm_cache_v2");Object.keys(localStorage).filter(k=>k.startsWith("molavolt_osm_local_")).forEach(k=>localStorage.removeItem(k));startRealSearch();alert("Kayıtlar ve Türkiye istasyon önbelleği sıfırlandı")}
 
-/* UFUK_ROUTE_PREMIUM_PATCH_0507_JS */
-let selectedRouteDest=null,routeSearchTimer=null;
-const ROUTE_FALLBACK=[
-  {label:"Ankara",sub:"Ankara, Türkiye",lat:39.9334,lon:32.8597},
-  {label:"İstanbul",sub:"İstanbul, Türkiye",lat:41.0082,lon:28.9784},
-  {label:"İzmir",sub:"İzmir, Türkiye",lat:38.4237,lon:27.1428},
-  {label:"Bolu",sub:"Bolu, Türkiye",lat:40.7350,lon:31.6061},
-  {label:"Düzce",sub:"Düzce, Türkiye",lat:40.8438,lon:31.1565},
-  {label:"Karasu",sub:"Sakarya / Karasu",lat:41.1047,lon:30.6928},
-  {label:"Eskişehir",sub:"Eskişehir, Türkiye",lat:39.7767,lon:30.5206},
-  {label:"Bursa",sub:"Bursa, Türkiye",lat:40.1885,lon:29.0610},
-  {label:"Antalya",sub:"Antalya, Türkiye",lat:36.8969,lon:30.7133},
-  {label:"Konya",sub:"Konya, Türkiye",lat:37.8746,lon:32.4932}
-];
-function routeVal(id,def=0){const v=parseFloat(String(document.getElementById(id)?.value||"").replace(",","."));return isFinite(v)?v:def}
-function routeModeChanged(){const mode=document.getElementById("rp_mode")?.value||"manual";const inp=document.getElementById("rp_consumption"),lab=document.getElementById("rp_consumption_label");if(!inp)return;if(mode==="wltp"){inp.value=inp.value||"15";if(lab)lab.textContent="WLTP kWh/100 km"}else{inp.value=inp.value||"18";if(lab)lab.textContent="Tüketim kWh/100 km"}}
-function hideRouteSuggest(){const box=document.getElementById("routeSuggest");if(box)box.classList.remove("show")}
-function renderRouteSuggest(list){
-  const box=document.getElementById("routeSuggest"); if(!box)return;
-  if(!list.length){box.classList.remove("show");box.innerHTML="";return}
-  box.innerHTML=list.slice(0,6).map((x,i)=>`<button type="button" onclick="chooseRouteDest(${Number(x.lat)},${Number(x.lon)},'${esc(x.label)}','${esc(x.sub||"")}')">${esc(x.label)}<small>${esc(x.sub||"Türkiye")}</small></button>`).join("");
-  box.classList.add("show");
+
+function deviceId(){
+  let id=localStorage.getItem('molavolt_device_id');
+  if(!id){id='dev-'+Date.now()+'-'+Math.random().toString(16).slice(2);localStorage.setItem('molavolt_device_id',id)}
+  return id;
 }
-function localRouteSuggest(q){
-  const s=String(q||"").toLowerCase();
-  return ROUTE_FALLBACK.filter(x=>(x.label+" "+x.sub).toLowerCase().includes(s));
+function localCoupons(){return getJson('molavolt_my_coupons',[])}
+function setLocalCoupons(v){setJson('molavolt_my_coupons',v||[])}
+function addLocalCoupon(c){
+  const arr=localCoupons().filter(x=>x.code!==c.code);
+  arr.unshift(c);
+  setLocalCoupons(arr.slice(0,30));
+  renderMyCoupons();
 }
-async function routeSearchInput(){
-  const input=document.getElementById("rp_dest"); if(!input)return;
-  const q=input.value.trim(); selectedRouteDest=null;
-  if(routeSearchTimer)clearTimeout(routeSearchTimer);
-  if(q.length<2){renderRouteSuggest([]);return}
-  routeSearchTimer=setTimeout(async()=>{
-    const local=localRouteSuggest(q);
-    renderRouteSuggest(local);
-    try{
-      const url="https://nominatim.openstreetmap.org/search?format=json&addressdetails=1&limit=6&countrycodes=tr&q="+encodeURIComponent(q);
-      const res=await fetch(url,{headers:{"Accept":"application/json"}});
-      const arr=await res.json();
-      const list=(arr||[]).map(x=>({label:(x.name||String(x.display_name||"").split(",")[0]||q),sub:x.display_name||"Türkiye",lat:parseFloat(x.lat),lon:parseFloat(x.lon)})).filter(x=>isFinite(x.lat)&&isFinite(x.lon));
-      if(list.length)renderRouteSuggest(list);
-    }catch(e){}
-  },320);
+function couponStatusText(c){
+  if(c.status==='sponsor_ok')return 'Sponsor onayladı';
+  if(c.status==='customer_ok')return 'Müşteri kullandım dedi';
+  if(c.status==='cancelled')return 'İptal / kullanılmadı';
+  return 'Kod oluşturuldu';
 }
-function chooseRouteDest(lat,lon,label,sub){
-  selectedRouteDest={lat,lon,label,sub};
-  const input=document.getElementById("rp_dest"); if(input)input.value=label;
-  hideRouteSuggest();
+function couponStatusClass(c){
+  if(c.status==='sponsor_ok')return 'ok';
+  if(c.status==='customer_ok')return 'warn';
+  return '';
 }
-function getRouteDest(){
-  if(selectedRouteDest)return selectedRouteDest;
-  const q=(document.getElementById("rp_dest")?.value||"Ankara").trim();
-  const found=localRouteSuggest(q)[0]||ROUTE_FALLBACK[0];
-  return {lat:found.lat,lon:found.lon,label:found.label,sub:found.sub};
+function renderMyCoupons(){
+  const box=$('myCouponCards');
+  if(!box)return;
+  const arr=localCoupons();
+  box.innerHTML=arr.length?arr.map(c=>`<div class="couponRow">
+    <b>${esc(c.code)}</b><br>
+    <span class="statusPill ${couponStatusClass(c)}">${esc(couponStatusText(c))}</span>
+    <p class="muted" style="margin-top:8px">${esc(c.sponsorName||'Sponsor')} ${c.stationName?('· '+esc(c.stationName)):''}</p>
+    <div class="couponActions">
+      <button class="primaryBtn" onclick="confirmCoupon('${esc(c.code)}','customer_ok')">Kullandım</button>
+      <button class="secondaryBtn" onclick="confirmCoupon('${esc(c.code)}','cancelled')">Kullanmadım</button>
+    </div>
+  </div>`).join(''):'<div class="empty">Henüz fırsat kodun yok.</div>';
+}
+
+function dayNumber(){return Math.floor(Date.now()/86400000)}
+function sponsorSeed(o){return String(o.id||o.name||'').split('').reduce((a,c)=>a+c.charCodeAt(0),0)}
+function fairSponsors(list,context='global'){
+  const arr=[...(list||[])];
+  const day=dayNumber()+String(context||'global').length;
+  return arr.sort((a,b)=>((sponsorSeed(a)+day)%997)-((sponsorSeed(b)+day)%997));
+}
+function sponsorLogoHtml(o){
+  return o.logo?`<img class="sponsorLogo" src="${esc(o.logo)}" onerror="this.style.display='none';this.nextElementSibling.style.display='grid'"><div class="gift" style="display:none">🎁</div>`:`<div class="gift">🎁</div>`;
+}
+function makeCouponCode(o){
+  const base=(String(o.name||'MOLA').replace(/[^A-Za-zÇĞİÖŞÜçğıöşü0-9]/g,'').slice(0,4)||'MOLA').toUpperCase();
+  return base + Math.floor(1000+Math.random()*9000);
+}
+async function useSponsorCoupon(id,stationId=''){
+  const o=sponsors().find(x=>x.id===id);
+  if(!o)return alert('Fırsat bulunamadı.');
+  const s=stations.find(x=>x.id===stationId)||null;
+  const code=makeCouponCode(o);
+  const coupon={
+    code,
+    sponsorId:o.id,
+    sponsorName:o.name||'Sponsor',
+    sponsorWhatsapp:o.whatsapp||'',
+    stationId:s?s.id:(o.stationId||''),
+    stationName:s?s.name:'',
+    customerDeviceId:deviceId(),
+    status:'created',
+    customerConfirmed:false,
+    sponsorConfirmed:false,
+    createdMs:Date.now()
+  };
+  if(window.createCouponFirebase){
+    try{await window.createCouponFirebase(coupon)}catch(err){console.error(err)}
+  }
+  addLocalCoupon(coupon);
+  const phone=String(o.whatsapp||'').replace(/[^0-9]/g,'');
+  const sponsorLink=`${location.origin}${location.pathname}?coupon=${encodeURIComponent(code)}&action=sponsor_ok`;
+  const customerLink=`${location.origin}${location.pathname}?coupon=${encodeURIComponent(code)}&action=customer_ok`;
+  const msg=`Merhaba, MolaVolt fırsat kodumu kullanmak istiyorum.%0A%0AKod: ${code}%0AFirma: ${encodeURIComponent(o.name||'Sponsor')}%0Aİndirim: ${encodeURIComponent(o.discount||'')}${s?`%0Aİstasyon: ${encodeURIComponent(s.name)}`:''}%0A%0ASatış gerçekleştiyse onay linki:%0A${encodeURIComponent(sponsorLink)}%0A%0AMüşteri kullandı onay linki:%0A${encodeURIComponent(customerLink)}`;
+  if(!phone){
+    alert('Fırsat kodun: '+code+'\\nSponsor WhatsApp numarası eklenmemiş. Profil > Fırsat kodlarım bölümünden kullandım onayı verebilirsin.');
+    return;
+  }
+  alert('Fırsat kodun oluşturuldu: '+code+'\\nWhatsApp mesajı açılıyor. Sonra Profil > Fırsat kodlarım bölümünden kullandım onayı verebilirsin.');
+  window.open(`https://wa.me/${phone}?text=${msg}`,'_blank','noopener');
+}
+
+function routeUrl(s){return `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(s.lat+','+s.lon)}&travelmode=driving`}
+function normBrand(v){const t=String(v||'').toLowerCase();if(t.includes('zes')||t.includes('zorlu'))return'ZES';if(t.includes('eşarj')||t.includes('esarj'))return'Eşarj';if(t.includes('trugo')||t.includes('togg'))return'Trugo';if(t.includes('sharz'))return'Sharz';if(t.includes('voltrun'))return'Voltrun';if(t.includes('ovolt'))return'Ovolt';if(t.includes('wat'))return'WAT';return'Diğer'}
+function toNum(v){if(typeof v==='number')return v;const m=String(v??'').replace(',','.').match(/-?\d+(\.\d+)?/);return m?parseFloat(m[0]):NaN}
+function pick(o,keys){for(const k of keys){if(o&&o[k]!==undefined&&o[k]!==null&&String(o[k]).trim()!=='')return o[k]}return''}
+function rowObject(row,cols){if(!Array.isArray(row))return row||{};const o={};(cols||[]).forEach((c,i)=>o[c]=row[i]);return o}
+function parseMaybe(v){if(typeof v!=='string')return v;const t=v.trim();if(!t)return v;try{return JSON.parse(t)}catch(e){}const a=t.indexOf('['),b=t.lastIndexOf(']');if(a>=0&&b>a){try{return JSON.parse(t.slice(a,b+1))}catch(e){}}const c=t.indexOf('{'),d=t.lastIndexOf('}');if(c>=0&&d>c){try{return JSON.parse(t.slice(c,d+1))}catch(e){}}return v}
+function socketSummary(soketler){let sockets='Soket bilgisi EPDK verisinde',power='kW bilgisi EPDK verisinde';try{soketler=parseMaybe(soketler);const arr=Array.isArray(soketler)?soketler:(soketler?[soketler]:[]);const sv=[],pv=[];arr.forEach(x=>{x=parseMaybe(x);if(!x)return;const st=pick(x,['soketTipi','soketTuru','socketType','connectorType','tip']);const pw=pick(x,['soketGucu','guc','kw','power']);if(st)sv.push(String(st));if(pw)pv.push(String(pw).includes('kW')?String(pw):String(pw)+' kW')});if(sv.length)sockets=[...new Set(sv)].join(' / ');if(pv.length)power=[...new Set(pv)].join(' / ')}catch(e){}return{sockets,power}}
+function normalizeEpdkData(data){data=parseMaybe(data);let rows=[];const cols=data&&Array.isArray(data.columnNames)?data.columnNames:[];if(data&&typeof data.result==='string')data={...data,result:parseMaybe(data.result)};if(Array.isArray(data))rows=data;else if(data&&Array.isArray(data.result))rows=data.result.map(r=>rowObject(parseMaybe(r),cols));else if(data&&data.result&&typeof data.result==='object')rows=[data.result];else if(data&&data.data){const d=parseMaybe(data.data);if(Array.isArray(d))rows=d;else if(d&&Array.isArray(d.result))rows=d.result.map(r=>rowObject(parseMaybe(r),cols))}const out=[];rows.forEach((raw,idx)=>{raw=parseMaybe(raw);const r=rowObject(raw,cols);const lat=toNum(pick(r,['enlem','lat','latitude','koordinatx','koordinatX']));const lon=toNum(pick(r,['boylam','lon','lng','longitude','koordinaty','koordinatY']));if(!isFinite(lat)||!isFinite(lon))return;const sok=socketSummary(r.soketler);const name=pick(r,['sarjIstasyonuAdi','istasyonAdi','ad','name'])||'EPDK Şarj İstasyonu';const op=pick(r,['marka','sarjAgiIsletmecisiUnvan','sarjIstasyonuIsletmecisi','isletmeciUnvan'])||'Diğer';const address=pick(r,['adres','address'])||'Adres bilgisi yok';const no=pick(r,['sarjIstasyonuNo','istasyonNo','id'])||(idx+'-'+lat.toFixed(5)+'-'+lon.toFixed(5));out.push({id:'epdk-'+String(no).replace(/[^a-zA-Z0-9_.-]/g,'-')+'-'+idx,name:String(name),brand:normBrand(String(op)+' '+String(name)),type:pick(r,['hizmetSekli'])||'Şarj',status:'Açık',address:String(address),lat,lon,distance:km(userPos.lat,userPos.lon,lat,lon),sockets:sok.sockets,power:sok.power,source:'EPDK'})});const seen=new Set();return out.filter(s=>{const key=s.name+'|'+s.lat.toFixed(5)+'|'+s.lon.toFixed(5);if(seen.has(key))return false;seen.add(key);return true})}
+function clearLegacy(){clearLegacySilent();alert('Eski kayıtlar temizlendi.')}function clearLegacySilent(){LEGACY_KEYS.forEach(k=>localStorage.removeItem(k));Object.keys(localStorage).filter(k=>k.startsWith('molavolt_osm')).forEach(k=>localStorage.removeItem(k))}
+function buildStations(){stations=epdkStations().map(s=>({...s,distance:km(userPos.lat,userPos.lon,s.lat,s.lon)})).sort((a,b)=>a.distance-b.distance)}
+function applyFilters(){
+  const q=($('searchInput')?.value||'').trim().toLowerCase();
+  filtered=stations.filter(s=>(currentBrand==='Tümü'||s.brand===currentBrand)&&(!q||String(s.name+s.brand+s.address+s.sockets+s.power).toLowerCase().includes(q)));
+  filtered.sort((a,b)=>sortMode==='name'?a.name.localeCompare(b.name,'tr'):(a.distance||0)-(b.distance||0));
+  homeLimit=40;
+  stationLimit=80;
+  renderAll();
+}
+function renderChips(){$('brandChips').innerHTML=BRANDS.map(b=>`<button class="chip ${b===currentBrand?'active':''}" onclick="setBrand('${esc(b)}')">${esc(b)}</button>`).join('')}function setBrand(b){currentBrand=b;renderChips();applyFilters()}function setSort(s){sortMode=s;$('sortDistance')?.classList.toggle('active',s==='distance');$('sortName')?.classList.toggle('active',s==='name');applyFilters()}
+function stationOffers(id){
+  return sponsors().filter(x=>!x.stationId || x.stationId===id);
+}
+function offerCount(id){
+  return stationOffers(id).length;
+}
+function stationCard(s){
+  const offers=offerCount(s.id);
+  return `<div class="station" onclick="openDetail('${esc(s.id)}')">
+    <div class="stationTop">
+      <div>
+        <div class="tags">
+          <span class="tag g">${esc(s.brand)}</span>
+          <span class="tag b">${esc(s.status)}</span>
+          <span class="tag y">EPDK</span>
+          ${offers?`<span class="tag y">🎁 ${offers} fırsat</span>`:''}
+        </div>
+        <h4>${esc(s.name)}</h4>
+        <p>${esc(s.address)}</p>
+      </div>
+      <div style="text-align:right">
+        <b>${Number(s.distance||0).toFixed(1)} km</b>
+        <p>${esc(s.sockets)}</p>
+      </div>
+    </div>
+    <div class="metrics">
+      <span>${esc(s.power||'kW bilgisi yok')}</span>
+      <span>${offers} fırsat</span>
+    </div>
+    <div class="cardActions">
+      <button type="button" class="mapShowBtn" onclick="openStationMap('${esc(s.id)}',event)">Haritada gör</button>
+      <a class="routeBtn routeActionBtn" href="${routeUrl(s)}" target="_blank" rel="noopener" onclick="event.stopPropagation()">Yol tarifi</a>
+    </div>
+  </div>`;
+}
+
+function renderCards(){
+  const empty='<div class="empty">Şu anda gösterilecek istasyon bulunamadı. Lütfen birazdan tekrar dene.</div>';
+
+  const homeList=filtered.slice(0,homeLimit);
+  const stationList=filtered.slice(0,stationLimit);
+
+  let homeHtml=homeList.map(stationCard).join('')||empty;
+  let stationHtml=stationList.map(stationCard).join('')||empty;
+
+  if(filtered.length>homeLimit){
+    homeHtml+=`<button class="secondaryBtn loadMoreBtn" onclick="homeLimit+=40;renderCards()">Daha fazla göster (${filtered.length-homeLimit} kaldı)</button>`;
+  }
+
+  if(filtered.length>stationLimit){
+    stationHtml+=`<button class="secondaryBtn loadMoreBtn" onclick="stationLimit+=100;renderCards()">Daha fazla göster (${filtered.length-stationLimit} kaldı)</button>`;
+  }
+
+  if($('homeCards')) $('homeCards').innerHTML=homeHtml;
+  if($('stationCards')) $('stationCards').innerHTML=stationHtml;
+
+  if($('countText')){
+    $('countText').textContent=filtered.length?`${filtered.length} istasyon bulundu`:'Yakındaki istasyonlar';
+  }
+}
+function renderFavs(){$('favCards').innerHTML='<div class="empty">Favori özelliği yakında aktif olacak.</div>'}
+
+let sponsorAutoTimer=null;
+let sponsorAutoIndex=0;
+function sponsorVisibleCount(){
+  const box=$('sponsorCards');
+  return box?box.children.length:0;
+}
+function updateSponsorDots(){
+  const dots=$('sponsorDots'), box=$('sponsorCards');
+  if(!dots||!box)return;
+  const count=box.children.length;
+  dots.innerHTML=Array.from({length:Math.min(count,8)},(_,i)=>`<span class="sponsorDot ${i===(sponsorAutoIndex%Math.min(count,8))?'active':''}"></span>`).join('');
+}
+function startSponsorAutoScroll(){
+  const box=$('sponsorCards');
+  if(!box)return;
+  if(sponsorAutoTimer) clearInterval(sponsorAutoTimer);
+  sponsorAutoTimer=setInterval(()=>{
+    const count=box.children.length;
+    if(count<2)return;
+    sponsorAutoIndex=(sponsorAutoIndex+1)%count;
+    const card=box.children[sponsorAutoIndex];
+    if(card) box.scrollTo({left:card.offsetLeft-2,behavior:'smooth'});
+    updateSponsorDots();
+  },3600);
+}
+
+function renderSponsors(){
+  const box=$('sponsorCards');
+  if(!box)return;
+  const arr=fairSponsors(sponsors(),'home').slice(0,12);
+  sponsorAutoIndex=0;
+  box.innerHTML=arr.length?arr.map(o=>`<div class="sponsorCard">
+    <div>
+      <div class="sponsorHead">
+        ${sponsorLogoHtml(o)}
+        <div><span class="tag g">${esc(o.discount)} indirim</span><h4>${esc(o.name)}</h4></div>
+      </div>
+      <p>${esc(o.offer)}</p>
+    </div>
+    <div>
+      <button class="routeBtn couponBtn" onclick="useSponsorCoupon('${esc(o.id)}','${esc(o.stationId||'')}')">Fırsat kodu al</button>
+      <div class="smallInfo">Kod WhatsApp üzerinden sponsor firmaya iletilir.</div>
+    </div>
+  </div>`).join(''):'<div class="empty">Sponsor fırsatı yok.</div>';
+  updateSponsorDots();
+  startSponsorAutoScroll();
+}
+function renderAll(){renderCards();renderFavs();renderSponsors();renderMyCoupons();if(isAdmin){renderAdmin();setTimeout(restoreAdminTab,50)}}function showTab(name){
+  activeCustomerTab=name;
+  ['home','stations','route','favorites','report','profile'].forEach(t=>{
+    $('tab-'+t)?.classList.toggle('active',t===name);
+    $('nav-'+t)?.classList.toggle('active',t===name);
+  });
+}
+function openModal(id){$(id)?.classList.add('show')}function closeModal(id){$(id)?.classList.remove('show')}
+function openDetail(id){
+  const s=stations.find(x=>x.id===id);
+  if(!s)return;
+  const off=fairSponsors(stationOffers(id),id);
+  const offerHtml=off.length?off.map(o=>`<div class="sponsorCard" style="min-width:auto">
+    <div class="sponsorHead">
+      ${sponsorLogoHtml(o)}
+      <div><h4>${esc(o.name)} <span class="tag g">${esc(o.discount)}</span></h4></div>
+    </div>
+    <p>${esc(o.offer)}</p>
+    <button class="routeBtn couponBtn" onclick="useSponsorCoupon('${esc(o.id)}','${esc(s.id)}')">Fırsat kodu al</button>
+    <div class="smallInfo">Kod WhatsApp üzerinden sponsor firmaya iletilir.</div>
+  </div>`).join(''):'<div class="empty">Bu istasyonda fırsat yok.</div>';
+  $('detailContent').innerHTML=`<h2>${esc(s.name)}</h2><p class="muted">${esc(s.address)}</p><div class="tags"><span class="tag g">${esc(s.brand)}</span><span class="tag b">${Number(s.distance||0).toFixed(1)} km</span><span class="tag">${esc(s.sockets)}</span><span class="tag y">${esc(s.power)}</span></div><br><div class="cardActions"><button class="mapShowBtn" onclick="openStationMap('${esc(s.id)}',event)">Haritada gör</button><a class="routeBtn" href="${routeUrl(s)}" target="_blank" rel="noopener">Yol tarifi al</a></div><div style="margin-top:16px"><h3>Fırsatlar</h3>${offerHtml}</div>`;
+  openModal('detailModal');
+}
+function openStationMap(id,event){if(event){event.preventDefault();event.stopPropagation()}const s=stations.find(x=>x.id===id);if(!s)return;$('mapModalTitle').textContent=s.name;$('mapModalText').textContent=`${s.brand} · ${s.address} · ${s.power}`;$('mapModalRoute').href=routeUrl(s);openModal('mapModal');setTimeout(()=>{if(!stationMap){stationMap=L.map('stationMap',{zoomControl:true,tap:true,dragging:true,touchZoom:true,doubleClickZoom:true,scrollWheelZoom:true}).setView([s.lat,s.lon],15);L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'&copy; OSM'}).addTo(stationMap)}else{stationMap.setView([s.lat,s.lon],15)}if(stationMapMarker)stationMap.removeLayer(stationMapMarker);stationMapMarker=L.marker([s.lat,s.lon]).addTo(stationMap).bindPopup(`<b>${esc(s.name)}</b><br>${esc(s.address)}`).openPopup();setTimeout(()=>stationMap.invalidateSize(),180)},180)}function closeStationMap(){closeModal('mapModal')}function hardRefresh(){location.href=location.pathname+'?v='+Date.now()}
+async function loadEpdk(){const url=($('epdkUrl').value||DEFAULT_EPDK_URL).trim();localStorage.setItem('molavolt_epdk_url',url);$('adminStatus').textContent='EPDK verisi çekiliyor...';try{const res=await fetch(url,{cache:'no-store'});const txt=await res.text();let data=parseMaybe(txt);if(typeof data==='string')throw new Error('API JSON döndürmedi: '+txt.slice(0,120));if(!res.ok)throw new Error('HTTP '+res.status+' - '+txt.slice(0,220));const list=normalizeEpdkData(data);if(!list.length)throw new Error('EPDK cevap verdi ama koordinatlı istasyon bulunamadı. numRows: '+(data.numRows??'bilinmiyor')+' / result tipi: '+(typeof data.result));clearLegacySilent();setEpdkStations(list);buildStations();applyFilters();renderAdmin();$('adminStatus').textContent=`EPDK yüklendi: ${list.length} istasyon`;alert('EPDK verisi yüklendi: '+list.length+' istasyon')}catch(err){$('adminStatus').textContent='Hata: '+err.message;alert('EPDK yükleme hatası: '+err.message)}}
+function clearEpdk(){if(!confirm('EPDK verisi temizlensin mi?'))return;localStorage.removeItem('molavolt_epdk_stations');buildStations();applyFilters();renderAdmin();$('adminStatus').textContent='EPDK verisi temizlendi.'}
+
+function showAdminTab(name){
+  ['epdk','stations','sponsor','reports'].forEach(t=>{
+    document.getElementById('adminTab-'+t)?.classList.toggle('active',t===name);
+    document.getElementById('adminSection-'+t)?.classList.toggle('active',t===name);
+  });
+  localStorage.setItem('molavolt_admin_tab', name);
+  if(typeof renderAdmin==='function') renderAdmin();
+}
+function restoreAdminTab(){
+  const saved=localStorage.getItem('molavolt_admin_tab')||'epdk';
+  showAdminTab(saved);
+}
+
+
+/* UFUK_ROUTE_SIMPLE_PREMIUM_0506_JS */
+const ROUTE_CITY_COORDS={
+  "ankara":[39.9334,32.8597],"istanbul":[41.0082,28.9784],"izmir":[38.4237,27.1428],
+  "bursa":[40.1885,29.0610],"antalya":[36.8969,30.7133],"eskisehir":[39.7767,30.5206],
+  "eskişehir":[39.7767,30.5206],"konya":[37.8746,32.4932],"sakarya":[40.7569,30.3781],
+  "bolu":[40.7350,31.6061],"duzce":[40.8438,31.1565],"düzce":[40.8438,31.1565],
+  "karasu":[41.1047,30.6928],"denizli":[37.7765,29.0864],"adana":[37.0000,35.3213],
+  "samsun":[41.2867,36.3300],"trabzon":[41.0027,39.7168],"kocaeli":[40.8533,29.8815],
+  "kayseri":[38.7205,35.4826],"mersin":[36.8121,34.6415],"gaziantep":[37.0662,37.3833]
+};
+function routeVal(id,def=0){
+  const v=parseFloat(String($(id)?.value||'').replace(',','.'));
+  return isFinite(v)?v:def;
+}
+function routeDestination(){
+  const q=String($('rp_dest')?.value||'').trim().toLowerCase();
+  for(const [k,v] of Object.entries(ROUTE_CITY_COORDS)){
+    if(q.includes(k))return {name:k,lat:v[0],lon:v[1]};
+  }
+  return {name:q||'Ankara',lat:39.9334,lon:32.8597};
 }
 function pointLineDistanceKm(a,b,p){
-  const ax=a.lat,ay=a.lon,bx=b.lat,by=b.lon,px=p.lat,py=p.lon;
-  const abx=bx-ax,aby=by-ay,apx=px-ax,apy=py-ay,ab2=abx*abx+aby*aby||1;
-  let t=(apx*abx+apy*aby)/ab2;t=Math.max(0,Math.min(1,t));
-  const lat=ax+t*abx,lon=ay+t*aby;
-  return{distance:km(px,py,lat,lon),progress:t};
+  const ax=a.lat, ay=a.lon, bx=b.lat, by=b.lon, px=p.lat, py=p.lon;
+  const abx=bx-ax, aby=by-ay, apx=px-ax, apy=py-ay;
+  const ab2=abx*abx+aby*aby || 1;
+  let t=(apx*abx+apy*aby)/ab2;
+  t=Math.max(0,Math.min(1,t));
+  const lat=ax+t*abx, lon=ay+t*aby;
+  return {distance:km(px,py,lat,lon),progress:t};
 }
 function routeStationsFor(dest,corridorKm){
   const start={lat:userPos.lat,lon:userPos.lon};
-  return stations.map(s=>{const m=pointLineDistanceKm(start,dest,s);return{...s,routeDeviation:m.distance,routeProgress:m.progress}})
-    .filter(s=>s.routeDeviation<=corridorKm&&s.routeProgress>.03&&s.routeProgress<.98)
+  return stations.map(s=>{
+    const m=pointLineDistanceKm(start,dest,s);
+    return {...s,routeDeviation:m.distance,routeProgress:m.progress};
+  }).filter(s=>s.routeDeviation<=corridorKm && s.routeProgress>0.03 && s.routeProgress<0.98)
     .sort((a,b)=>a.routeProgress-b.routeProgress);
 }
-function routeDirectionsLink(s){return `https://www.google.com/maps/dir/?api=1&destination=${s.lat},${s.lon}&travelmode=driving`}
+function toggleRouteConsumption(){
+  const mode=$('rp_mode')?.value||'manual';
+  if($('rp_manual'))$('rp_manual').parentElement.style.opacity=mode==='manual'?'1':'.45';
+  if($('rp_wltp'))$('rp_wltp').parentElement.style.opacity=mode==='wltp'?'1':'.45';
+}
 function planEvRoute(){
-  const box=document.getElementById("routeResult"); if(!box)return;
-  if(!stations.length){box.innerHTML='<div class="routeWarn">İstasyon verisi yok. Önce istasyon listesinin yüklendiğinden emin ol.</div>';return}
-  const dest=getRouteDest(), roadFactor=1.18;
-  const distance=routeVal("rp_distance",km(userPos.lat,userPos.lon,dest.lat,dest.lon)*roadFactor);
-  const battery=routeVal("rp_battery",60), soc=routeVal("rp_soc",45), arrival=routeVal("rp_arrival",10), target=routeVal("rp_target",80);
-  const cons=routeVal("rp_consumption",document.getElementById("rp_mode")?.value==="wltp"?15:18);
-  const price=routeVal("rp_price",10), chargeKw=routeVal("rp_kw",90), corridor=routeVal("rp_corridor",25);
-  const need=distance*cons/100, usable=battery*Math.max(0,(soc-arrival))/100, range=usable/Math.max(cons,1)*100, cost=need*price;
+  buildStations();
+  if(!stations.length){
+    $('routeResult').innerHTML='<div class="routeWarn">EPDK istasyon verisi henüz yok. Admin panelden EPDK verisini yükle veya Firebase’den oku.</div>';
+    return;
+  }
+  const dest=routeDestination();
+  const roadFactor=1.18;
+  const estimatedKm=km(userPos.lat,userPos.lon,dest.lat,dest.lon)*roadFactor;
+  const distance=routeVal('rp_distance',estimatedKm);
+  const battery=routeVal('rp_battery',60);
+  const soc=routeVal('rp_soc',45);
+  const arrival=routeVal('rp_arrival',10);
+  const chargeTarget=routeVal('rp_charge_target',80);
+  const mode=$('rp_mode')?.value||'manual';
+  const consumption=mode==='wltp'?routeVal('rp_wltp',15):routeVal('rp_manual',18);
+  const price=routeVal('rp_dc_price',10);
+  const chargeKw=routeVal('rp_charge_kw',90);
+  const corridor=routeVal('rp_corridor',25);
+
+  const energyNeed=distance*consumption/100;
+  const usableStart=battery*Math.max(0,(soc-arrival))/100;
+  const startRange=usableStart/Math.max(consumption,1)*100;
+  const totalCost=energyNeed*price;
   const routeList=routeStationsFor(dest,corridor);
-  let html=`<div class="routeResultCard"><h3>Rota sonucu</h3><p class="muted">${esc(dest.label)} için tahmini hesap</p>
+
+  let html=`<section class="section"><div class="panel">
+    <h3>Rota sonucu</h3>
+    <p class="muted">Konumundan ${esc($('rp_dest')?.value||dest.name)} yönüne tahmini hesap</p>
     <div class="routeSummary">
-      <div class="routeMetric"><span>Mesafe</span><b>${distance.toFixed(0)} km</b></div>
-      <div class="routeMetric"><span>Enerji</span><b>${need.toFixed(1)} kWh</b></div>
-      <div class="routeMetric"><span>Maliyet</span><b>${cost.toFixed(0)} TL</b></div>
-      <div class="routeMetric"><span>Mevcut menzil</span><b>${range.toFixed(0)} km</b></div>
+      <div class="routeMetric"><span>Tahmini mesafe</span><b>${distance.toFixed(0)} km</b></div>
+      <div class="routeMetric"><span>Enerji ihtiyacı</span><b>${energyNeed.toFixed(1)} kWh</b></div>
+      <div class="routeMetric"><span>Kullanılabilir enerji</span><b>${usableStart.toFixed(1)} kWh</b></div>
+      <div class="routeMetric"><span>Toplam enerji maliyeti</span><b>${totalCost.toFixed(0)} TL</b></div>
     </div>`;
-  if(need<=usable){
-    const arrSoc=soc-(need/battery*100);
-    html+=`<div class="routeStop"><b>Şarj molası gerekmiyor.</b><p>Bu değerlerle hedefe yaklaşık %${Math.max(0,arrSoc).toFixed(0)} şarjla varırsın.</p></div>`;
+
+  if(energyNeed<=usableStart){
+    const arrivalSoc=soc-(energyNeed/battery*100);
+    html+=`<div class="routeStep"><b>Şarj molası gerekmiyor.</b><p>Bu tüketimle hedefe yaklaşık %${Math.max(0,arrivalSoc).toFixed(0)} şarjla varırsın.</p></div>`;
   }else{
-    const missing=need-usable;
-    const chargeKwh=Math.min(Math.max(missing+battery*.08,8),battery*Math.max(0,(target-arrival))/100);
-    const mins=Math.ceil(chargeKwh/Math.max(10,chargeKw)*60);
-    const targetProgress=Math.min(.92,Math.max(.10,(range/distance)*.82));
+    const missing=energyNeed-usableStart;
+    const chargeKwh=Math.min(Math.max(missing + battery*0.08, 8), battery*Math.max(0,(chargeTarget-arrival))/100);
+    const chargeMin=chargeKwh/Math.max(10,chargeKw)*60;
+    const targetProgress=Math.min(.9, Math.max(.12, (startRange/distance)*0.82));
+    const candidates=routeList.filter(s=>s.routeProgress<=targetProgress+.22).sort((a,b)=>Math.abs(a.routeProgress-targetProgress)-Math.abs(b.routeProgress-targetProgress));
+    const stop=candidates[0]||routeList[0];
+
+    if(stop){
+      html+=`<div class="routeStep">
+        <b>Önerilen şarj molası</b>
+        <p><b>${esc(stop.name)}</b><br>${esc(stop.address)}<br>Rotadan sapma: ${stop.routeDeviation.toFixed(1)} km · Rota ilerleme: %${(stop.routeProgress*100).toFixed(0)}</p>
+        <div class="routeSummary">
+          <div class="routeMetric"><span>Alınacak enerji</span><b>${chargeKwh.toFixed(1)} kWh</b></div>
+          <div class="routeMetric"><span>Şarj süresi</span><b>${Math.ceil(chargeMin)} dk</b></div>
+          <div class="routeMetric"><span>Mola maliyeti</span><b>${(chargeKwh*price).toFixed(0)} TL</b></div>
+          <div class="routeMetric"><span>Ortalama hız</span><b>${chargeKw.toFixed(0)} kW</b></div>
+        </div>
+        <div class="cardActions">
+          <button class="mapShowBtn" onclick="openStationMap('${esc(stop.id)}',event)">Haritada gör</button>
+          <a class="routeBtn routeActionBtn" href="${routeUrl(stop)}" target="_blank" rel="noopener" onclick="event.stopPropagation()">Yol tarifi</a>
+        </div>
+      </div>`;
+    }else{
+      html+=`<div class="routeWarn">Bu rota koridorunda uygun istasyon bulunamadı. Sapma limitini yükselt veya EPDK verisini güncelle.</div>`;
+    }
+  }
+  html+=`<div class="routeWarn">Not: Bu ilk sürüm düz rota koridoru ile hesaplar. Sonraki aşamada Google Maps/OSRM rota çizgisiyle daha hassas durak seçimi eklenir.</div></div></section>`;
+
+  if(routeList.length){
+    html+=`<section class="section"><h3>Rota üzerindeki istasyonlar</h3><p class="muted">${routeList.length} istasyon, ${corridor} km koridor içinde</p><div class="cards">`+
+      routeList.slice(0,15).map(s=>`<div class="station" onclick="openDetail('${esc(s.id)}')">
+        <div class="stationTop">
+          <div>
+            <div class="tags"><span class="tag g">${esc(s.brand)}</span><span class="tag y">${esc(s.power||'kW bilgisi yok')}</span></div>
+            <h4>${esc(s.name)}</h4>
+            <p>${esc(s.address)}</p>
+          </div>
+          <div style="text-align:right"><b>${s.routeDeviation.toFixed(1)} km</b><p>sapma</p></div>
+        </div>
+        <div class="cardActions">
+          <button class="mapShowBtn" onclick="openStationMap('${esc(s.id)}',event)">Haritada gör</button>
+          <a class="routeBtn routeActionBtn" href="${routeUrl(s)}" target="_blank" rel="noopener" onclick="event.stopPropagation()">Yol tarifi</a>
+        </div>
+      </div>`).join('')+
+    `</div></section>`;
+  }
+  $('routeResult').innerHTML=html;
+}
+
+function renderAdmin(){if(!isAdmin)return;if($('epdkUrl'))$('epdkUrl').value=localStorage.getItem('molavolt_epdk_url')||DEFAULT_EPDK_URL;const q=($('adminSearch')?.value||'').trim().toLowerCase();const list=stations.filter(s=>!q||String(s.name+s.brand+s.address+s.sockets+s.power).toLowerCase().includes(q));if($('adminStatus')&&!$('adminStatus').textContent.includes('çekiliyor'))$('adminStatus').textContent=`EPDK kayıtları: ${stations.length}. Arama sonucu: ${list.length}.`;if($('adminSummary'))$('adminSummary').textContent=`Toplam ${stations.length} EPDK istasyonu var. Arama sonucu: ${list.length}. Sponsor/fırsat sayısı: ${sponsors().length}.`;if($('sp_station'))$('sp_station').innerHTML='<option value="">Tüm istasyonlarda göster</option>'+stations.map(s=>`<option value="${esc(s.id)}">${esc(s.name)}</option>`).join('');$('adminStationList').innerHTML=list.map(s=>`<div class="station"><h4>${esc(s.name)}</h4><p>${esc(s.brand)} · ${esc(s.address)}</p><div class="tags"><span class="tag y">${esc(s.power)}</span><span class="tag">${esc(s.sockets)}</span><span class="tag b">EPDK</span></div></div>`).join('')||'<div class="empty">EPDK verisi yok. Üstten EPDK verisini yükle.</div>';$('adminSponsorList').innerHTML=fairSponsors(sponsors(),'admin').map(s=>`<div class="station"><div class="sponsorHead">${sponsorLogoHtml(s)}<div><h4>${esc(s.name)} <span class="tag g">${esc(s.discount)}</span></h4><p>${esc(s.offer)}</p><div class="tags"><span class="tag b">${esc(s.whatsapp||'WP yok')}</span></div></div></div><div class="adminActions"><button class="secondaryBtn" onclick="editSponsor('${esc(s.id)}')">Düzenle</button><button class="secondaryBtn" onclick="deleteSponsor('${esc(s.id)}')">Sil</button></div></div>`).join('')||'<div class="empty">Fırsat yok.</div>'}
+function clearSponsorForm(){['sp_id','sp_name','sp_discount','sp_offer','sp_whatsapp','sp_logo'].forEach(id=>$(id)&&($(id).value=''))}function saveSponsor(){const id=$('sp_id').value||'sp-'+Date.now();const obj={id,stationId:$('sp_station').value,name:$('sp_name').value||'Sponsor işletme',discount:$('sp_discount').value||'%10',offer:$('sp_offer').value||'MolaVolt kullanıcılarına özel fırsat',whatsapp:$('sp_whatsapp').value||'',logo:$('sp_logo')?$('sp_logo').value:''};const arr=sponsors();const i=arr.findIndex(x=>x.id===id);if(i>=0)arr[i]=obj;else arr.unshift(obj);setSponsors(arr);clearSponsorForm();renderAdmin();renderSponsors();alert('Fırsat kaydedildi ve Firebase senkronu tetiklendi.')}function editSponsor(id){const s=sponsors().find(x=>x.id===id);if(!s)return;$('sp_id').value=s.id;$('sp_station').value=s.stationId;$('sp_name').value=s.name;$('sp_discount').value=s.discount;$('sp_offer').value=s.offer;$('sp_whatsapp').value=s.whatsapp||'';if($('sp_logo'))$('sp_logo').value=s.logo||''}function deleteSponsor(id){if(!confirm('Silinsin mi?'))return;setSponsors(sponsors().filter(x=>x.id!==id));renderAdmin();renderSponsors()}
+function locateSort(){
+  buildStations();
+  applyFilters();
+  setLocStatus('Konum alınıyor...');
+  if(navigator.geolocation){
+    navigator.geolocation.getCurrentPosition(pos=>{
+      userPos={lat:pos.coords.latitude,lon:pos.coords.longitude,accuracy:Math.round(pos.coords.accuracy||0)};
+      savePos(userPos);
+      buildStations();
+      applyFilters();
+      setLocStatus('Canlı konuma göre sıralandı' + (userPos.accuracy ? ' · hassasiyet ±'+userPos.accuracy+' m' : ''));
+    },()=>{
+      buildStations();
+      applyFilters();
+      setLocStatus('Konum alınamadı; son kayıtlı konuma göre sıralandı.');
+    },{enableHighAccuracy:true,timeout:10000,maximumAge:30000});
+  }else{
+    setLocStatus('Bu cihazda konum desteği yok; son kayıtlı konuma göre sıralandı.');
+  }
+}
+function init(){
+  isAdmin=new URLSearchParams(location.search).get('admin')===ADMIN_KEY;
+  document.body.classList.toggle('admin-mode',isAdmin);
+  if(isAdmin) $('subTitle').textContent='Admin Panel';
+  clearLegacySilent();
+  renderChips();
+  buildStations();
+  renderSponsors();
+  const si=$('searchInput');
+  if(si){
+    si.addEventListener('input',stableSearch);
+    si.addEventListener('keyup',stableSearch);
+    si.addEventListener('search',stableSearch);
+    si.addEventListener('compositionend',stableSearch);
+  }
+  locateSort();
+  if(isAdmin) renderAdmin();
+}
+
+/* UFUK_ROUTE_SIMPLE_PREMIUM_0506_JS */
+const ROUTE_PREMIUM_CITIES=[
+  ['Ankara','Ankara merkez',39.9334,32.8597],['İstanbul','İstanbul merkez',41.0082,28.9784],
+  ['İzmir','İzmir merkez',38.4237,27.1428],['Bolu','Bolu merkez',40.7350,31.6061],
+  ['Düzce','Düzce merkez',40.8438,31.1565],['Karasu','Sakarya Karasu',41.1047,30.6928],
+  ['Sakarya','Sakarya merkez',40.7569,30.3781],['Kocaeli','Kocaeli merkez',40.8533,29.8815],
+  ['Eskişehir','Eskişehir merkez',39.7767,30.5206],['Bursa','Bursa merkez',40.1885,29.0610],
+  ['Denizli','Denizli merkez',37.7765,29.0864],['Konya','Konya merkez',37.8746,32.4932],
+  ['Antalya','Antalya merkez',36.8969,30.7133],['Kayseri','Kayseri merkez',38.7205,35.4826],
+  ['Samsun','Samsun merkez',41.2867,36.3300],['Trabzon','Trabzon merkez',41.0027,39.7168]
+];
+let routeSelectedDest=null, routeGeoTimer=null;
+function toggleRouteAdvanced(){ $('routeAdvanced')?.classList.toggle('show') }
+function normalizeTextTR(v){return String(v||'').toLowerCase().replaceAll('ı','i').replaceAll('ğ','g').replaceAll('ü','u').replaceAll('ş','s').replaceAll('ö','o').replaceAll('ç','c')}
+function routeLocalSuggestions(q){
+  const n=normalizeTextTR(q);
+  const city=ROUTE_PREMIUM_CITIES.filter(x=>normalizeTextTR(x[0]+' '+x[1]).includes(n)).map(x=>({name:x[0],sub:x[1],lat:x[2],lon:x[3],type:'city'}));
+  const st=(stations||[]).filter(s=>normalizeTextTR(s.name+' '+s.address+' '+s.brand).includes(n)).slice(0,6).map(s=>({name:s.name,sub:s.address,lat:s.lat,lon:s.lon,type:'station'}));
+  return [...city,...st].slice(0,8);
+}
+function showRouteSuggest(items){
+  const box=$('routeSuggest'); if(!box)return;
+  if(!items.length){box.classList.remove('show');box.innerHTML='';return}
+  box.innerHTML=items.map((x,i)=>`<button type="button" onclick="chooseRouteSuggest(${i})">${esc(x.name)}<small>${esc(x.sub||'')}</small></button>`).join('');
+  box._items=items; box.classList.add('show');
+}
+function chooseRouteSuggest(i){
+  const box=$('routeSuggest'); const x=box?._items?.[i]; if(!x)return;
+  routeSelectedDest={name:x.name,lat:Number(x.lat),lon:Number(x.lon),sub:x.sub||''};
+  $('rp_dest').value=x.name;
+  box.classList.remove('show');
+}
+async function routeSuggestInput(){
+  routeSelectedDest=null;
+  const q=($('rp_dest')?.value||'').trim();
+  if(q.length<2){showRouteSuggest([]);return}
+  const local=routeLocalSuggestions(q);
+  showRouteSuggest(local);
+  clearTimeout(routeGeoTimer);
+  routeGeoTimer=setTimeout(async()=>{
+    try{
+      const url='https://nominatim.openstreetmap.org/search?format=json&limit=5&countrycodes=tr&q='+encodeURIComponent(q);
+      const res=await fetch(url,{headers:{'Accept':'application/json'}});
+      const data=await res.json();
+      const remote=(Array.isArray(data)?data:[]).map(x=>({name:(x.display_name||q).split(',').slice(0,2).join(','),sub:x.display_name||'',lat:parseFloat(x.lat),lon:parseFloat(x.lon),type:'address'})).filter(x=>isFinite(x.lat)&&isFinite(x.lon));
+      const merged=[...local,...remote].filter((x,idx,arr)=>arr.findIndex(y=>Math.abs(y.lat-x.lat)<.001&&Math.abs(y.lon-x.lon)<.001)===idx).slice(0,8);
+      if(($('rp_dest')?.value||'').trim()===q)showRouteSuggest(merged);
+    }catch(e){}
+  },450);
+}
+async function resolveRouteDestination(){
+  if(routeSelectedDest)return routeSelectedDest;
+  const q=($('rp_dest')?.value||'Ankara').trim();
+  const local=routeLocalSuggestions(q)[0];
+  if(local){routeSelectedDest={name:local.name,lat:local.lat,lon:local.lon,sub:local.sub};return routeSelectedDest}
+  try{
+    const url='https://nominatim.openstreetmap.org/search?format=json&limit=1&countrycodes=tr&q='+encodeURIComponent(q);
+    const res=await fetch(url,{headers:{'Accept':'application/json'}});
+    const data=await res.json();
+    const first=Array.isArray(data)?data[0]:null;
+    if(first){
+      routeSelectedDest={name:q,lat:parseFloat(first.lat),lon:parseFloat(first.lon),sub:first.display_name||''};
+      return routeSelectedDest;
+    }
+  }catch(e){}
+  routeSelectedDest={name:'Ankara',lat:39.9334,lon:32.8597,sub:'Varsayılan hedef'};
+  return routeSelectedDest;
+}
+function routeVal(id,def=0){const v=parseFloat(String($(id)?.value||'').replace(',','.'));return isFinite(v)?v:def}
+function pointLineDistanceKm(a,b,p){const ax=a.lat,ay=a.lon,bx=b.lat,by=b.lon,px=p.lat,py=p.lon;const abx=bx-ax,aby=by-ay,apx=px-ax,apy=py-ay;const ab2=abx*abx+aby*aby||1;let t=(apx*abx+apy*aby)/ab2;t=Math.max(0,Math.min(1,t));const lat=ax+t*abx,lon=ay+t*aby;return{distance:km(px,py,lat,lon),progress:t}}
+function routeStationsFor(dest,corridorKm){const start={lat:userPos.lat,lon:userPos.lon};return stations.map(s=>{const m=pointLineDistanceKm(start,dest,s);return{...s,routeDeviation:m.distance,routeProgress:m.progress}}).filter(s=>s.routeDeviation<=corridorKm&&s.routeProgress>0.03&&s.routeProgress<0.98).sort((a,b)=>a.routeProgress-b.routeProgress)}
+function toggleRouteConsumption(){const mode=$('rp_mode')?.value||'manual';if($('rp_manual'))$('rp_manual').parentElement.style.opacity=mode==='manual'?'1':'.55';if($('rp_wltp'))$('rp_wltp').parentElement.style.opacity=mode==='wltp'?'1':'.55'}
+async function planEvRoute(){
+  buildStations();
+  if(!stations.length){$('routeResult').innerHTML='<div class="routeWarn">EPDK/Firebase istasyon verisi henüz gelmedi. Biraz bekle veya admin panelden Firebase’den oku.</div>';return}
+  $('routeResult').innerHTML='<div class="panel routeResultCard">Rota hesaplanıyor...</div>';
+  const dest=await resolveRouteDestination();
+  const roadFactor=1.18;
+  const estimatedKm=km(userPos.lat,userPos.lon,dest.lat,dest.lon)*roadFactor;
+  const distance=routeVal('rp_distance',estimatedKm);
+  const battery=routeVal('rp_battery',60), soc=routeVal('rp_soc',45), arrival=routeVal('rp_arrival',10);
+  const mode=$('rp_mode')?.value||'manual';
+  const consumption=mode==='wltp'?routeVal('rp_wltp',15):routeVal('rp_manual',18);
+  const price=routeVal('rp_dc_price',10), chargeKw=routeVal('rp_charge_kw',90), corridor=routeVal('rp_corridor',25);
+  const chargeTarget=routeVal('rp_charge_target',80);
+  const energyNeed=distance*consumption/100;
+  const usableStart=battery*Math.max(0,(soc-arrival))/100;
+  const startRange=usableStart/Math.max(consumption,1)*100;
+  const totalCost=energyNeed*price;
+  const routeList=routeStationsFor(dest,corridor);
+  let html=`<section class="section"><div class="panel routeResultCard"><h3>Rota özeti</h3><p class="muted">${esc(dest.name)} için tahmini hesap</p><div class="routeSummary"><div class="routeMetric"><span>Mesafe</span><b>${distance.toFixed(0)} km</b></div><div class="routeMetric"><span>Enerji</span><b>${energyNeed.toFixed(1)} kWh</b></div><div class="routeMetric"><span>Maliyet</span><b>${totalCost.toFixed(0)} TL</b></div><div class="routeMetric"><span>Rota istasyonu</span><b>${routeList.length}</b></div></div>`;
+  if(energyNeed<=usableStart){
+    const arrivalSoc=soc-(energyNeed/battery*100);
+    html+=`<div class="routeStep"><b>Şarj molası gerekmiyor.</b><p>Bu verilerle hedefe yaklaşık %${Math.max(0,arrivalSoc).toFixed(0)} şarjla varırsın.</p></div>`;
+  }else{
+    const missing=energyNeed-usableStart;
+    const chargeKwh=Math.min(Math.max(missing+battery*.08,8), battery*Math.max(0,(chargeTarget-arrival))/100);
+    const chargeMin=chargeKwh/Math.max(10,chargeKw)*60;
+    const targetProgress=Math.min(.9,Math.max(.12,(startRange/distance)*.82));
     const stop=(routeList.filter(s=>s.routeProgress<=targetProgress+.22).sort((a,b)=>Math.abs(a.routeProgress-targetProgress)-Math.abs(b.routeProgress-targetProgress))[0])||routeList[0];
     if(stop){
-      html+=`<div class="routeStop"><b>Önerilen mola</b><p><b>${esc(stop.name)}</b><br>${esc(stop.address)}<br>Rotadan sapma: ${stop.routeDeviation.toFixed(1)} km</p>
-      <div class="routeSummary"><div class="routeMetric"><span>Alınacak enerji</span><b>${chargeKwh.toFixed(1)} kWh</b></div><div class="routeMetric"><span>Şarj süresi</span><b>${mins} dk</b></div></div>
-      <div class="actions"><button class="action secondary" onclick="selectStationById('${esc(stop.id)}')">Detay</button><a class="action" target="_blank" href="${routeDirectionsLink(stop)}">Yol tarifi</a></div></div>`;
-    }else html+=`<div class="routeWarn">Bu rota üzerinde uygun istasyon bulamadım. Sapma limitini yükselt veya istasyon verisini güncelle.</div>`;
+      html+=`<div class="routeStep"><b>Önerilen mola</b><p><b>${esc(stop.name)}</b><br>${esc(stop.address)}<br>Sapma: ${stop.routeDeviation.toFixed(1)} km</p><div class="routeSummary"><div class="routeMetric"><span>Şarj</span><b>${chargeKwh.toFixed(1)} kWh</b></div><div class="routeMetric"><span>Süre</span><b>${Math.ceil(chargeMin)} dk</b></div><div class="routeMetric"><span>Mola maliyeti</span><b>${(chargeKwh*price).toFixed(0)} TL</b></div><div class="routeMetric"><span>Güç</span><b>${esc(stop.power||'kW')}</b></div></div><div class="cardActions"><button class="mapShowBtn" onclick="openStationMap('${esc(stop.id)}',event)">Haritada gör</button><a class="routeBtn routeActionBtn" href="${routeUrl(stop)}" target="_blank" rel="noopener" onclick="event.stopPropagation()">Yol tarifi</a></div></div>`;
+    }else html+=`<div class="routeWarn">Bu rota koridorunda uygun istasyon bulunamadı. Ayarlardan sapma limitini artır.</div>`;
   }
-  html+=`<p class="routeNote">Hesap ilk sürümde düz rota koridoruyla çalışır. Sonraki adımda gerçek Google/OSRM rota çizgisine bağlanır.</p></div>`;
+  html+=`</div></section>`;
   if(routeList.length){
-    html+=`<div class="section"><div class="sectionTitle"><div><h3>Rota üstü istasyonlar</h3><p>${routeList.length} istasyon bulundu</p></div></div><div class="cards">`+
-      routeList.slice(0,12).map(s=>`<div class="station" onclick="selectStationById('${esc(s.id)}')"><div class="stationTop"><div><div class="tags"><span class="tag green">${esc(s.brand)}</span><span class="tag yellow">${s.routeDeviation.toFixed(1)} km sapma</span></div><h4>${esc(s.name)}</h4><p>${esc(s.address)}</p></div><div style="text-align:right"><b>%${(s.routeProgress*100).toFixed(0)}</b><p>rota</p></div></div><div class="actions"><a class="action secondary" target="_blank" onclick="event.stopPropagation()" href="${routeDirectionsLink(s)}">Yol tarifi</a></div></div>`).join("")+
-    `</div></div>`;
+    html+=`<section class="section"><h3>Rota üzerindeki istasyonlar</h3><p class="muted">${corridor} km koridor içinde en yakın sonuçlar</p><div class="cards">`+routeList.slice(0,10).map(s=>`<div class="station" onclick="openDetail('${esc(s.id)}')"><div class="stationTop"><div><div class="tags"><span class="tag g">${esc(s.brand)}</span><span class="tag y">${esc(s.power||'kW bilgisi yok')}</span></div><h4>${esc(s.name)}</h4><p>${esc(s.address)}</p></div><div style="text-align:right"><b>${s.routeDeviation.toFixed(1)} km</b><p>sapma</p></div></div><div class="cardActions"><button class="mapShowBtn" onclick="openStationMap('${esc(s.id)}',event)">Haritada gör</button><a class="routeBtn routeActionBtn" href="${routeUrl(s)}" target="_blank" rel="noopener" onclick="event.stopPropagation()">Yol tarifi</a></div></div>`).join('')+`</div></section>`;
   }
-  box.innerHTML=html;
+  $('routeResult').innerHTML=html;
 }
-document.addEventListener("click",e=>{if(!e.target.closest(".routeInputBox"))hideRouteSuggest()});
 
-document.querySelectorAll(".navItem").forEach(b=>b.onclick=()=>{document.querySelectorAll(".navItem").forEach(x=>x.classList.remove("active"));b.classList.add("active");document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active"));document.getElementById("tab-"+b.dataset.tab)?.classList.add("active");setTimeout(()=>realMap&&realMap.invalidateSize(),150)});
-document.querySelectorAll(".sort").forEach(b=>b.onclick=()=>{document.querySelectorAll(".sort").forEach(x=>x.classList.remove("active"));b.classList.add("active");currentSort=b.dataset.sort;applyFilters()});
-document.getElementById("searchInput").addEventListener("input",applyFilters);
-clearOldAppCaches();
-stations=mergeStations([]);selectedStation=stations[0];renderBrandChips();applyFilters();setLocationText("Konumuna yakın şarj istasyonları",`Sürüm ${APP_VERSION} yüklendi. Konum izni bekleniyor.`);setTimeout(()=>startRealSearch(false),500);
+window.addEventListener('load',()=>{init();setTimeout(toggleRouteConsumption,400)});
 </script>
+
+
+
+
+<script type="module">
+/* UFUK_OFFER_COUNT_FIX_0503 */
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
+import { getFirestore, doc, getDoc, setDoc, serverTimestamp, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyAcmXWfZMcSpTrZ5hDBNCDta8xmsIk4TwY",
+  authDomain: "molavolt.firebaseapp.com",
+  projectId: "molavolt",
+  storageBucket: "molavolt.firebasestorage.app",
+  messagingSenderId: "582172292918",
+  appId: "1:582172292918:web:c59296193cb3f236b96597"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+const META_DOC = doc(db, "molavolt", "epdkMeta");
+const CHUNK_COLLECTION = "molavoltEpdkChunks";
+const CHUNK_SIZE = 350;
+
+function setAdminStatus(msg){
+  const el = document.getElementById("adminStatus");
+  if(el) el.textContent = msg;
+}
+function chunksOf(arr, size){
+  const out = [];
+  for(let i=0; i<arr.length; i+=size) out.push(arr.slice(i, i+size));
+  return out;
+}
+async function saveEpdkToFirebase(list){
+  const chunks = chunksOf(list, CHUNK_SIZE);
+  setAdminStatus("Firebase’e parça parça kaydediliyor... 0/" + chunks.length);
+  for(let i=0; i<chunks.length; i++){
+    const id = "chunk_" + String(i).padStart(3, "0");
+    await setDoc(doc(db, CHUNK_COLLECTION, id), {
+      stations: chunks[i],
+      index: i,
+      count: chunks[i].length,
+      updatedAt: serverTimestamp(),
+      version: "0503"
+    });
+    setAdminStatus("Firebase’e parça parça kaydediliyor... " + (i+1) + "/" + chunks.length);
+  }
+  await setDoc(META_DOC, {
+    count: list.length,
+    chunkCount: chunks.length,
+    chunkSize: CHUNK_SIZE,
+    updatedAt: serverTimestamp(),
+    version: "0503"
+  });
+}
+async function loadEpdkFromFirebase(){
+  const metaSnap = await getDoc(META_DOC);
+  if(!metaSnap.exists()) return [];
+  const meta = metaSnap.data() || {};
+  const chunkCount = Number(meta.chunkCount || 0);
+  const all = [];
+  const promises = [];
+  for(let i=0; i<chunkCount; i++){
+    const id = "chunk_" + String(i).padStart(3, "0");
+    promises.push(getDoc(doc(db, CHUNK_COLLECTION, id)));
+  }
+  const snaps = await Promise.all(promises);
+  snaps.forEach(snap=>{
+    if(snap.exists()){
+      const data = snap.data() || {};
+      if(Array.isArray(data.stations)) all.push(...data.stations);
+    }
+  });
+  return all;
+}
+async function applyFirebaseStations(silent=false){
+  try{
+    const list = await loadEpdkFromFirebase();
+    if(!list.length){
+      if(!silent) setAdminStatus("Firebase’de EPDK verisi yok. Önce EPDK verisini yükle.");
+      return false;
+    }
+    localStorage.setItem("molavolt_epdk_stations", JSON.stringify(list));
+    if(typeof buildStations === "function") buildStations();
+    if(typeof applyFilters === "function") applyFilters();
+    if(typeof renderAdmin === "function") renderAdmin();
+    if(!silent) setAdminStatus("Firebase’den yüklendi: " + list.length + " istasyon");
+    return true;
+  }catch(err){
+    console.error("Firebase okuma hatası", err);
+    if(!silent) setAdminStatus("Firebase okuma hatası: " + err.message);
+    return false;
+  }
+}
+
+const SPONSORS_DOC = doc(db, "molavolt", "sponsors");
+
+async function saveSponsorsFirebase(list){
+  await setDoc(SPONSORS_DOC, {
+    sponsors: Array.isArray(list) ? list : [],
+    count: Array.isArray(list) ? list.length : 0,
+    updatedAt: serverTimestamp(),
+    version: "0503"
+  });
+}
+
+async function loadSponsorsFirebase(){
+  const snap = await getDoc(SPONSORS_DOC);
+  if(!snap.exists()) return [];
+  const data = snap.data() || {};
+  return Array.isArray(data.sponsors) ? data.sponsors : [];
+}
+
+window.saveSponsorsToFirebase = async function(list){
+  try{
+    await saveSponsorsFirebase(list);
+    const el=document.getElementById("adminStatus");
+    if(el) el.textContent="Sponsorlar Firebase’e senkronlandı: "+(Array.isArray(list)?list.length:0);
+  }catch(err){
+    console.error("Sponsor Firebase kayıt hatası", err);
+    const el=document.getElementById("adminStatus");
+    if(el) el.textContent="Sponsor Firebase kayıt hatası: "+err.message;
+  }
+};
+
+window.loadSponsorsFromFirebase = async function(silent=false){
+  try{
+    const list = await loadSponsorsFirebase();
+    if(list.length){
+      localStorage.setItem("mv_sponsors", JSON.stringify(list));
+      if(typeof renderSponsors==="function") renderSponsors();
+      if(typeof renderAdmin==="function") renderAdmin();
+      if(!silent) alert("Sponsorlar Firebase’den yüklendi: "+list.length);
+      return true;
+    }
+    return false;
+  }catch(err){
+    console.error("Sponsor Firebase okuma hatası", err);
+    if(!silent) alert("Sponsor Firebase okuma hatası: "+err.message);
+    return false;
+  }
+};
+
+
+const COUPON_COLLECTION = "molavoltCoupons";
+
+window.createCouponFirebase = async function(coupon){
+  await setDoc(doc(db, COUPON_COLLECTION, coupon.code), {
+    ...coupon,
+    createdAt: serverTimestamp(),
+    updatedAt: serverTimestamp()
+  }, {merge:true});
+};
+
+window.confirmCoupon = async function(code, action){
+  const ref=doc(db, COUPON_COLLECTION, code);
+  const update={updatedAt:serverTimestamp()};
+  if(action==='customer_ok'){
+    update.status='customer_ok';
+    update.customerConfirmed=true;
+    update.customerConfirmedAt=serverTimestamp();
+  }else if(action==='sponsor_ok'){
+    update.status='sponsor_ok';
+    update.sponsorConfirmed=true;
+    update.sponsorConfirmedAt=serverTimestamp();
+  }else if(action==='cancelled'){
+    update.status='cancelled';
+    update.customerConfirmed=false;
+    update.cancelledAt=serverTimestamp();
+  }
+  await setDoc(ref, update, {merge:true});
+  const arr=localCoupons();
+  const i=arr.findIndex(x=>x.code===code);
+  if(i>=0){
+    arr[i]={...arr[i],...update,status:update.status||arr[i].status,customerConfirmed:!!update.customerConfirmed,sponsorConfirmed:!!update.sponsorConfirmed};
+    setLocalCoupons(arr);
+    renderMyCoupons();
+  }
+  alert(code+' kodu güncellendi: '+couponStatusText({status:update.status}));
+  if(history.replaceState && new URLSearchParams(location.search).get('coupon')){
+    history.replaceState({},'',location.pathname);
+  }
+};
+
+async function handleCouponActionFromUrl(){
+  const p=new URLSearchParams(location.search);
+  const code=p.get('coupon');
+  const action=p.get('action');
+  if(code&&action&&window.confirmCoupon){
+    await window.confirmCoupon(code,action);
+    showTab('profile');
+  }
+}
+
+window.loadCouponReports = async function(){
+  const summary=$('couponReportSummary'), sponsorBox=$('couponSponsorReport'), recent=$('couponRecentList');
+  if(summary)summary.innerHTML='<div class="empty">Rapor yükleniyor...</div>';
+  try{
+    const snap=await getDocs(collection(db, COUPON_COLLECTION));
+    const rows=[];
+    snap.forEach(d=>rows.push({id:d.id,...(d.data()||{})}));
+    rows.sort((a,b)=>(b.createdMs||0)-(a.createdMs||0));
+    const total=rows.length;
+    const cust=rows.filter(x=>x.customerConfirmed||x.status==='customer_ok'||x.status==='sponsor_ok').length;
+    const sponsorOk=rows.filter(x=>x.sponsorConfirmed||x.status==='sponsor_ok').length;
+    const cancelled=rows.filter(x=>x.status==='cancelled').length;
+    if(summary)summary.innerHTML=`<div class="reportBox">Kod alındı<b>${total}</b></div><div class="reportBox">Müşteri onayı<b>${cust}</b></div><div class="reportBox">Sponsor onayı<b>${sponsorOk}</b></div><div class="reportBox">Net dönüşüm<b>${total?Math.round((sponsorOk/total)*100):0}%</b></div>`;
+    const by={};
+    rows.forEach(r=>{
+      const k=r.sponsorName||'Sponsor';
+      by[k]=by[k]||{name:k,total:0,cust:0,sponsor:0,cancel:0};
+      by[k].total++;
+      if(r.customerConfirmed||r.status==='customer_ok'||r.status==='sponsor_ok')by[k].cust++;
+      if(r.sponsorConfirmed||r.status==='sponsor_ok')by[k].sponsor++;
+      if(r.status==='cancelled')by[k].cancel++;
+    });
+    const sponsorHtml=Object.values(by).sort((a,b)=>b.total-a.total).map(x=>`<div class="couponRow"><b>${esc(x.name)}</b><div class="reportGrid"><div class="reportBox">Kod<b>${x.total}</b></div><div class="reportBox">Müşteri<b>${x.cust}</b></div><div class="reportBox">Sponsor<b>${x.sponsor}</b></div><div class="reportBox">Dönüşüm<b>${x.total?Math.round((x.sponsor/x.total)*100):0}%</b></div></div></div>`).join('');
+    if(sponsorBox)sponsorBox.innerHTML=sponsorHtml||'<div class="empty">Rapor verisi yok.</div>';
+    if(recent)recent.innerHTML=rows.slice(0,30).map(r=>`<div class="couponRow"><b>${esc(r.code||r.id)}</b> <span class="statusPill ${couponStatusClass(r)}">${esc(couponStatusText(r))}</span><p class="muted">${esc(r.sponsorName||'Sponsor')} ${r.stationName?('· '+esc(r.stationName)):''}</p><div class="couponActions"><button class="secondaryBtn" onclick="confirmCoupon('${esc(r.code||r.id)}','sponsor_ok')">Sponsor onayla</button><button class="secondaryBtn" onclick="confirmCoupon('${esc(r.code||r.id)}','cancelled')">İptal</button></div></div>`).join('')||'<div class="empty">Kod kaydı yok.</div>';
+  }catch(err){
+    if(summary)summary.innerHTML='<div class="empty">Rapor hatası: '+esc(err.message)+'</div>';
+  }
+};
+
+window.loadEpdk = async function(){
+  const input = document.getElementById("epdkUrl");
+  const url = (input && input.value.trim()) || localStorage.getItem("molavolt_epdk_url") || "https://molavolt.vercel.app/api/epdk";
+  if(input) input.value = url;
+  localStorage.setItem("molavolt_epdk_url", url);
+  setAdminStatus("EPDK verisi çekiliyor...");
+  try{
+    const res = await fetch(url, {cache:"no-store"});
+    const txt = await res.text();
+    let data;
+    try{ data = JSON.parse(txt); }catch(e){ throw new Error("API JSON döndürmedi: " + txt.slice(0,120)); }
+    if(!res.ok) throw new Error("HTTP " + res.status + " - " + txt.slice(0,220));
+    const list = normalizeEpdkData(data);
+    if(!list.length) throw new Error("EPDK cevap verdi ama koordinatlı istasyon bulunamadı. numRows: " + (data.numRows ?? "bilinmiyor"));
+    if(typeof clearLegacySilent === "function") clearLegacySilent();
+    if(typeof setEpdkStations === "function") setEpdkStations(list);
+    await saveEpdkToFirebase(list);
+    if(typeof buildStations === "function") buildStations();
+    if(typeof applyFilters === "function") applyFilters();
+    if(typeof renderAdmin === "function") renderAdmin();
+    setAdminStatus("EPDK Firebase’e parça parça kaydedildi: " + list.length + " istasyon");
+    alert("EPDK verisi Firebase’e parça parça kaydedildi: " + list.length + " istasyon.");
+  }catch(err){
+    console.error(err);
+    setAdminStatus("Hata: " + err.message);
+    alert("EPDK/Firebase yükleme hatası: " + err.message);
+  }
+};
+window.loadFirebaseStations = async function(){
+  const ok = await applyFirebaseStations(false);
+  if(ok) alert("Firebase’den istasyonlar yüklendi.");
+};
+window.addEventListener("load", () => { handleCouponActionFromUrl();
+  setTimeout(async () => {
+    try{
+      const local = JSON.parse(localStorage.getItem("molavolt_epdk_stations") || "[]");
+      if(!local.length) await applyFirebaseStations(true);
+      if(window.loadSponsorsFromFirebase) await window.loadSponsorsFromFirebase(true);
+    }catch(e){
+      await applyFirebaseStations(true);
+      if(window.loadSponsorsFromFirebase) await window.loadSponsorsFromFirebase(true);
+    }
+  }, 700);
+});
+</script>
+
 </body>
 </html>
