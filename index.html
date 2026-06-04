@@ -1,8 +1,8 @@
 <!doctype html>
 <html lang="tr">
 <head>
-<!-- UFUK_MULTI_STOP_FINAL_0510 -->
-<!-- UFUK_NO_LIVE_MAP_ROUTE_PREMIUM_0508 -->
+<!-- UFUK_ROUTE_MULTI_CLEAN_0511 -->
+<!-- UFUK_NO_LIVE_MAP_ROUTE_PREMIUM_0508 + MULTI_CLEAN_0511 -->
 <!-- UFUK_ROUTE_SIMPLE_PREMIUM_0506 -->
 <!-- UFUK_ROUTE_SIMPLE_PREMIUM_0506 -->
 <!-- UFUK_OFFER_COUNT_FIX_0503 + ROUTE_0504 -->
@@ -271,49 +271,24 @@
 }
 
 
-/* UFUK_MULTI_STOP_FINAL_0510 */
-.bottomNav{
-  grid-template-columns:repeat(6,1fr)!important;
-  gap:3px!important;
-  padding:7px 6px!important;
-  border-radius:24px!important;
-}
-.bottomNav .navItem{
-  height:52px!important;
-  min-width:0!important;
-  padding:5px 1px!important;
-  border-radius:17px!important;
-  font-size:9px!important;
-  line-height:1!important;
-  letter-spacing:0!important;
-}
-.bottomNav .navItem .navIcon{width:22px!important;height:22px!important;border-radius:11px!important}
-.bottomNav .navItem svg{width:20px!important;height:20px!important}
-.bottomNav .navItem span:not(.navIcon){
-  display:block!important;
-  font-size:9.5px!important;
-  line-height:1.05!important;
-  white-space:nowrap!important;
-  overflow:hidden!important;
-  text-overflow:ellipsis!important;
-  max-width:58px!important;
-  font-weight:700!important;
-}
-.bottomNav .navItem.active span:not(.navIcon){font-size:10px!important;font-weight:900!important}
+/* UFUK_ROUTE_MULTI_CLEAN_0511 */
+.bottomNav{grid-template-columns:repeat(6,1fr)!important;padding:6px 5px!important;gap:3px!important;border-radius:23px!important}
+.bottomNav .navItem{height:50px!important;min-width:0!important;padding:5px 1px!important;border-radius:16px!important;font-size:8.7px!important;line-height:1!important}
+.bottomNav .navItem .navIcon{width:21px!important;height:21px!important;border-radius:11px!important}
+.bottomNav .navItem svg{width:19px!important;height:19px!important}
+.bottomNav .navItem span:not(.navIcon){display:block!important;font-size:9px!important;line-height:1.05!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important;max-width:52px!important;font-weight:700!important}
+.bottomNav .navItem.active span:not(.navIcon){font-size:9.5px!important;font-weight:900!important}
 .routeStopList{display:flex;flex-direction:column;gap:10px;margin-top:12px}
 .routeStopItem{border:1px solid rgba(53,239,141,.18);background:rgba(53,239,141,.055);border-radius:20px;padding:13px}
 .routeStopItem h4{margin:0 0 6px;font-size:17px;line-height:1.25}
 .routeStopItem p{margin:0;color:var(--muted);line-height:1.35;font-size:13px}
 .routeStopNo{display:inline-grid;place-items:center;width:28px;height:28px;border-radius:999px;background:linear-gradient(135deg,var(--green),#12c873);color:#052112;font-weight:900;margin-right:8px}
-.routeBigLink{display:block;text-align:center;margin-top:12px;padding:14px 16px;border-radius:18px;background:linear-gradient(135deg,var(--green),#12c873);color:#052112;font-weight:900;text-decoration:none;box-shadow:0 12px 30px rgba(53,239,141,.20)}
+.routeBigLink{display:block;text-align:center;margin-top:12px;padding:14px 16px;border-radius:18px;background:linear-gradient(135deg,var(--green),#12c873);color:#052112!important;font-weight:900;text-decoration:none!important;box-shadow:0 12px 30px rgba(53,239,141,.20)}
 .routeMiniGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:10px}
 .routeMini{border:1px solid var(--line);background:rgba(255,255,255,.04);border-radius:16px;padding:9px}
 .routeMini span{display:block;color:var(--muted);font-size:11px}.routeMini b{display:block;margin-top:3px}
 .routeVersion{font-size:11px;color:#6f879f;text-align:center;margin-top:8px}
-@media(max-width:360px){
-  .bottomNav .navItem span:not(.navIcon){font-size:8.5px!important;max-width:50px!important}
-  .routeMiniGrid{grid-template-columns:1fr}
-}
+@media(max-width:360px){.bottomNav .navItem span:not(.navIcon){font-size:8px!important;max-width:46px!important}.routeMiniGrid{grid-template-columns:1fr}}
 
 </style>
  <link rel="manifest" href="/manifest.json?v=10">
@@ -409,7 +384,7 @@
                 </div>
                 <div>
                   <label>Rota sapma km</label>
-                  <input id="rp_corridor" type="number" inputmode="decimal" value="25">
+                  <input id="rp_corridor" type="number" inputmode="decimal" value="80">
                 </div>
               </div>
               <input id="rp_charge_target" type="hidden" value="80">
@@ -517,60 +492,70 @@
 <div class="modal" id="detailModal"><div class="sheet"><button class="close" onclick="closeModal('detailModal')">×</button><div id="detailContent"></div></div></div>
 <div class="modal" id="infoModal"><div class="sheet"><button class="close" onclick="closeModal('infoModal')">×</button><h2>MolaVolt</h2><p class="muted">Yakındaki şarj istasyonlarını kolayca bul, haritada gör ve yol tarifi al.</p><div>UFUK_OFFER_COUNT_FIX_0503 + UFUK_ROUTE_SIMPLE_PREMIUM_0506</div></div></div>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js">
-/* UFUK_MULTI_STOP_FINAL_0510_JS - final override */
-function routeGoogleMultiUrlFinal(dest,stops){
+/* UFUK_ROUTE_MULTI_CLEAN_0511_JS */
+function routeGoogleMultiUrl(dest,stops){
   const origin=`${userPos.lat},${userPos.lon}`;
   const destination=`${dest.lat},${dest.lon}`;
-  const wp=(stops||[]).slice(0,8).map(s=>`${s.lat},${s.lon}`).join('|');
+  const waypoints=(stops||[]).slice(0,8).map(s=>`${s.lat},${s.lon}`).join('|');
   let url=`https://www.google.com/maps/dir/?api=1&origin=${encodeURIComponent(origin)}&destination=${encodeURIComponent(destination)}&travelmode=driving`;
-  if(wp) url+=`&waypoints=${encodeURIComponent(wp)}`;
+  if(waypoints) url+=`&waypoints=${encodeURIComponent(waypoints)}`;
   return url;
 }
-function routePowerKwFinal(s){
+function routePowerKw(s){
   const txt=String((s&&s.power)||'');
-  const nums=[...txt.replace(',','.').matchAll(/\d+(\.\d+)?/g)].map(m=>parseFloat(m[0])).filter(n=>isFinite(n));
+  const nums=[...txt.replace(',','.').matchAll(/\d+(\.\d)?/g)].map(m=>parseFloat(m[0])).filter(n=>isFinite(n));
   return nums.length?Math.max(...nums):0;
 }
-function chooseStopFinal(routeList,currentProgress,maxProgress){
-  const candidates=routeList.filter(s=>s.routeProgress>currentProgress+0.025 && s.routeProgress<=maxProgress-0.01);
+function routeStationsForAuto(dest,baseCorridor){
+  const corridors=[baseCorridor,90,120,160,220].filter((v,i,a)=>v>0&&a.indexOf(v)===i).sort((a,b)=>a-b);
+  let best=[], used=baseCorridor;
+  for(const c of corridors){
+    const list=routeStationsFor(dest,c);
+    if(list.length>best.length){best=list;used=c;}
+    if(list.length>=20)return {list,usedCorridor:c};
+  }
+  return {list:best,usedCorridor:used};
+}
+function chooseReachableStop(routeList,currentProgress,maxProgress){
+  const candidates=routeList.filter(s=>s.routeProgress>currentProgress+0.018 && s.routeProgress<=maxProgress-0.006);
   if(!candidates.length)return null;
   candidates.sort((a,b)=>{
     const far=b.routeProgress-a.routeProgress;
-    if(Math.abs(far)>0.025)return far;
-    return routePowerKwFinal(b)-routePowerKwFinal(a);
+    if(Math.abs(far)>0.02)return far;
+    return routePowerKw(b)-routePowerKw(a);
   });
   return candidates[0];
 }
-function buildMultiStopPlanFinal(routeList,distance,battery,soc,arrival,target,consumption,price,chargeKw){
+function buildMultiStopPlan(routeList,distance,battery,soc,arrival,target,consumption,price,chargeKw){
   const reserve=battery*Math.max(0,arrival)/100;
   let energy=battery*Math.max(0,soc)/100;
   let progress=0;
   const stops=[];
   for(let i=0;i<12;i++){
     const usable=Math.max(0,energy-reserve);
-    const possibleKm=usable/Math.max(consumption,1)*100;
-    const maxProgress=progress+(possibleKm/Math.max(distance,1));
+    const reachableKm=usable/Math.max(consumption,1)*100;
+    const maxProgress=progress+(reachableKm/Math.max(distance,1));
     if(maxProgress>=1){
       return {ok:true,stops,totalKwh:stops.reduce((a,s)=>a+s.chargeKwh,0),totalMin:stops.reduce((a,s)=>a+s.chargeMin,0),totalCost:stops.reduce((a,s)=>a+s.cost,0)};
     }
-    const stop=chooseStopFinal(routeList,progress,maxProgress);
+    const stop=chooseReachableStop(routeList,progress,maxProgress);
     if(!stop){
-      return {ok:false,reason:'Bu ayarlarla güvenli şekilde ulaşılacak sonraki şarj istasyonu bulunamadı. Mevcut şarjı artır, varış rezervini düşür veya sapma limitini yükselt.',stops,totalKwh:stops.reduce((a,s)=>a+s.chargeKwh,0),totalMin:stops.reduce((a,s)=>a+s.chargeMin,0),totalCost:stops.reduce((a,s)=>a+s.cost,0)};
+      return {ok:false,reason:'Bu batarya/şarj değerleriyle bir sonraki güvenli şarj istasyonuna ulaşamıyoruz. Sapma limitini artır, mevcut şarjı yükselt veya varış rezervini düşür.',stops,totalKwh:stops.reduce((a,s)=>a+s.chargeKwh,0),totalMin:stops.reduce((a,s)=>a+s.chargeMin,0),totalCost:stops.reduce((a,s)=>a+s.cost,0)};
     }
     const segKm=(stop.routeProgress-progress)*distance;
     const used=segKm*consumption/100;
     const arrivalEnergy=Math.max(0,energy-used);
     const targetEnergy=Math.min(battery,battery*Math.max(target,arrival+5)/100);
     const chargeKwh=Math.max(0,targetEnergy-arrivalEnergy);
-    const kw=routePowerKwFinal(stop)||chargeKw||90;
+    const kw=routePowerKw(stop)||chargeKw||90;
     const chargeMin=Math.ceil(chargeKwh/Math.max(10,kw)*60);
     stops.push({...stop,segKm,arrivalSoc:(arrivalEnergy/battery*100),chargeKwh,chargeMin,cost:chargeKwh*price,effectiveKw:kw});
     energy=targetEnergy;
     progress=stop.routeProgress;
   }
-  return {ok:false,reason:'Rota 12 moladan fazla gerektiriyor. Daha yüksek batarya/şarj hedefi veya farklı ayar deneyin.',stops,totalKwh:stops.reduce((a,s)=>a+s.chargeKwh,0),totalMin:stops.reduce((a,s)=>a+s.chargeMin,0),totalCost:stops.reduce((a,s)=>a+s.cost,0)};
+  return {ok:false,reason:'Rota 12 moladan fazla gerektiriyor. Daha yüksek batarya/şarj hedefi veya farklı güzergah deneyin.',stops,totalKwh:stops.reduce((a,s)=>a+s.chargeKwh,0),totalMin:stops.reduce((a,s)=>a+s.chargeMin,0),totalCost:stops.reduce((a,s)=>a+s.cost,0)};
 }
-function planEvRoute(){
+async function planEvRoute(){
   buildStations();
   const out=$('routeResult');
   if(!out)return;
@@ -578,7 +563,10 @@ function planEvRoute(){
     out.innerHTML='<div class="routeWarn">EPDK istasyon verisi henüz yok. Admin panelden EPDK verisini yükle veya Firebase’den oku.</div>';
     return;
   }
-  const dest=routeDestination();
+  out.innerHTML='<div class="panel routeResultCard">Çoklu rota hesaplanıyor...</div>';
+  let dest;
+  try{ dest=typeof resolveRouteDestination==='function' ? await resolveRouteDestination() : routeDestination(); }
+  catch(e){ dest=routeDestination(); }
   const roadFactor=1.18;
   const estimatedKm=km(userPos.lat,userPos.lon,dest.lat,dest.lon)*roadFactor;
   const distance=routeVal('rp_distance',estimatedKm);
@@ -590,74 +578,70 @@ function planEvRoute(){
   const consumption=mode==='wltp'?routeVal('rp_wltp',15):routeVal('rp_manual',18);
   const price=routeVal('rp_dc_price',10);
   const chargeKw=routeVal('rp_charge_kw',90);
-  const corridor=routeVal('rp_corridor',25);
+  const corridor=routeVal('rp_corridor',80);
 
+  const routePack=routeStationsForAuto(dest,corridor);
+  const routeList=routePack.list;
+  const usedCorridor=routePack.usedCorridor;
   const energyNeed=distance*consumption/100;
   const startEnergy=battery*soc/100;
-  const routeList=routeStationsFor(dest,corridor);
-  const plan=buildMultiStopPlanFinal(routeList,distance,battery,soc,arrival,target,consumption,price,chargeKw);
-  const mapsUrl=routeGoogleMultiUrlFinal(dest,plan.stops);
+  const plan=buildMultiStopPlan(routeList,distance,battery,soc,arrival,target,consumption,price,chargeKw);
+  const mapsUrl=routeGoogleMultiUrl(dest,plan.stops);
 
   let html=`<section class="section"><div class="panel">
     <h3>Çoklu rota planı</h3>
-    <p class="muted">${esc($('rp_dest')?.value||dest.name)} yönüne şarj molaları ve Google Haritalar linki</p>
+    <p class="muted">${esc($('rp_dest')?.value||dest.name)} yönüne duraklı şarj rotası</p>
     <div class="routeSummary">
       <div class="routeMetric"><span>Mesafe</span><b>${distance.toFixed(0)} km</b></div>
-      <div class="routeMetric"><span>Toplam enerji</span><b>${energyNeed.toFixed(1)} kWh</b></div>
+      <div class="routeMetric"><span>Enerji</span><b>${energyNeed.toFixed(1)} kWh</b></div>
       <div class="routeMetric"><span>Başlangıç</span><b>${startEnergy.toFixed(1)} kWh</b></div>
       <div class="routeMetric"><span>Rota istasyonu</span><b>${routeList.length}</b></div>
     </div>`;
 
   if(plan.stops.length){
     html+=`<div class="routeStop">
-      <b>${plan.stops.length} mola önerildi</b>
+      <b>${plan.stops.length} şarj molası önerildi</b>
       <div class="routeMiniGrid">
         <div class="routeMini"><span>Toplam şarj</span><b>${plan.totalKwh.toFixed(1)} kWh</b></div>
         <div class="routeMini"><span>Toplam süre</span><b>${Math.ceil(plan.totalMin)} dk</b></div>
         <div class="routeMini"><span>Mola maliyeti</span><b>${plan.totalCost.toFixed(0)} TL</b></div>
       </div>
       <a class="routeBigLink" href="${mapsUrl}" target="_blank" rel="noopener">Duraklı rotayı Google Haritalar’da aç</a>
-    </div>`;
-  }else if(plan.ok){
-    const arrSoc=soc-(energyNeed/battery*100);
-    html+=`<div class="routeStep"><b>Şarj molası gerekmiyor.</b><p>Bu ayarlarla hedefe yaklaşık %${Math.max(0,arrSoc).toFixed(0)} şarjla varırsın.</p><a class="routeBigLink" href="${mapsUrl}" target="_blank" rel="noopener">Google Haritalar’da rotayı aç</a></div>`;
-  }
-
-  if(!plan.ok){
-    html+=`<div class="routeWarn">${esc(plan.reason||'Plan tamamlanamadı.')}</div>`;
-    if(!plan.stops.length) html+=`<div class="routeWarn">Öneri: Sapma limitini 40-60 km yap, mevcut şarjı yükselt veya varışta kalacak oranı %5 yap.</div>`;
-  }
-
-  if(plan.stops.length){
-    html+=`<div class="routeStopList">`+
-      plan.stops.map((s,i)=>`<div class="routeStopItem">
-        <h4><span class="routeStopNo">${i+1}</span>${esc(s.name)}</h4>
-        <p>${esc(s.address)}<br>Sapma: ${s.routeDeviation.toFixed(1)} km · Rota ilerleme: %${(s.routeProgress*100).toFixed(0)} · Varış şarjı: %${Math.max(0,s.arrivalSoc).toFixed(0)}</p>
-        <div class="routeMiniGrid">
-          <div class="routeMini"><span>Şarj</span><b>${s.chargeKwh.toFixed(1)} kWh</b></div>
-          <div class="routeMini"><span>Süre</span><b>${s.chargeMin} dk</b></div>
-          <div class="routeMini"><span>Maliyet</span><b>${s.cost.toFixed(0)} TL</b></div>
-        </div>
-        <div class="cardActions">
-          <button class="mapShowBtn" onclick="openStationMap('${esc(s.id)}',event)">Haritada gör</button>
-          <a class="routeBtn routeActionBtn" href="${routeUrl(s)}" target="_blank" rel="noopener" onclick="event.stopPropagation()">İstasyona git</a>
-        </div>
-      </div>`).join('')+
+    </div>
+    <div class="routeStopList">`+
+    plan.stops.map((s,i)=>`<div class="routeStopItem">
+      <h4><span class="routeStopNo">${i+1}</span>${esc(s.name)}</h4>
+      <p>${esc(s.address)}<br>Sapma: ${s.routeDeviation.toFixed(1)} km · Rota ilerleme: %${(s.routeProgress*100).toFixed(0)} · Varış şarjı: %${Math.max(0,s.arrivalSoc).toFixed(0)}</p>
+      <div class="routeMiniGrid">
+        <div class="routeMini"><span>Şarj</span><b>${s.chargeKwh.toFixed(1)} kWh</b></div>
+        <div class="routeMini"><span>Süre</span><b>${s.chargeMin} dk</b></div>
+        <div class="routeMini"><span>Maliyet</span><b>${s.cost.toFixed(0)} TL</b></div>
+      </div>
+      <div class="cardActions">
+        <button class="mapShowBtn" onclick="openStationMap('${esc(s.id)}',event)">Haritada gör</button>
+        <a class="routeBtn routeActionBtn" href="${routeUrl(s)}" target="_blank" rel="noopener" onclick="event.stopPropagation()">Bu durağa git</a>
+      </div>
+    </div>`).join('')+
     `</div>`;
+  }else if(plan.ok){
+    const arrivalSoc=soc-(energyNeed/battery*100);
+    html+=`<div class="routeStep"><b>Şarj molası gerekmiyor.</b><p>Bu ayarlarla hedefe yaklaşık %${Math.max(0,arrivalSoc).toFixed(0)} şarjla varırsın.</p><a class="routeBigLink" href="${mapsUrl}" target="_blank" rel="noopener">Google Haritalar’da rotayı aç</a></div>`;
   }
 
-  html+=`<div class="routeWarn">Google Haritalar linki, önerilen şarj istasyonlarını ara durak olarak ekler. Link müşteriye gönderilebilir.</div><div class="routeVersion">v0510 çoklu rota</div></div></section>`;
+  if(!plan.ok) html+=`<div class="routeWarn">${esc(plan.reason)}</div>`;
+
+  html+=`<div class="routeWarn">Google Haritalar linki, önerilen şarj istasyonlarını ara durak olarak ekler. Link müşteriye gönderilebilir.</div><div class="routeVersion">v0511 çoklu rota temiz sürüm · koridor ${usedCorridor} km</div></div></section>`;
 
   if(routeList.length){
-    html+=`<section class="section"><h3>Rota üzerindeki istasyonlar</h3><p class="muted">${routeList.length} istasyon, ${corridor} km koridor içinde</p><div class="cards">`+
-      routeList.slice(0,15).map(s=>`<div class="station" onclick="openDetail('${esc(s.id)}')">
+    html+=`<section class="section"><h3>Rota üzerindeki istasyonlar</h3><p class="muted">${routeList.length} istasyon listeleniyor. Koridor: ${usedCorridor} km</p><div class="cards">`+
+      routeList.slice(0,60).map(s=>`<div class="station" onclick="openDetail('${esc(s.id)}')">
         <div class="stationTop">
           <div>
             <div class="tags"><span class="tag g">${esc(s.brand)}</span><span class="tag y">${esc(s.power||'kW bilgisi yok')}</span></div>
             <h4>${esc(s.name)}</h4>
             <p>${esc(s.address)}</p>
           </div>
-          <div style="text-align:right"><b>${s.routeDeviation.toFixed(1)} km</b><p>sapma</p></div>
+          <div style="text-align:right"><b>${s.routeDeviation.toFixed(1)} km</b><p>sapma<br>%${(s.routeProgress*100).toFixed(0)}</p></div>
         </div>
         <div class="cardActions">
           <button class="mapShowBtn" onclick="openStationMap('${esc(s.id)}',event)">Haritada gör</button>
@@ -671,7 +655,7 @@ function planEvRoute(){
 
 </script>
 <script>
-const VERSION='0510',ADMIN_KEY='ufuk8790',DEFAULT_EPDK_URL='https://molavolt.vercel.app/api/epdk';
+const VERSION='0511',ADMIN_KEY='ufuk8790',DEFAULT_EPDK_URL='https://molavolt.vercel.app/api/epdk';
 const BRANDS=['Tümü','ZES','Eşarj','Trugo','Sharz','Voltrun','Ovolt','WAT','Diğer'];
 const LEGACY_KEYS=['mv_manual_stations','mv_hidden_stations','mv_turkey_stations','molavolt_turkey_osm_cache','molavolt_osm_cache_v2','molavolt_turkey_admin_seed','molavolt_turkey_admin_hidden','molavolt_turkey_seed','molavolt_hidden_seed'];
 let userPos=loadPos()||{lat:40.840621,lon:31.152219},stations=[],filtered=[],currentBrand='Tümü',sortMode='distance',isAdmin=false,stationMap=null,stationMapMarker=null;
@@ -957,6 +941,7 @@ function restoreAdminTab(){
 
 /* UFUK_ROUTE_SIMPLE_PREMIUM_0506_JS */
 const ROUTE_CITY_COORDS={
+  "diyarbakir":[37.9250,40.2110],"diyarbakır":[37.9250,40.2110],"kars":[40.6013,43.0975],"erzurum":[39.9043,41.2679],"sivas":[39.7505,37.0150],"malatya":[38.3552,38.3095],"elazig":[38.6748,39.2225],"elazığ":[38.6748,39.2225],
   "ankara":[39.9334,32.8597],"istanbul":[41.0082,28.9784],"izmir":[38.4237,27.1428],
   "bursa":[40.1885,29.0610],"antalya":[36.8969,30.7133],"eskisehir":[39.7767,30.5206],
   "eskişehir":[39.7767,30.5206],"konya":[37.8746,32.4932],"sakarya":[40.7569,30.3781],
@@ -998,94 +983,8 @@ function toggleRouteConsumption(){
   if($('rp_manual'))$('rp_manual').parentElement.style.opacity=mode==='manual'?'1':'.45';
   if($('rp_wltp'))$('rp_wltp').parentElement.style.opacity=mode==='wltp'?'1':'.45';
 }
-function planEvRoute(){
-  buildStations();
-  if(!stations.length){
-    $('routeResult').innerHTML='<div class="routeWarn">EPDK istasyon verisi henüz yok. Admin panelden EPDK verisini yükle veya Firebase’den oku.</div>';
-    return;
-  }
-  const dest=routeDestination();
-  const roadFactor=1.18;
-  const estimatedKm=km(userPos.lat,userPos.lon,dest.lat,dest.lon)*roadFactor;
-  const distance=routeVal('rp_distance',estimatedKm);
-  const battery=routeVal('rp_battery',60);
-  const soc=routeVal('rp_soc',45);
-  const arrival=routeVal('rp_arrival',10);
-  const chargeTarget=routeVal('rp_charge_target',80);
-  const mode=$('rp_mode')?.value||'manual';
-  const consumption=mode==='wltp'?routeVal('rp_wltp',15):routeVal('rp_manual',18);
-  const price=routeVal('rp_dc_price',10);
-  const chargeKw=routeVal('rp_charge_kw',90);
-  const corridor=routeVal('rp_corridor',25);
+/* old planEvRoute removed by UFUK_ROUTE_MULTI_CLEAN_0511 */
 
-  const energyNeed=distance*consumption/100;
-  const usableStart=battery*Math.max(0,(soc-arrival))/100;
-  const startRange=usableStart/Math.max(consumption,1)*100;
-  const totalCost=energyNeed*price;
-  const routeList=routeStationsFor(dest,corridor);
-
-  let html=`<section class="section"><div class="panel">
-    <h3>Rota sonucu</h3>
-    <p class="muted">Konumundan ${esc($('rp_dest')?.value||dest.name)} yönüne tahmini hesap</p>
-    <div class="routeSummary">
-      <div class="routeMetric"><span>Tahmini mesafe</span><b>${distance.toFixed(0)} km</b></div>
-      <div class="routeMetric"><span>Enerji ihtiyacı</span><b>${energyNeed.toFixed(1)} kWh</b></div>
-      <div class="routeMetric"><span>Kullanılabilir enerji</span><b>${usableStart.toFixed(1)} kWh</b></div>
-      <div class="routeMetric"><span>Toplam enerji maliyeti</span><b>${totalCost.toFixed(0)} TL</b></div>
-    </div>`;
-
-  if(energyNeed<=usableStart){
-    const arrivalSoc=soc-(energyNeed/battery*100);
-    html+=`<div class="routeStep"><b>Şarj molası gerekmiyor.</b><p>Bu tüketimle hedefe yaklaşık %${Math.max(0,arrivalSoc).toFixed(0)} şarjla varırsın.</p></div>`;
-  }else{
-    const missing=energyNeed-usableStart;
-    const chargeKwh=Math.min(Math.max(missing + battery*0.08, 8), battery*Math.max(0,(chargeTarget-arrival))/100);
-    const chargeMin=chargeKwh/Math.max(10,chargeKw)*60;
-    const targetProgress=Math.min(.9, Math.max(.12, (startRange/distance)*0.82));
-    const candidates=routeList.filter(s=>s.routeProgress<=targetProgress+.22).sort((a,b)=>Math.abs(a.routeProgress-targetProgress)-Math.abs(b.routeProgress-targetProgress));
-    const stop=candidates[0]||routeList[0];
-
-    if(stop){
-      html+=`<div class="routeStep">
-        <b>Önerilen şarj molası</b>
-        <p><b>${esc(stop.name)}</b><br>${esc(stop.address)}<br>Rotadan sapma: ${stop.routeDeviation.toFixed(1)} km · Rota ilerleme: %${(stop.routeProgress*100).toFixed(0)}</p>
-        <div class="routeSummary">
-          <div class="routeMetric"><span>Alınacak enerji</span><b>${chargeKwh.toFixed(1)} kWh</b></div>
-          <div class="routeMetric"><span>Şarj süresi</span><b>${Math.ceil(chargeMin)} dk</b></div>
-          <div class="routeMetric"><span>Mola maliyeti</span><b>${(chargeKwh*price).toFixed(0)} TL</b></div>
-          <div class="routeMetric"><span>Ortalama hız</span><b>${chargeKw.toFixed(0)} kW</b></div>
-        </div>
-        <div class="cardActions">
-          <button class="mapShowBtn" onclick="openStationMap('${esc(stop.id)}',event)">Haritada gör</button>
-          <a class="routeBtn routeActionBtn" href="${routeUrl(stop)}" target="_blank" rel="noopener" onclick="event.stopPropagation()">Yol tarifi</a>
-        </div>
-      </div>`;
-    }else{
-      html+=`<div class="routeWarn">Bu rota koridorunda uygun istasyon bulunamadı. Sapma limitini yükselt veya EPDK verisini güncelle.</div>`;
-    }
-  }
-  html+=`<div class="routeWarn">Not: Bu ilk sürüm düz rota koridoru ile hesaplar. Sonraki aşamada Google Maps/OSRM rota çizgisiyle daha hassas durak seçimi eklenir.</div></div></section>`;
-
-  if(routeList.length){
-    html+=`<section class="section"><h3>Rota üzerindeki istasyonlar</h3><p class="muted">${routeList.length} istasyon, ${corridor} km koridor içinde</p><div class="cards">`+
-      routeList.slice(0,15).map(s=>`<div class="station" onclick="openDetail('${esc(s.id)}')">
-        <div class="stationTop">
-          <div>
-            <div class="tags"><span class="tag g">${esc(s.brand)}</span><span class="tag y">${esc(s.power||'kW bilgisi yok')}</span></div>
-            <h4>${esc(s.name)}</h4>
-            <p>${esc(s.address)}</p>
-          </div>
-          <div style="text-align:right"><b>${s.routeDeviation.toFixed(1)} km</b><p>sapma</p></div>
-        </div>
-        <div class="cardActions">
-          <button class="mapShowBtn" onclick="openStationMap('${esc(s.id)}',event)">Haritada gör</button>
-          <a class="routeBtn routeActionBtn" href="${routeUrl(s)}" target="_blank" rel="noopener" onclick="event.stopPropagation()">Yol tarifi</a>
-        </div>
-      </div>`).join('')+
-    `</div></section>`;
-  }
-  $('routeResult').innerHTML=html;
-}
 
 function renderAdmin(){if(!isAdmin)return;if($('epdkUrl'))$('epdkUrl').value=localStorage.getItem('molavolt_epdk_url')||DEFAULT_EPDK_URL;const q=($('adminSearch')?.value||'').trim().toLowerCase();const list=stations.filter(s=>!q||String(s.name+s.brand+s.address+s.sockets+s.power).toLowerCase().includes(q));if($('adminStatus')&&!$('adminStatus').textContent.includes('çekiliyor'))$('adminStatus').textContent=`EPDK kayıtları: ${stations.length}. Arama sonucu: ${list.length}.`;if($('adminSummary'))$('adminSummary').textContent=`Toplam ${stations.length} EPDK istasyonu var. Arama sonucu: ${list.length}. Sponsor/fırsat sayısı: ${sponsors().length}.`;if($('sp_station'))$('sp_station').innerHTML='<option value="">Tüm istasyonlarda göster</option>'+stations.map(s=>`<option value="${esc(s.id)}">${esc(s.name)}</option>`).join('');$('adminStationList').innerHTML=list.map(s=>`<div class="station"><h4>${esc(s.name)}</h4><p>${esc(s.brand)} · ${esc(s.address)}</p><div class="tags"><span class="tag y">${esc(s.power)}</span><span class="tag">${esc(s.sockets)}</span><span class="tag b">EPDK</span></div></div>`).join('')||'<div class="empty">EPDK verisi yok. Üstten EPDK verisini yükle.</div>';$('adminSponsorList').innerHTML=fairSponsors(sponsors(),'admin').map(s=>`<div class="station"><div class="sponsorHead">${sponsorLogoHtml(s)}<div><h4>${esc(s.name)} <span class="tag g">${esc(s.discount)}</span></h4><p>${esc(s.offer)}</p><div class="tags"><span class="tag b">${esc(s.whatsapp||'WP yok')}</span></div></div></div><div class="adminActions"><button class="secondaryBtn" onclick="editSponsor('${esc(s.id)}')">Düzenle</button><button class="secondaryBtn" onclick="deleteSponsor('${esc(s.id)}')">Sil</button></div></div>`).join('')||'<div class="empty">Fırsat yok.</div>'}
 function clearSponsorForm(){['sp_id','sp_name','sp_discount','sp_offer','sp_whatsapp','sp_logo'].forEach(id=>$(id)&&($(id).value=''))}function saveSponsor(){const id=$('sp_id').value||'sp-'+Date.now();const obj={id,stationId:$('sp_station').value,name:$('sp_name').value||'Sponsor işletme',discount:$('sp_discount').value||'%10',offer:$('sp_offer').value||'MolaVolt kullanıcılarına özel fırsat',whatsapp:$('sp_whatsapp').value||'',logo:$('sp_logo')?$('sp_logo').value:''};const arr=sponsors();const i=arr.findIndex(x=>x.id===id);if(i>=0)arr[i]=obj;else arr.unshift(obj);setSponsors(arr);clearSponsorForm();renderAdmin();renderSponsors();alert('Fırsat kaydedildi ve Firebase senkronu tetiklendi.')}function editSponsor(id){const s=sponsors().find(x=>x.id===id);if(!s)return;$('sp_id').value=s.id;$('sp_station').value=s.stationId;$('sp_name').value=s.name;$('sp_discount').value=s.discount;$('sp_offer').value=s.offer;$('sp_whatsapp').value=s.whatsapp||'';if($('sp_logo'))$('sp_logo').value=s.logo||''}function deleteSponsor(id){if(!confirm('Silinsin mi?'))return;setSponsors(sponsors().filter(x=>x.id!==id));renderAdmin();renderSponsors()}
@@ -1200,44 +1099,8 @@ function routeVal(id,def=0){const v=parseFloat(String($(id)?.value||'').replace(
 function pointLineDistanceKm(a,b,p){const ax=a.lat,ay=a.lon,bx=b.lat,by=b.lon,px=p.lat,py=p.lon;const abx=bx-ax,aby=by-ay,apx=px-ax,apy=py-ay;const ab2=abx*abx+aby*aby||1;let t=(apx*abx+apy*aby)/ab2;t=Math.max(0,Math.min(1,t));const lat=ax+t*abx,lon=ay+t*aby;return{distance:km(px,py,lat,lon),progress:t}}
 function routeStationsFor(dest,corridorKm){const start={lat:userPos.lat,lon:userPos.lon};return stations.map(s=>{const m=pointLineDistanceKm(start,dest,s);return{...s,routeDeviation:m.distance,routeProgress:m.progress}}).filter(s=>s.routeDeviation<=corridorKm&&s.routeProgress>0.03&&s.routeProgress<0.98).sort((a,b)=>a.routeProgress-b.routeProgress)}
 function toggleRouteConsumption(){const mode=$('rp_mode')?.value||'manual';if($('rp_manual'))$('rp_manual').parentElement.style.opacity=mode==='manual'?'1':'.55';if($('rp_wltp'))$('rp_wltp').parentElement.style.opacity=mode==='wltp'?'1':'.55'}
-async function planEvRoute(){
-  buildStations();
-  if(!stations.length){$('routeResult').innerHTML='<div class="routeWarn">EPDK/Firebase istasyon verisi henüz gelmedi. Biraz bekle veya admin panelden Firebase’den oku.</div>';return}
-  $('routeResult').innerHTML='<div class="panel routeResultCard">Rota hesaplanıyor...</div>';
-  const dest=await resolveRouteDestination();
-  const roadFactor=1.18;
-  const estimatedKm=km(userPos.lat,userPos.lon,dest.lat,dest.lon)*roadFactor;
-  const distance=routeVal('rp_distance',estimatedKm);
-  const battery=routeVal('rp_battery',60), soc=routeVal('rp_soc',45), arrival=routeVal('rp_arrival',10);
-  const mode=$('rp_mode')?.value||'manual';
-  const consumption=mode==='wltp'?routeVal('rp_wltp',15):routeVal('rp_manual',18);
-  const price=routeVal('rp_dc_price',10), chargeKw=routeVal('rp_charge_kw',90), corridor=routeVal('rp_corridor',25);
-  const chargeTarget=routeVal('rp_charge_target',80);
-  const energyNeed=distance*consumption/100;
-  const usableStart=battery*Math.max(0,(soc-arrival))/100;
-  const startRange=usableStart/Math.max(consumption,1)*100;
-  const totalCost=energyNeed*price;
-  const routeList=routeStationsFor(dest,corridor);
-  let html=`<section class="section"><div class="panel routeResultCard"><h3>Rota özeti</h3><p class="muted">${esc(dest.name)} için tahmini hesap</p><div class="routeSummary"><div class="routeMetric"><span>Mesafe</span><b>${distance.toFixed(0)} km</b></div><div class="routeMetric"><span>Enerji</span><b>${energyNeed.toFixed(1)} kWh</b></div><div class="routeMetric"><span>Maliyet</span><b>${totalCost.toFixed(0)} TL</b></div><div class="routeMetric"><span>Rota istasyonu</span><b>${routeList.length}</b></div></div>`;
-  if(energyNeed<=usableStart){
-    const arrivalSoc=soc-(energyNeed/battery*100);
-    html+=`<div class="routeStep"><b>Şarj molası gerekmiyor.</b><p>Bu verilerle hedefe yaklaşık %${Math.max(0,arrivalSoc).toFixed(0)} şarjla varırsın.</p></div>`;
-  }else{
-    const missing=energyNeed-usableStart;
-    const chargeKwh=Math.min(Math.max(missing+battery*.08,8), battery*Math.max(0,(chargeTarget-arrival))/100);
-    const chargeMin=chargeKwh/Math.max(10,chargeKw)*60;
-    const targetProgress=Math.min(.9,Math.max(.12,(startRange/distance)*.82));
-    const stop=(routeList.filter(s=>s.routeProgress<=targetProgress+.22).sort((a,b)=>Math.abs(a.routeProgress-targetProgress)-Math.abs(b.routeProgress-targetProgress))[0])||routeList[0];
-    if(stop){
-      html+=`<div class="routeStep"><b>Önerilen mola</b><p><b>${esc(stop.name)}</b><br>${esc(stop.address)}<br>Sapma: ${stop.routeDeviation.toFixed(1)} km</p><div class="routeSummary"><div class="routeMetric"><span>Şarj</span><b>${chargeKwh.toFixed(1)} kWh</b></div><div class="routeMetric"><span>Süre</span><b>${Math.ceil(chargeMin)} dk</b></div><div class="routeMetric"><span>Mola maliyeti</span><b>${(chargeKwh*price).toFixed(0)} TL</b></div><div class="routeMetric"><span>Güç</span><b>${esc(stop.power||'kW')}</b></div></div><div class="cardActions"><button class="mapShowBtn" onclick="openStationMap('${esc(stop.id)}',event)">Haritada gör</button><a class="routeBtn routeActionBtn" href="${routeUrl(stop)}" target="_blank" rel="noopener" onclick="event.stopPropagation()">Yol tarifi</a></div></div>`;
-    }else html+=`<div class="routeWarn">Bu rota koridorunda uygun istasyon bulunamadı. Ayarlardan sapma limitini artır.</div>`;
-  }
-  html+=`</div></section>`;
-  if(routeList.length){
-    html+=`<section class="section"><h3>Rota üzerindeki istasyonlar</h3><p class="muted">${corridor} km koridor içinde en yakın sonuçlar</p><div class="cards">`+routeList.slice(0,10).map(s=>`<div class="station" onclick="openDetail('${esc(s.id)}')"><div class="stationTop"><div><div class="tags"><span class="tag g">${esc(s.brand)}</span><span class="tag y">${esc(s.power||'kW bilgisi yok')}</span></div><h4>${esc(s.name)}</h4><p>${esc(s.address)}</p></div><div style="text-align:right"><b>${s.routeDeviation.toFixed(1)} km</b><p>sapma</p></div></div><div class="cardActions"><button class="mapShowBtn" onclick="openStationMap('${esc(s.id)}',event)">Haritada gör</button><a class="routeBtn routeActionBtn" href="${routeUrl(s)}" target="_blank" rel="noopener" onclick="event.stopPropagation()">Yol tarifi</a></div></div>`).join('')+`</div></section>`;
-  }
-  $('routeResult').innerHTML=html;
-}
+/* old planEvRoute removed by UFUK_ROUTE_MULTI_CLEAN_0511 */
+
 
 window.addEventListener('load',()=>{init();setTimeout(toggleRouteConsumption,400)});
 </script>
