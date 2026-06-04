@@ -2948,5 +2948,266 @@ window.addEventListener('load',()=>{
 });
 
 </script>
+<script>
+/* UFUK_IOS_EPDK_ONLY_FIX_0606
+   Sadece EPDK veri okuma/normalize/fallback katmanı. Admin açılışı, alt panel ve tasarıma dokunmaz. */
+(function(){
+  const CACHE_KEY='molavolt_epdk_stations';
+  const BACKUP_KEY='molavolt_epdk_stations_backup_0606';
+  const API_DEFAULT='https://molavolt.vercel.app/api/epdk';
+  const FB_PROJECT='molavolt';
+  const FB_KEY='AIzaSyAcmXWfZMcSpTrZ5hDBNCDta8xmsIk4TwY';
+  const ROOT=`https://firestore.googleapis.com/v1/projects/${FB_PROJECT}/databases/(default)/documents`;
+
+  function safeParse0606(v){
+    if(v==null) return v;
+    if(typeof v!=='string') return v;
+    const t=v.trim();
+    if(!t) return v;
+    try{return JSON.parse(t);}catch(e){}
+    const pairs=[['[',']'],['{','}']];
+    for(const p of pairs){
+      const a=t.indexOf(p[0]), b=t.lastIndexOf(p[1]);
+      if(a>=0 && b>a){try{return JSON.parse(t.slice(a,b+1));}catch(e){}}
+    }
+    return v;
+  }
+  function asText0606(v){return String(v==null?'':v).trim();}
+  function pickDeep0606(o,keys){
+    o=safeParse0606(o);
+    if(!o || typeof o!=='object') return '';
+    for(const k of keys){
+      if(o[k]!==undefined && o[k]!==null && asText0606(o[k])!=='') return o[k];
+    }
+    for(const k of Object.keys(o)){
+      const v=o[k];
+      if(v && typeof v==='object' && !Array.isArray(v)){
+        const r=pickDeep0606(v,keys);
+        if(asText0606(r)!=='') return r;
+      }
+    }
+    return '';
+  }
+  function toNum0606(v){
+    if(typeof v==='number') return v;
+    if(v && typeof v==='object') v=pickDeep0606(v,['value','number','doubleValue','integerValue','stringValue']);
+    const m=String(v??'').replace(',','.').match(/-?\d+(\.\d+)?/);
+    return m?parseFloat(m[0]):NaN;
+  }
+  function fsVal0606(v){
+    if(!v || typeof v!=='object') return v;
+    if('stringValue' in v) return v.stringValue;
+    if('integerValue' in v) return Number(v.integerValue);
+    if('doubleValue' in v) return Number(v.doubleValue);
+    if('booleanValue' in v) return !!v.booleanValue;
+    if('timestampValue' in v) return v.timestampValue;
+    if('arrayValue' in v) return (v.arrayValue.values||[]).map(fsVal0606);
+    if('mapValue' in v){
+      const out={}, f=v.mapValue.fields||{};
+      Object.keys(f).forEach(k=>out[k]=fsVal0606(f[k]));
+      return out;
+    }
+    return v;
+  }
+  function fsDoc0606(doc){
+    const out={}, f=(doc&&doc.fields)||{};
+    Object.keys(f).forEach(k=>out[k]=fsVal0606(f[k]));
+    return out;
+  }
+  function fetchText0606(url,ms){
+    const ctrl=new AbortController();
+    const id=setTimeout(()=>ctrl.abort(),ms||10000);
+    return fetch(url,{cache:'no-store',headers:{'Accept':'application/json,text/plain,*/*'},signal:ctrl.signal})
+      .then(async res=>{const txt=await res.text(); if(!res.ok) throw new Error('HTTP '+res.status+' '+txt.slice(0,160)); return txt;})
+      .finally(()=>clearTimeout(id));
+  }
+  function extractArrays0606(data){
+    data=safeParse0606(data);
+    const found=[];
+    function walk(x,path){
+      x=safeParse0606(x);
+      if(Array.isArray(x)){
+        if(x.length) found.push({arr:x,path:path||''});
+        x.slice(0,8).forEach((y,i)=>walk(y,(path||'arr')+'.'+i));
+      }else if(x && typeof x==='object'){
+        Object.keys(x).forEach(k=>walk(x[k],(path?path+'.':'')+k));
+      }
+    }
+    walk(data,'root');
+    return found.sort((a,b)=>b.arr.length-a.arr.length);
+  }
+  function columnsFrom0606(data){
+    data=safeParse0606(data)||{};
+    const direct=data.columnNames||data.columns||data.fields||(data.result&&(data.result.columnNames||data.result.columns||data.result.fields));
+    if(Array.isArray(direct)){
+      return direct.map(c=>typeof c==='string'?c:(c.id||c.name||c.key||c.title||'')).filter(Boolean);
+    }
+    return [];
+  }
+  function rowObject0606(row,cols){
+    row=safeParse0606(row);
+    if(!Array.isArray(row)) return row||{};
+    const o={};
+    (cols||[]).forEach((c,i)=>{o[c]=row[i];});
+    return o;
+  }
+  function coords0606(r){
+    const latKeys=['enlem','lat','latitude','koordinatx','koordinatX','x','Y','y_lat','gpsLat'];
+    const lonKeys=['boylam','lon','lng','longitude','koordinaty','koordinatY','y','X','x_lon','gpsLon'];
+    let lat=toNum0606(pickDeep0606(r,latKeys));
+    let lon=toNum0606(pickDeep0606(r,lonKeys));
+    const geo=pickDeep0606(r,['geometry','geometri','konum','location','coord','coordinates','koordinat']);
+    const g=safeParse0606(geo);
+    if((!isFinite(lat)||!isFinite(lon)) && g){
+      let arr=null;
+      if(Array.isArray(g)) arr=g;
+      else if(Array.isArray(g.coordinates)) arr=g.coordinates;
+      if(arr && arr.length>=2){
+        const a=toNum0606(arr[0]), b=toNum0606(arr[1]);
+        if(isFinite(a)&&isFinite(b)){
+          if(Math.abs(a)>Math.abs(b)){lon=a;lat=b;} else {lat=a;lon=b;}
+        }
+      }
+    }
+    if(isFinite(lat)&&isFinite(lon) && Math.abs(lat)>90 && Math.abs(lon)<=90){const t=lat;lat=lon;lon=t;}
+    return {lat,lon};
+  }
+  function socketSummary0606(soketler,r){
+    if(typeof socketSummary==='function'){
+      try{const s=socketSummary(soketler); if(s && (s.sockets||s.power)) return s;}catch(e){}
+    }
+    const txt=asText0606(soketler||pickDeep0606(r,['soket','soketler','socket','connectors','connectorTypes']));
+    const p=asText0606(pickDeep0606(r,['soketGucu','guc','kw','power','sarjGucu','dcGuc','acGuc']));
+    return {sockets:txt||'Soket bilgisi EPDK verisinde',power:p?(p.includes('kW')?p:p+' kW'):'kW bilgisi EPDK verisinde'};
+  }
+
+  window.normalizeEpdkData = function(data){
+    data=safeParse0606(data);
+    const cols=columnsFrom0606(data);
+    let rowCandidates=[];
+    if(Array.isArray(data)) rowCandidates=[data];
+    if(data && data.result){
+      const r=safeParse0606(data.result);
+      if(Array.isArray(r)) rowCandidates.push(r);
+      if(r && typeof r==='object') ['records','items','data','rows','list','result'].forEach(k=>Array.isArray(r[k])&&rowCandidates.push(r[k]));
+    }
+    if(data && typeof data==='object') ['records','items','data','rows','list','features'].forEach(k=>Array.isArray(data[k])&&rowCandidates.push(data[k]));
+    extractArrays0606(data).forEach(x=>rowCandidates.push(x.arr));
+
+    const out=[];
+    rowCandidates.forEach(arr=>{
+      (arr||[]).forEach((raw,idx)=>{
+        let r=rowObject0606(raw,cols);
+        if(r && r.properties) r={...safeParse0606(r.properties),...r};
+        const c=coords0606(r);
+        if(!isFinite(c.lat)||!isFinite(c.lon)) return;
+        if(Math.abs(c.lat)>90 || Math.abs(c.lon)>180) return;
+        const sok=socketSummary0606(pickDeep0606(r,['soketler','sockets','connectors']),r);
+        const name=pickDeep0606(r,['sarjIstasyonuAdi','istasyonAdi','stationName','ad','adi','name','title'])||'EPDK Şarj İstasyonu';
+        const op=pickDeep0606(r,['marka','operator','brand','sarjAgiIsletmecisiUnvan','sarjIstasyonuIsletmecisi','isletmeciUnvan','firma','company'])||'Diğer';
+        const address=pickDeep0606(r,['adres','address','locationAddress','ilceAdres','mahalle','fullAddress'])||'Adres bilgisi yok';
+        const no=pickDeep0606(r,['sarjIstasyonuNo','istasyonNo','id','_id','uuid','stationId'])||(idx+'-'+c.lat.toFixed(5)+'-'+c.lon.toFixed(5));
+        const brand=(typeof normBrand==='function')?normBrand(String(op)+' '+String(name)):String(op);
+        out.push({id:'epdk-'+String(no).replace(/[^a-zA-Z0-9_.-]/g,'-')+'-'+idx,name:String(name),brand,type:pickDeep0606(r,['hizmetSekli','type'])||'Şarj',status:'Açık',address:String(address),lat:c.lat,lon:c.lon,distance:(typeof km==='function'?km(userPos.lat,userPos.lon,c.lat,c.lon):0),sockets:sok.sockets,power:sok.power,source:'EPDK'});
+      });
+    });
+    const seen=new Set();
+    return out.filter(s=>{const key=(s.name+'|'+s.lat.toFixed(5)+'|'+s.lon.toFixed(5)).toLowerCase(); if(seen.has(key))return false; seen.add(key); return true;});
+  };
+
+  async function loadFirestoreRest0606(){
+    const metaTxt=await fetchText0606(`${ROOT}/molavolt/epdkMeta?key=${FB_KEY}&_=${Date.now()}`,9000);
+    const meta=fsDoc0606(JSON.parse(metaTxt));
+    const count=Number(meta.chunkCount||0);
+    if(!count) return [];
+    const all=[];
+    for(let i=0;i<count;i++){
+      const id='chunk_'+String(i).padStart(3,'0');
+      const txt=await fetchText0606(`${ROOT}/molavoltEpdkChunks/${id}?key=${FB_KEY}&_=${Date.now()}`,9000);
+      const d=fsDoc0606(JSON.parse(txt));
+      if(Array.isArray(d.stations)) all.push(...d.stations);
+    }
+    return all;
+  }
+  function applyList0606(list,source){
+    if(!Array.isArray(list)||!list.length) return false;
+    try{
+      localStorage.setItem(CACHE_KEY,JSON.stringify(list));
+      localStorage.setItem(BACKUP_KEY,JSON.stringify({source,count:list.length,ts:Date.now(),list}));
+    }catch(e){}
+    if(typeof setEpdkStations==='function') setEpdkStations(list);
+    if(typeof buildStations==='function') buildStations();
+    if(typeof applyFilters==='function') applyFilters();
+    if(typeof renderAdmin==='function' && window.isAdmin) renderAdmin();
+    if(typeof updateDataHealth0521==='function') updateDataHealth0521(source,Array.isArray(stations)?stations.length:list.length);
+    return Array.isArray(stations) ? stations.length>0 : true;
+  }
+  async function fetchApiList0606(){
+    const urls=[localStorage.getItem('molavolt_epdk_url'), (typeof DEFAULT_EPDK_URL!=='undefined'?DEFAULT_EPDK_URL:null), API_DEFAULT].filter(Boolean);
+    for(const base of [...new Set(urls)]){
+      try{
+        const txt=await fetchText0606(base+(base.includes('?')?'&':'?')+'_='+Date.now(),10000);
+        const list=window.normalizeEpdkData(safeParse0606(txt));
+        if(list.length) return {list,source:'epdk-api'};
+      }catch(e){console.warn('EPDK API 0606 geçildi',base,e);}
+    }
+    return {list:[],source:'none'};
+  }
+  window.ensureEpdkStations0606 = async function(){
+    try{
+      if(typeof buildStations==='function') buildStations();
+      if(Array.isArray(stations)&&stations.length) return {ok:true,source:'memory',count:stations.length};
+      const local=safeParse0606(localStorage.getItem(CACHE_KEY)||'[]');
+      if(Array.isArray(local)&&local.length && applyList0606(local,'localStorage')) return {ok:true,source:'localStorage',count:stations.length};
+      const backup=safeParse0606(localStorage.getItem(BACKUP_KEY)||'{}');
+      if(backup && Array.isArray(backup.list)&&backup.list.length && applyList0606(backup.list,'backup')) return {ok:true,source:'backup',count:stations.length};
+      try{
+        const rest=await loadFirestoreRest0606();
+        if(rest.length && applyList0606(rest,'firebase-rest')) return {ok:true,source:'firebase-rest',count:stations.length};
+      }catch(e){console.warn('Firestore REST 0606 geçildi',e);}
+      const api=await fetchApiList0606();
+      if(api.list.length && applyList0606(api.list,api.source)) return {ok:true,source:api.source,count:stations.length};
+      if(typeof useFallbackStations0519==='function' && useFallbackStations0519('EPDK/Firebase 0606 okunamadı')){
+        if(typeof updateDataHealth0521==='function') updateDataHealth0521('fallback',stations.length);
+        return {ok:true,source:'fallback',count:stations.length};
+      }
+    }catch(e){console.error('ensureEpdkStations0606 hata',e);}
+    return {ok:false,source:'none',count:0};
+  };
+  window.ensureRouteStationsReady0521 = window.ensureEpdkStations0606;
+  window.ensureRouteStationsReady0516 = async function(){ const r=await window.ensureEpdkStations0606(); return !!r.ok; };
+  window.ensureRouteStationsReady0519 = async function(){ const r=await window.ensureEpdkStations0606(); return !!r.ok; };
+  const oldLoadEpdk=window.loadEpdk;
+  window.loadEpdk=async function(){
+    const input=document.getElementById('epdkUrl');
+    const status=document.getElementById('adminStatus');
+    const url=(input&&input.value.trim())||localStorage.getItem('molavolt_epdk_url')||API_DEFAULT;
+    if(input) input.value=url;
+    localStorage.setItem('molavolt_epdk_url',url);
+    if(status) status.textContent='EPDK verisi çekiliyor...';
+    try{
+      const txt=await fetchText0606(url+(url.includes('?')?'&':'?')+'_='+Date.now(),12000);
+      const list=window.normalizeEpdkData(safeParse0606(txt));
+      if(!list.length) throw new Error('EPDK cevap verdi ama koordinatlı istasyon bulunamadı.');
+      if(typeof clearLegacySilent==='function') clearLegacySilent();
+      applyList0606(list,'epdk-api');
+      if(typeof saveEpdkToFirebase==='function'){
+        try{await saveEpdkToFirebase(list);}catch(e){console.warn('Firebase kayıt geçildi',e);}
+      }
+      if(status) status.textContent='EPDK yüklendi: '+list.length+' istasyon';
+      alert('EPDK verisi yüklendi: '+list.length+' istasyon');
+    }catch(err){
+      console.error(err);
+      if(status) status.textContent='Hata: '+err.message;
+      if(oldLoadEpdk){try{return await oldLoadEpdk();}catch(e){}}
+      alert('EPDK yükleme hatası: '+err.message);
+    }
+  };
+  window.addEventListener('load',function(){
+    setTimeout(function(){ window.ensureEpdkStations0606().then(function(r){ if(r.ok && typeof updateDataHealth0521==='function') updateDataHealth0521(r.source,r.count); }); },900);
+  });
+})();
+</script>
+
 </body>
 </html>
