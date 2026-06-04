@@ -1,6 +1,7 @@
 <!doctype html>
 <html lang="tr">
 <head>
+<!-- UFUK_IOS_EPDK_ROUTE_FIX_0516 -->
 <!-- UFUK_ROUTE_NO_AUTO_REDIRECT_0515 -->
 <!-- UFUK_ROUTE_LOW_SOC_START_CHARGE_0514 -->
 <!-- UFUK_ROUTE_DIRECT_MAP_0512 -->
@@ -361,6 +362,18 @@
 .routeStopPreviewItem b{color:var(--text)}
 @media(max-width:390px){.routeDirectCard .routeMainSummary{grid-template-columns:1fr}}
 
+
+/* UFUK_IOS_EPDK_ROUTE_FIX_0516 */
+.routeDataLoading{
+  border:1px solid rgba(255,209,102,.25);
+  background:rgba(255,209,102,.08);
+  color:#ffe39a;
+  border-radius:18px;
+  padding:12px;
+  margin-top:10px;
+  line-height:1.35;
+}
+
 </style>
  <link rel="manifest" href="/manifest.json?v=10">
   <meta name="theme-color" content="#07111d">
@@ -702,7 +715,7 @@ async function planEvRoute(){
 
   if(!plan.ok) html+=`<div class="routeWarn">${esc(plan.reason)}</div>`;
 
-  html+=`<div class="routeWarn">Google Haritalar linki, önerilen şarj istasyonlarını ara durak olarak ekler. Link müşteriye gönderilebilir.</div><div class="routeVersion">v0515 müşteri onaylı Google Maps rota · koridor ${usedCorridor} km</div></div></section>`;
+  html+=`<div class="routeWarn">Google Haritalar linki, önerilen şarj istasyonlarını ara durak olarak ekler. Link müşteriye gönderilebilir.</div><div class="routeVersion">v0516 iOS EPDK veri düzeltmesi · koridor ${usedCorridor} km</div></div></section>`;
 
   if(routeList.length){
     html+=`<section class="section"><h3>Rota üzerindeki istasyonlar</h3><p class="muted">${routeList.length} istasyon listeleniyor. Koridor: ${usedCorridor} km</p><div class="cards">`+
@@ -727,7 +740,7 @@ async function planEvRoute(){
 
 </script>
 <script>
-const VERSION='0515',ADMIN_KEY='ufuk8790',DEFAULT_EPDK_URL='https://molavolt.vercel.app/api/epdk';
+const VERSION='0516',ADMIN_KEY='ufuk8790',DEFAULT_EPDK_URL='https://molavolt.vercel.app/api/epdk';
 const BRANDS=['Tümü','ZES','Eşarj','Trugo','Sharz','Voltrun','Ovolt','WAT','Diğer'];
 const LEGACY_KEYS=['mv_manual_stations','mv_hidden_stations','mv_turkey_stations','molavolt_turkey_osm_cache','molavolt_osm_cache_v2','molavolt_turkey_admin_seed','molavolt_turkey_admin_hidden','molavolt_turkey_seed','molavolt_hidden_seed'];
 let userPos=loadPos()||{lat:40.840621,lon:31.152219},stations=[],filtered=[],currentBrand='Tümü',sortMode='distance',isAdmin=false,stationMap=null,stationMapMarker=null;
@@ -1567,7 +1580,7 @@ function planEvRoute(){
           <a href="${mapsUrl}" target="_blank" rel="noopener">Google Haritalar’da aç</a>
           <button onclick="navigator.clipboard&&navigator.clipboard.writeText('${mapsUrl.replaceAll("'","%27")}');routeToast('Rota linki kopyalandı')">Linki kopyala</button>
         </div>
-        <div class="routeVersion">v0515 müşteri onaylı Google Maps rota</div>
+        <div class="routeVersion">v0516 iOS EPDK veri düzeltmesi</div>
       </div>`;
     }
     setTimeout(()=>{ window.location.href=mapsUrl; }, 450);
@@ -1729,7 +1742,7 @@ function planEvRoute(){
           <a href="${mapsUrl}" target="_blank" rel="noopener">Google Haritalar’da aç</a>
           <button onclick="navigator.clipboard&&navigator.clipboard.writeText('${mapsUrl.replaceAll("'","%27")}');routeToast('Rota linki kopyalandı')">Linki kopyala</button>
         </div>
-        <div class="routeVersion">v0515 müşteri onaylı Google Maps rota</div>
+        <div class="routeVersion">v0516 iOS EPDK veri düzeltmesi</div>
       </div>`;
     }
 
@@ -1815,7 +1828,165 @@ function planEvRoute(){
           <a href="${mapsUrl}" target="_blank" rel="noopener">Duraklı Google Haritalar rotasını aç</a>
           <button onclick="navigator.clipboard&&navigator.clipboard.writeText('${mapsUrl.replaceAll("'","%27")}');routeToast('Rota linki kopyalandı')">Linki kopyala</button>
         </div>
-        <div class="routeVersion">v0515 müşteri onaylı Google Maps rota</div>
+        <div class="routeVersion">v0516 iOS EPDK veri düzeltmesi</div>
+      </div>`;
+    }
+
+    if(lowSocProblem) routeToast('Bu şarjla güvenli rota oluşturulamadı');
+    else routeToast('Rota hazır. Haritayı açmak için butona bas.');
+  }catch(err){
+    console.error(err);
+    routeToast('Rota oluşturulamadı');
+    const out=$('routeResult');
+    if(out) out.innerHTML='<div class="routeWarn">Rota oluşturulamadı. Lütfen hedefi listeden seçip tekrar dene.</div>';
+  }
+}
+
+</script>
+<script>
+
+/* UFUK_IOS_EPDK_ROUTE_FIX_0516_JS */
+async function ensureRouteStationsReady0516(){
+  try{
+    buildStations();
+    if(Array.isArray(stations) && stations.length) return true;
+
+    // 1) localStorage tekrar dene
+    const local = JSON.parse(localStorage.getItem('molavolt_epdk_stations') || '[]');
+    if(Array.isArray(local) && local.length){
+      if(typeof setEpdkStations==='function') setEpdkStations(local);
+      buildStations();
+      if(stations.length) return true;
+    }
+
+    // 2) Firebase modülü yüklendiyse oradan oku
+    if(typeof window.loadFirebaseStations === 'function'){
+      try{
+        await window.loadFirebaseStations();
+        buildStations();
+        if(stations.length) return true;
+      }catch(e){ console.warn('Firebase fallback olmadı', e); }
+    }
+
+    // 3) iOS / WhatsApp webview için direkt API fallback
+    const apiUrl = localStorage.getItem('molavolt_epdk_url') || 'https://molavolt.vercel.app/api/epdk';
+    const res = await fetch(apiUrl + (apiUrl.includes('?')?'&':'?') + 't=' + Date.now(), {cache:'no-store'});
+    const raw = await res.text();
+    let data;
+    try{ data = JSON.parse(raw); }catch(e){ throw new Error('API JSON dönmedi'); }
+    const list = typeof normalizeEpdkData === 'function' ? normalizeEpdkData(data) : [];
+    if(Array.isArray(list) && list.length){
+      if(typeof setEpdkStations==='function') setEpdkStations(list);
+      localStorage.setItem('molavolt_epdk_stations', JSON.stringify(list));
+      buildStations();
+      if(typeof applyFilters==='function') applyFilters();
+      return stations.length > 0;
+    }
+  }catch(err){
+    console.error('ensureRouteStationsReady0516 hata', err);
+  }
+  return false;
+}
+function routeExactCityDest0516(q){
+  try{
+    const n=normalizeTextTR(q||'');
+    if(typeof ROUTE_PREMIUM_CITIES!=='undefined'){
+      const exact=ROUTE_PREMIUM_CITIES.find(x=>normalizeTextTR(x[0])===n || normalizeTextTR(x[1])===n);
+      if(exact) return {name:exact[0],sub:exact[1],lat:Number(exact[2]),lon:Number(exact[3]),type:'city'};
+      const starts=ROUTE_PREMIUM_CITIES.find(x=>normalizeTextTR(x[0]).startsWith(n));
+      if(starts) return {name:starts[0],sub:starts[1],lat:Number(starts[2]),lon:Number(starts[3]),type:'city'};
+    }
+  }catch(e){}
+  return null;
+}
+function routeDirectDestination(){
+  try{
+    const q=($('rp_dest')?.value||'Ankara').trim();
+    const city=routeExactCityDest0516(q);
+    if(city) return city;
+    if(typeof routeSelectedDest!=='undefined' && routeSelectedDest) return routeSelectedDest;
+    if(typeof routeLocalSuggestions==='function'){
+      const suggestions=routeLocalSuggestions(q);
+      const citySuggestion=suggestions.find(x=>x.type==='city');
+      if(citySuggestion) return {name:citySuggestion.name,lat:Number(citySuggestion.lat),lon:Number(citySuggestion.lon),sub:citySuggestion.sub||''};
+      const local=suggestions[0];
+      if(local) return {name:local.name,lat:Number(local.lat),lon:Number(local.lon),sub:local.sub||''};
+    }
+    if(typeof routeDestination==='function') return routeDestination();
+  }catch(e){}
+  return {name:'Ankara',lat:39.9334,lon:32.8597,sub:'Varsayılan hedef'};
+}
+async function planEvRoute(){
+  try{
+    routeToast('Rota ve istasyon verisi hazırlanıyor…');
+    const out=$('routeResult');
+    if(out) out.innerHTML='<div class="routeDirectCard"><h3>Rota hesaplanıyor…</h3><p>EPDK istasyon verisi kontrol ediliyor, ardından şarj durakları hesaplanıyor.</p></div>';
+
+    const ok = await ensureRouteStationsReady0516();
+    if(!ok){
+      if(out) out.innerHTML='<div class="routeDataLoading"><b>İstasyon verisi yüklenemedi.</b><br>İnternet bağlantısını kontrol edip sayfayı yenileyin. iPhone/WhatsApp içinde açıldıysa Safari ile açmayı deneyin.</div>';
+      routeToast('İstasyon verisi yüklenemedi');
+      return;
+    }
+
+    const dest=routeDirectDestination();
+    const roadFactor=1.18;
+    const estimatedKm=km(userPos.lat,userPos.lon,dest.lat,dest.lon)*roadFactor;
+    const distance=routeVal('rp_distance',estimatedKm);
+    const battery=routeVal('rp_battery',60);
+    const soc=routeVal('rp_soc',45);
+    const arrival=routeVal('rp_arrival',10);
+    const target=routeVal('rp_charge_target',80);
+    const mode=$('rp_mode')?.value||'manual';
+    const consumption=mode==='wltp'?routeVal('rp_wltp',15):routeVal('rp_manual',18);
+    const price=routeVal('rp_price', routeVal('rp_dc_price',10));
+    const chargeKw=routeVal('rp_kw', routeVal('rp_charge_kw',90));
+    const corridor=routeVal('rp_corridor',80);
+
+    const pack=routeStationsAutoDirect(dest,corridor);
+    const plan=buildPlanDirect(pack.list,distance,battery,soc,arrival,target,consumption,price,chargeKw);
+    const mapsUrl=routeGoogleDirectUrl(dest,plan.stops);
+    const energyNeed=distance*consumption/100;
+    const startEnergy=battery*soc/100;
+    const startUsable=battery*Math.max(0,(soc-arrival))/100;
+    const lowSocProblem=energyNeed>startUsable && !plan.stops.length;
+
+    let stopHtml='';
+    if(plan.stops.length){
+      stopHtml=`<div class="routeStopPreview"><b>Önerilen şarj durakları</b>`+
+        plan.stops.map((s,i)=>`<div class="routeStopPreviewItem">
+          <b>${i+1}. ${esc(s.name)}</b>${s.isStartCharge?' <span class="strongWarn">(önce buraya şarj)</span>':''}<br>
+          ${esc(s.address||'')}<br>
+          Şarj: <b>${s.chargeKwh.toFixed(1)} kWh</b> · Süre: <b>${s.chargeMin} dk</b> · Maliyet: <b>${s.cost.toFixed(0)} TL</b>
+        </div>`).join('')+
+      `</div>`;
+    }else if(lowSocProblem){
+      stopHtml='<p class="strongWarn">Bu şarjla güvenli rota oluşturulamadı. En yakın şarj noktasına kadar bile güvenli rezerv kalmıyor olabilir. Mevcut şarjı artırıp tekrar dene veya varışta kalsın değerini düşür.</p>';
+    }else{
+      stopHtml='<p>Bu değerlerle şarj molası gerekmiyor.</p>';
+    }
+
+    if(out){
+      out.innerHTML=`<div class="routeDirectCard ready ${lowSocProblem?'warning':''}">
+        <h3>Rota hazır</h3>
+        <p><b>${esc(dest.name||$('rp_dest')?.value||'Hedef')}</b> için hesaplama tamamlandı. İstasyon verisi: <b>${stations.length}</b></p>
+        ${plan.warning?`<p class="strongWarn">${esc(plan.warning)}</p>`:''}
+
+        <div class="routeMainSummary">
+          <div><span>Durak</span><b>${plan.stops.length}</b></div>
+          <div><span>Şarj süresi</span><b>${Math.ceil(plan.totalMin)} dk</b></div>
+          <div><span>Maliyet</span><b>${plan.totalCost.toFixed(0)} TL</b></div>
+        </div>
+
+        <p>Mesafe: <b>${distance.toFixed(0)} km</b> · Gerekli enerji: <b>${energyNeed.toFixed(1)} kWh</b> · Başlangıç enerji: <b>${startEnergy.toFixed(1)} kWh</b></p>
+        <p>Toplam şarj: <b>${plan.totalKwh.toFixed(1)} kWh</b></p>
+        ${stopHtml}
+
+        <div class="routeDirectActions">
+          <a href="${mapsUrl}" target="_blank" rel="noopener">Duraklı Google Haritalar rotasını aç</a>
+          <button onclick="navigator.clipboard&&navigator.clipboard.writeText('${mapsUrl.replaceAll("'","%27")}');routeToast('Rota linki kopyalandı')">Linki kopyala</button>
+        </div>
+        <div class="routeVersion">v0516 iOS EPDK veri düzeltmesi</div>
       </div>`;
     }
 
