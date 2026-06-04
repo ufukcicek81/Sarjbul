@@ -1,8 +1,8 @@
 <!doctype html>
 <html lang="tr">
 <head>
-<!-- UFUK_IOS_FIREBASE_LOCATION_FIX_0521 -->
 <!-- UFUK_ADMIN_ACCESS_FIX_0520 -->
+<!-- UFUK_IOS_EPDK_LOCATION_FINAL_0604 -->
 <!-- UFUK_IOS_NO_STUCK_FALLBACK_0519 -->
 <!-- UFUK_IOS_LOCATION_FIREBASE_TIMEOUT_0518 -->
 <!-- UFUK_IOS_LAYOUT_STABILITY_0517 -->
@@ -535,44 +535,6 @@ body:not(.admin-mode) .adminEmergencyBar{display:block}
   color:#06150e;
 }
 
-
-/* UFUK_IOS_FIREBASE_LOCATION_FIX_0521 */
-.locFixPanel{
-  margin-top:8px;
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:8px;
-}
-.locFixPanel button{
-  border:1px solid var(--line);
-  border-radius:15px;
-  padding:11px 10px;
-  font-weight:900;
-  background:rgba(255,255,255,.055);
-  color:#eaf4ff;
-}
-.locFixPanel button:first-child{
-  background:linear-gradient(135deg,#35ef8d,#12c873);
-  color:#06150e;
-  border:0;
-}
-.dataHealthBox{
-  margin-top:10px;
-  border:1px solid rgba(53,239,141,.20);
-  background:rgba(53,239,141,.065);
-  color:#dfffea;
-  border-radius:16px;
-  padding:10px;
-  line-height:1.35;
-  font-size:13px;
-}
-.dataHealthBox.warn{
-  border-color:rgba(255,209,102,.28);
-  background:rgba(255,209,102,.08);
-  color:#ffe39a;
-}
-@media(max-width:380px){.locFixPanel{grid-template-columns:1fr}}
-
 </style>
  <link rel="manifest" href="/manifest.json?v=10">
   <meta name="theme-color" content="#07111d">
@@ -939,7 +901,7 @@ async function planEvRoute(){
 
 </script>
 <script>
-const VERSION='0521',ADMIN_KEY='ufuk8790',DEFAULT_EPDK_URL='https://molavolt.vercel.app/api/epdk';
+const VERSION='0520',ADMIN_KEY='ufuk8790',DEFAULT_EPDK_URL='https://molavolt.vercel.app/api/epdk';
 const BRANDS=['Tümü','ZES','Eşarj','Trugo','Sharz','Voltrun','Ovolt','WAT','Diğer'];
 const LEGACY_KEYS=['mv_manual_stations','mv_hidden_stations','mv_turkey_stations','molavolt_turkey_osm_cache','molavolt_osm_cache_v2','molavolt_turkey_admin_seed','molavolt_turkey_admin_hidden','molavolt_turkey_seed','molavolt_hidden_seed'];
 let userPos=loadPos()||{lat:40.840621,lon:31.152219},stations=[],filtered=[],currentBrand='Tümü',sortMode='distance',isAdmin=false,stationMap=null,stationMapMarker=null;
@@ -1463,6 +1425,8 @@ async function loadEpdkFromFirebase(){
   });
   return all;
 }
+window.saveEpdkToFirebase0604 = saveEpdkToFirebase;
+window.loadEpdkFromFirebase0604 = loadEpdkFromFirebase;
 async function applyFirebaseStations(silent=false){
   try{
     const list = await loadEpdkFromFirebase();
@@ -2617,7 +2581,7 @@ async function planEvRoute(){
           <a href="${mapsUrl}" target="_blank" rel="noopener">Duraklı Google Haritalar rotasını aç</a>
           <button onclick="navigator.clipboard&&navigator.clipboard.writeText('${mapsUrl.replaceAll("'","%27")}');routeToast('Rota linki kopyalandı')">Linki kopyala</button>
         </div>
-        <div class="routeVersion">v0521 iOS Firebase REST + konum düzeltmesi</div>
+        <div class="routeVersion">v0520 admin giriş düzeltmesi</div>
       </div>`;
     }
     if(lowSocProblem) routeToast('Bu şarjla güvenli rota oluşturulamadı');
@@ -2688,265 +2652,329 @@ window.addEventListener('load',()=>{
 });
 
 </script>
-<script>
 
-/* UFUK_IOS_FIREBASE_LOCATION_FIX_0521_JS */
-const FIREBASE_API_KEY_0521 = "AIzaSyAcmXWfZMcSpTrZ5hDBNCDta8xmsIk4TwY";
-const FIREBASE_PROJECT_0521 = "molavolt";
-function fsVal0521(v){
-  if(!v || typeof v!=='object') return null;
-  if('stringValue' in v) return v.stringValue;
-  if('integerValue' in v) return Number(v.integerValue);
-  if('doubleValue' in v) return Number(v.doubleValue);
-  if('booleanValue' in v) return !!v.booleanValue;
-  if('timestampValue' in v) return v.timestampValue;
-  if('arrayValue' in v) return (v.arrayValue.values||[]).map(fsVal0521);
-  if('mapValue' in v){
-    const out={};
-    const f=v.mapValue.fields||{};
-    Object.keys(f).forEach(k=>out[k]=fsVal0521(f[k]));
+<script>
+/* UFUK_IOS_EPDK_LOCATION_FINAL_0604_JS
+   Sadece konum + EPDK veri katmanı override edilir. Alt panel, admin HTML'i ve tasarım korunur. */
+(function(){
+  const PATCH='UFUK_IOS_EPDK_LOCATION_FINAL_0604';
+  const REAL_EPDK_MIN_COUNT=50;
+
+  function safeStatus0604(msg){
+    try{ if(typeof setLocStatus==='function') setLocStatus(msg); }catch(e){}
+  }
+  function adminStatus0604(msg){
+    const el=document.getElementById('adminStatus');
+    if(el) el.textContent=msg;
+  }
+  function fetchTextTimeout0604(url,ms){
+    return new Promise((resolve,reject)=>{
+      const ctrl=window.AbortController?new AbortController():null;
+      const timer=setTimeout(()=>{ try{ if(ctrl) ctrl.abort(); }catch(e){} reject(new Error('Zaman aşımı: '+ms+' ms')); },ms);
+      fetch(url,{cache:'no-store',signal:ctrl?ctrl.signal:undefined,headers:{'Accept':'application/json,text/plain,*/*'}})
+        .then(async res=>{
+          const txt=await res.text();
+          if(!res.ok) throw new Error('HTTP '+res.status+' - '+txt.slice(0,180));
+          resolve(txt);
+        })
+        .catch(reject)
+        .finally(()=>clearTimeout(timer));
+    });
+  }
+  function parseJsonLoose0604(txt){
+    if(typeof txt!=='string') return txt;
+    try{ return JSON.parse(txt); }catch(e){}
+    try{ if(typeof parseMaybe==='function') return parseMaybe(txt); }catch(e){}
+    throw new Error('API JSON döndürmedi: '+txt.slice(0,120));
+  }
+  function pick0604(obj,keys){
+    if(!obj || typeof obj!=='object') return undefined;
+    for(const k of keys){
+      if(obj[k]!==undefined && obj[k]!==null && obj[k]!=='') return obj[k];
+      const found=Object.keys(obj).find(x=>String(x).toLowerCase()===String(k).toLowerCase());
+      if(found && obj[found]!==undefined && obj[found]!==null && obj[found]!=='') return obj[found];
+    }
+    return undefined;
+  }
+  function num0604(v){
+    if(Array.isArray(v)) return NaN;
+    if(typeof v==='string') v=v.replace(',','.').replace(/[^0-9.\-]/g,'');
+    const n=Number(v); return Number.isFinite(n)?n:NaN;
+  }
+  function recursiveRows0604(obj,depth=0,out=[]){
+    if(depth>5 || !obj) return out;
+    if(Array.isArray(obj)){
+      if(obj.length && typeof obj[0]==='object') out.push(obj);
+      obj.slice(0,4).forEach(x=>recursiveRows0604(x,depth+1,out));
+      return out;
+    }
+    if(typeof obj==='object') Object.keys(obj).forEach(k=>recursiveRows0604(obj[k],depth+1,out));
     return out;
   }
-  return null;
-}
-function fsDoc0521(doc){
-  const out={};
-  const f=(doc&&doc.fields)||{};
-  Object.keys(f).forEach(k=>out[k]=fsVal0521(f[k]));
-  return out;
-}
-async function fetchJsonTimeout0521(url,ms=6500){
-  const ctrl=new AbortController();
-  const id=setTimeout(()=>ctrl.abort(),ms);
-  try{
-    const res=await fetch(url,{cache:'no-store',signal:ctrl.signal});
-    const txt=await res.text();
-    if(!res.ok) throw new Error('HTTP '+res.status+' '+txt.slice(0,120));
-    return JSON.parse(txt);
-  }finally{clearTimeout(id);}
-}
-async function loadEpdkFromFirestoreRest0521(){
-  const root=`https://firestore.googleapis.com/v1/projects/${FIREBASE_PROJECT_0521}/databases/(default)/documents`;
-  const metaUrl=`${root}/molavolt/epdkMeta?key=${FIREBASE_API_KEY_0521}&t=${Date.now()}`;
-  const metaDoc=await fetchJsonTimeout0521(metaUrl,6500);
-  const meta=fsDoc0521(metaDoc);
-  const chunkCount=Number(meta.chunkCount||0);
-  if(!chunkCount) return [];
-  const all=[];
-  for(let i=0;i<chunkCount;i++){
-    const id='chunk_'+String(i).padStart(3,'0');
-    const url=`${root}/molavoltEpdkChunks/${id}?key=${FIREBASE_API_KEY_0521}&t=${Date.now()}`;
-    const doc=await fetchJsonTimeout0521(url,6500);
-    const data=fsDoc0521(doc);
-    if(Array.isArray(data.stations)) all.push(...data.stations);
-  }
-  return all;
-}
-async function ensureRouteStationsReady0521(){
-  try{
-    buildStations();
-    if(Array.isArray(stations)&&stations.length)return {ok:true,source:'local',count:stations.length};
+  function normalizeAnyEpdk0604(data){
+    try{
+      if(typeof normalizeEpdkData==='function'){
+        const n=normalizeEpdkData(data);
+        if(Array.isArray(n)&&n.length) return dedupeStations0604(n);
+      }
+    }catch(e){ console.warn(PATCH,'ana normalize geçilemedi',e); }
 
-    const local=JSON.parse(localStorage.getItem('molavolt_epdk_stations')||'[]');
-    if(Array.isArray(local)&&local.length){
-      setEpdkStations(local);
-      buildStations();
-      if(stations.length)return {ok:true,source:'localStorage',count:stations.length};
+    let rows=[];
+    const d=(typeof data==='string')?parseJsonLoose0604(data):data;
+    if(Array.isArray(d)) rows=d;
+    else if(d && Array.isArray(d.features)){
+      rows=d.features.map(f=>({...(f.properties||{}), lat:f.geometry?.coordinates?.[1], lon:f.geometry?.coordinates?.[0]}));
+    }else if(d && typeof d==='object'){
+      const direct=pick0604(d,['result','data','items','records','stations','sarjIstasyonlari','chargingStations']);
+      if(Array.isArray(direct)) rows=direct;
+      else if(typeof direct==='string'){
+        try{ const parsed=parseJsonLoose0604(direct); if(Array.isArray(parsed)) rows=parsed; else rows=recursiveRows0604(parsed).sort((a,b)=>b.length-a.length)[0]||[]; }catch(e){}
+      }
+      if(!rows.length) rows=recursiveRows0604(d).sort((a,b)=>b.length-a.length)[0]||[];
     }
-
-    // Önce Firebase SDK varsa onu dene
-    if(typeof window.loadFirebaseStations==='function'){
+    const out=[];
+    rows.forEach((raw,idx)=>{
+      let r=raw;
+      try{ if(typeof r==='string') r=parseJsonLoose0604(r); }catch(e){}
+      if(!r || typeof r!=='object') return;
+      if(r.properties) r={...r.properties, lat:r.geometry?.coordinates?.[1], lon:r.geometry?.coordinates?.[0]};
+      const coords=pick0604(r,['coordinates','koordinat','coord']);
+      let lat=num0604(pick0604(r,['enlem','lat','latitude','koordinatx','koordinatX','x']));
+      let lon=num0604(pick0604(r,['boylam','lon','lng','longitude','koordinaty','koordinatY','y']));
+      if((!Number.isFinite(lat)||!Number.isFinite(lon)) && Array.isArray(coords) && coords.length>=2){
+        lon=num0604(coords[0]); lat=num0604(coords[1]);
+      }
+      if(!Number.isFinite(lat)||!Number.isFinite(lon)) return;
+      if(Math.abs(lat)>90 || Math.abs(lon)>180) return;
+      const name=pick0604(r,['sarjIstasyonuAdi','istasyonAdi','stationName','ad','name','title'])||'EPDK Şarj İstasyonu';
+      const op=pick0604(r,['marka','brand','sarjAgiIsletmecisiUnvan','operator','isletmeciUnvan'])||'Diğer';
+      const address=pick0604(r,['adres','address','fullAddress','lokasyon'])||'Adres bilgisi yok';
+      let sockets='AC/DC', power='kW bilgisi yok';
       try{
-        await window.loadFirebaseStations(true);
-        buildStations();
-        if(stations.length)return {ok:true,source:'firebase-sdk',count:stations.length};
-      }catch(e){console.warn('Firebase SDK okunamadı',e);}
+        if(typeof socketSummary==='function'){
+          const sok=socketSummary(pick0604(r,['soketler','sockets','connectors','socketList']));
+          sockets=sok.sockets||sockets; power=sok.power||power;
+        }
+      }catch(e){}
+      const no=pick0604(r,['sarjIstasyonuNo','istasyonNo','id','stationId'])||(idx+'-'+lat.toFixed(5)+'-'+lon.toFixed(5));
+      let brand=String(op);
+      try{ if(typeof normBrand==='function') brand=normBrand(String(op)+' '+String(name)); }catch(e){}
+      let distance=0;
+      try{ distance=km(userPos.lat,userPos.lon,lat,lon); }catch(e){}
+      out.push({id:'epdk-'+String(no).replace(/[^a-zA-Z0-9_.-]/g,'-')+'-'+idx,name:String(name),brand,type:'Şarj',status:'Açık',address:String(address),lat,lon,distance,sockets,power,source:'EPDK'});
+    });
+    return dedupeStations0604(out);
+  }
+  function dedupeStations0604(list){
+    const seen=new Set();
+    return (Array.isArray(list)?list:[]).filter(s=>{
+      const lat=num0604(s.lat), lon=num0604(s.lon);
+      if(!Number.isFinite(lat)||!Number.isFinite(lon)) return false;
+      const key=String(s.name||'').trim().toLowerCase()+'|'+lat.toFixed(5)+'|'+lon.toFixed(5);
+      if(seen.has(key)) return false;
+      seen.add(key);
+      s.lat=lat; s.lon=lon; s.source='EPDK';
+      return true;
+    });
+  }
+  function commitStations0604(list){
+    const clean=dedupeStations0604(list);
+    if(!clean.length) return false;
+    if(typeof clearLegacySilent==='function') clearLegacySilent();
+    if(typeof setEpdkStations==='function') setEpdkStations(clean);
+    else localStorage.setItem('molavolt_epdk_stations',JSON.stringify(clean));
+    if(typeof buildStations==='function') buildStations();
+    if(typeof applyFilters==='function') applyFilters();
+    if(typeof renderAdmin==='function') renderAdmin();
+    return true;
+  }
+  function epdkApiUrls0604(){
+    const urls=[];
+    try{ const saved=localStorage.getItem('molavolt_epdk_url'); if(saved) urls.push(saved); }catch(e){}
+    try{ if(location.origin && location.origin.startsWith('http')) urls.push(location.origin.replace(/\/$/,'')+'/api/epdk'); }catch(e){}
+    try{ if(typeof DEFAULT_EPDK_URL!=='undefined') urls.push(DEFAULT_EPDK_URL); }catch(e){}
+    urls.push('https://molavolt.vercel.app/api/epdk');
+    return [...new Set(urls.filter(Boolean))];
+  }
+  async function loadEpdkFromApi0604(statusPrefix='EPDK verisi çekiliyor'){
+    let lastErr=null;
+    const urls=epdkApiUrls0604();
+    for(const base of urls){
+      try{
+        adminStatus0604(statusPrefix+'... '+base.replace(/^https?:\/\//,''));
+        const url=base+(base.includes('?')?'&':'?')+'t='+Date.now();
+        const txt=await fetchTextTimeout0604(url,12000);
+        const list=normalizeAnyEpdk0604(parseJsonLoose0604(txt));
+        if(list.length) return list;
+        lastErr=new Error('Koordinatlı istasyon bulunamadı');
+      }catch(e){ lastErr=e; console.warn(PATCH,'API geçildi',base,e); }
     }
-
-    // iOS Safari / WebView için Firebase REST fallback
+    throw lastErr||new Error('EPDK API kaynağına ulaşılamadı');
+  }
+  async function loadFirebaseRest0604(){
+    const key='AIzaSyAcmXWfZMcSpTrZ5hDBNCDta8xmsIk4TwY';
+    const base='https://firestore.googleapis.com/v1/projects/molavolt/databases/(default)/documents';
+    const meta=parseJsonLoose0604(await fetchTextTimeout0604(`${base}/molavolt/epdkMeta?key=${key}&t=${Date.now()}`,9000));
+    const val=(v)=>{
+      if(!v || typeof v!=='object') return v;
+      if('stringValue' in v) return v.stringValue;
+      if('integerValue' in v) return Number(v.integerValue);
+      if('doubleValue' in v) return Number(v.doubleValue);
+      if('booleanValue' in v) return !!v.booleanValue;
+      if('arrayValue' in v) return (v.arrayValue.values||[]).map(val);
+      if('mapValue' in v){ const o={}; const f=v.mapValue.fields||{}; Object.keys(f).forEach(k=>o[k]=val(f[k])); return o; }
+      return v;
+    };
+    const count=Number(val(meta.fields?.chunkCount)||0);
+    if(!count) return [];
+    adminStatus0604('Firebase EPDK okunuyor... 0/'+count);
+    const all=[];
+    for(let i=0;i<count;i++){
+      const id='chunk_'+String(i).padStart(3,'0');
+      const doc=parseJsonLoose0604(await fetchTextTimeout0604(`${base}/molavoltEpdkChunks/${id}?key=${key}&t=${Date.now()}`,9000));
+      const arr=val(doc.fields?.stations)||[];
+      if(Array.isArray(arr)) all.push(...arr);
+      if(i%3===0) adminStatus0604('Firebase EPDK okunuyor... '+(i+1)+'/'+count);
+    }
+    return dedupeStations0604(all);
+  }
+  async function ensureEpdkData0604(opts={}){
+    const forceRemote=!!opts.forceRemote;
     try{
-      const restList=await loadEpdkFromFirestoreRest0521();
-      if(Array.isArray(restList)&&restList.length){
-        setEpdkStations(restList);
-        localStorage.setItem('molavolt_epdk_stations',JSON.stringify(restList));
-        buildStations();
-        if(typeof applyFilters==='function')applyFilters();
-        if(stations.length)return {ok:true,source:'firebase-rest',count:stations.length};
+      const local=JSON.parse(localStorage.getItem('molavolt_epdk_stations')||'[]');
+      if(!forceRemote && Array.isArray(local) && local.length>=REAL_EPDK_MIN_COUNT){
+        commitStations0604(local);
+        return true;
       }
-    }catch(e){console.warn('Firebase REST okunamadı',e);}
-
-    // Son çare EPDK API
-    const apiUrl=localStorage.getItem('molavolt_epdk_url')||DEFAULT_EPDK_URL||'https://molavolt.vercel.app/api/epdk';
+    }catch(e){}
     try{
-      const data=await fetchJsonTimeout0521(apiUrl+(apiUrl.includes('?')?'&':'?')+'t='+Date.now(),6500);
-      const list=typeof normalizeEpdkData==='function'?normalizeEpdkData(data):[];
-      if(Array.isArray(list)&&list.length){
-        setEpdkStations(list);
-        localStorage.setItem('molavolt_epdk_stations',JSON.stringify(list));
-        buildStations();
-        if(typeof applyFilters==='function')applyFilters();
-        return {ok:true,source:'epdk-api',count:stations.length};
+      const fb=await loadFirebaseRest0604();
+      if(fb.length){ commitStations0604(fb); adminStatus0604('Firebase’den yüklendi: '+fb.length+' EPDK istasyonu'); return true; }
+    }catch(e){ console.warn(PATCH,'Firebase REST okunamadı',e); }
+    try{
+      const api=await loadEpdkFromApi0604();
+      if(api.length){ commitStations0604(api); adminStatus0604('EPDK API’den yüklendi: '+api.length+' istasyon'); return true; }
+    }catch(e){ console.warn(PATCH,'API okunamadı',e); }
+    try{
+      const any=JSON.parse(localStorage.getItem('molavolt_epdk_stations')||'[]');
+      if(Array.isArray(any) && any.length){ commitStations0604(any); return true; }
+    }catch(e){}
+    adminStatus0604('EPDK verisi alınamadı. Manuel/eski sabit veri gösterilmedi. İnternet veya API kontrol edilmeli.');
+    return false;
+  }
+  async function adminLoadEpdk0604(){
+    const input=document.getElementById('epdkUrl');
+    const url=(input&&input.value.trim()) || (localStorage.getItem('molavolt_epdk_url')||'https://molavolt.vercel.app/api/epdk');
+    if(input) input.value=url;
+    localStorage.setItem('molavolt_epdk_url',url);
+    adminStatus0604('EPDK verisi çekiliyor...');
+    try{
+      const list=await loadEpdkFromApi0604('EPDK verisi çekiliyor');
+      if(!list.length) throw new Error('Koordinatlı EPDK istasyonu bulunamadı');
+      commitStations0604(list);
+      try{
+        if(window.saveEpdkToFirebase0604){
+          await window.saveEpdkToFirebase0604(list);
+          adminStatus0604('EPDK Firebase’e kaydedildi: '+list.length+' istasyon');
+          alert('EPDK verisi yüklendi ve Firebase’e kaydedildi: '+list.length+' istasyon.');
+          return;
+        }
+      }catch(saveErr){
+        console.warn(PATCH,'Firebase kayıt olmadı',saveErr);
+        adminStatus0604('EPDK cihazda yüklendi: '+list.length+' istasyon. Firebase kayıt hatası: '+saveErr.message);
+        alert('EPDK cihazda yüklendi: '+list.length+' istasyon. Firebase kayıt hatası: '+saveErr.message);
+        return;
       }
-    }catch(e){console.warn('EPDK API okunamadı',e);}
-
-    if(typeof useFallbackStations0519==='function' && useFallbackStations0519('Firebase/EPDK iOS tarafında okunamadı')){
-      return {ok:true,source:'fallback',count:stations.length};
+      adminStatus0604('EPDK cihazda yüklendi: '+list.length+' istasyon');
+      alert('EPDK verisi yüklendi: '+list.length+' istasyon.');
+    }catch(err){
+      console.error(PATCH,err);
+      adminStatus0604('EPDK yükleme hatası: '+err.message);
+      alert('EPDK yükleme hatası: '+err.message);
     }
-  }catch(e){console.error('ensureRouteStationsReady0521 hata',e);}
-  return {ok:false,source:'none',count:0};
-}
-function updateDataHealth0521(source,count){
-  let box=document.getElementById('dataHealth0521');
-  const host=document.getElementById('locStatus');
-  if(!box && host){
-    host.insertAdjacentHTML('afterend','<div id="dataHealth0521" class="dataHealthBox"></div>');
-    box=document.getElementById('dataHealth0521');
   }
-  if(box){
-    const txt=source==='fallback'
-      ? `EPDK/Firebase gecikti; geçici yedek veriyle devam ediliyor. İstasyon: ${count}`
-      : `İstasyon verisi hazır. Kaynak: ${source} · ${count} istasyon`;
-    box.className='dataHealthBox '+(source==='fallback'?'warn':'');
-    box.textContent=txt;
+  function getLocationOnce0604(options,ms){
+    return new Promise((resolve,reject)=>{
+      if(!navigator.geolocation) return reject(new Error('Bu cihazda konum desteği yok'));
+      let done=false;
+      const timer=setTimeout(()=>{ if(done)return; done=true; reject(new Error('Konum zaman aşımı')); },ms);
+      navigator.geolocation.getCurrentPosition(pos=>{
+        if(done)return; done=true; clearTimeout(timer);
+        resolve({lat:pos.coords.latitude,lon:pos.coords.longitude,accuracy:Math.round(pos.coords.accuracy||0)});
+      },err=>{
+        if(done)return; done=true; clearTimeout(timer);
+        reject(err||new Error('Konum alınamadı'));
+      },options);
+    });
   }
-}
-function requestLocation0521(force=false){
-  setLocStatus('Konum izni bekleniyor...');
-  const done=(msg)=>{
-    buildStations();
-    applyFilters();
-    setLocStatus(msg);
-  };
-  if(!navigator.geolocation){
-    done('Bu cihazda konum desteği yok; varsayılan konuma göre sıralandı.');
-    return;
-  }
-  let finished=false;
-  const timer=setTimeout(()=>{
-    if(finished)return;
-    finished=true;
-    done('Konum cevabı gecikti; varsayılan/son konumla devam ediliyor. Konum için “Konum izni ver”e bas.');
-  },7000);
-  navigator.geolocation.getCurrentPosition(pos=>{
-    if(finished)return;
-    finished=true; clearTimeout(timer);
-    userPos={lat:pos.coords.latitude,lon:pos.coords.longitude,accuracy:Math.round(pos.coords.accuracy||0)};
-    savePos(userPos);
-    done('Canlı konuma göre sıralandı'+(userPos.accuracy?' · ±'+userPos.accuracy+' m':''));
-  },err=>{
-    if(finished)return;
-    finished=true; clearTimeout(timer);
-    let msg='Konum alınamadı; varsayılan/son konumla devam ediliyor.';
-    if(err && err.code===1) msg='Konum izni kapalı. iPhone’da Safari > Konum > İzin ver yapıp tekrar deneyin.';
-    done(msg);
-  },{enableHighAccuracy:false,timeout:6500,maximumAge:600000});
-}
-function addLocationButtons0521(){
-  const loc=document.getElementById('locStatus');
-  if(!loc || document.getElementById('locFixPanel0521'))return;
-  loc.insertAdjacentHTML('afterend',`<div id="locFixPanel0521" class="locFixPanel">
-    <button onclick="requestLocation0521(true)">Konum izni ver</button>
-    <button onclick="userPos={lat:40.840621,lon:31.152219};savePos(userPos);buildStations();applyFilters();setLocStatus('Düzce başlangıç kabul edildi.');">Düzce ile devam</button>
-  </div>`);
-}
-function locateSort(){
-  buildStations();
-  applyFilters();
-  addLocationButtons0521();
-  requestLocation0521(false);
-}
-const oldInit0521=typeof init==='function'?init:null;
-init=function(){
-  if(oldInit0521)oldInit0521();
-  addLocationButtons0521();
-  setTimeout(async()=>{
-    const r=await ensureRouteStationsReady0521();
-    if(r.ok) updateDataHealth0521(r.source,r.count);
-  },500);
-};
-async function planEvRoute(){
-  try{
-    routeToast('Rota hesaplanıyor…');
-    const out=$('routeResult');
-    if(out) out.innerHTML='<div class="routeDataLoading"><b>Rota hesaplanıyor…</b><br>Firebase kayıtlı EPDK verisi iOS için REST yedek kanalından kontrol ediliyor.</div>';
-
-    const ready=await ensureRouteStationsReady0521();
-    if(!ready.ok){
-      if(out) out.innerHTML='<div class="routeDataLoading">İstasyon verisi yüklenemedi. Safari ayarlarından site verisini temizleyip tekrar deneyin.</div>';
-      routeToast('İstasyon verisi yüklenemedi');
-      return;
+  async function getFreshLocation0604(){
+    if(!window.isSecureContext && !/^https:/.test(location.protocol) && location.hostname!=='localhost'){
+      throw new Error('iOS konum için sayfa HTTPS üzerinden açılmalı');
     }
-    updateDataHealth0521(ready.source,ready.count);
-
-    const dest=routeDirectDestination();
-    const roadFactor=1.18;
-    const estimatedKm=km(userPos.lat,userPos.lon,dest.lat,dest.lon)*roadFactor;
-    const distance=routeVal('rp_distance',estimatedKm);
-    const battery=routeVal('rp_battery',60);
-    const soc=routeVal('rp_soc',45);
-    const arrival=routeVal('rp_arrival',10);
-    const target=routeVal('rp_charge_target',80);
-    const mode=$('rp_mode')?.value||'manual';
-    const consumption=mode==='wltp'?routeVal('rp_wltp',15):routeVal('rp_manual',18);
-    const price=routeVal('rp_price', routeVal('rp_dc_price',10));
-    const chargeKw=routeVal('rp_kw', routeVal('rp_charge_kw',90));
-    const corridor=routeVal('rp_corridor',80);
-
-    const pack=routeStationsAutoDirect(dest,corridor);
-    const plan=buildPlanDirect(pack.list,distance,battery,soc,arrival,target,consumption,price,chargeKw);
-    const mapsUrl=routeGoogleDirectUrl(dest,plan.stops);
-    const energyNeed=distance*consumption/100;
-    const startEnergy=battery*soc/100;
-    const startUsable=battery*Math.max(0,(soc-arrival))/100;
-    const lowSocProblem=energyNeed>startUsable && !plan.stops.length;
-
-    let stopHtml='';
-    if(plan.stops.length){
-      stopHtml=`<div class="routeStopPreview"><b>Önerilen şarj durakları</b>`+
-        plan.stops.map((s,i)=>`<div class="routeStopPreviewItem">
-          <b>${i+1}. ${esc(s.name)}</b>${s.isStartCharge?' <span class="strongWarn">(önce buraya şarj)</span>':''}<br>
-          ${esc(s.address||'')}<br>
-          Şarj: <b>${s.chargeKwh.toFixed(1)} kWh</b> · Süre: <b>${s.chargeMin} dk</b> · Maliyet: <b>${s.cost.toFixed(0)} TL</b>
-        </div>`).join('')+
-      `</div>`;
-    }else if(lowSocProblem){
-      stopHtml='<p class="strongWarn">Bu şarjla güvenli rota oluşturulamadı. Mevcut şarjı artırıp tekrar dene veya varışta kalsın değerini düşür.</p>';
-    }else{
-      stopHtml='<p>Bu değerlerle şarj molası gerekmiyor.</p>';
+    try{ return await getLocationOnce0604({enableHighAccuracy:true,timeout:10000,maximumAge:0},11500); }
+    catch(e1){
+      return await getLocationOnce0604({enableHighAccuracy:false,timeout:6500,maximumAge:600000},7500);
     }
-
-    if(out){
-      out.innerHTML=`<div class="routeDirectCard ready ${lowSocProblem?'warning':''}">
-        <h3>Rota hazır</h3>
-        <p><b>${esc(dest.name||$('rp_dest')?.value||'Hedef')}</b> için hesaplama tamamlandı. Veri kaynağı: <b>${ready.source}</b> · İstasyon: <b>${stations.length}</b></p>
-        <div class="routeMainSummary">
-          <div><span>Durak</span><b>${plan.stops.length}</b></div>
-          <div><span>Şarj süresi</span><b>${Math.ceil(plan.totalMin)} dk</b></div>
-          <div><span>Maliyet</span><b>${plan.totalCost.toFixed(0)} TL</b></div>
-        </div>
-        <p>Mesafe: <b>${distance.toFixed(0)} km</b> · Gerekli enerji: <b>${energyNeed.toFixed(1)} kWh</b> · Başlangıç enerji: <b>${startEnergy.toFixed(1)} kWh</b></p>
-        <p>Toplam şarj: <b>${plan.totalKwh.toFixed(1)} kWh</b></p>
-        ${stopHtml}
-        <div class="routeDirectActions">
-          <a href="${mapsUrl}" target="_blank" rel="noopener">Duraklı Google Haritalar rotasını aç</a>
-          <button onclick="navigator.clipboard&&navigator.clipboard.writeText('${mapsUrl.replaceAll("'","%27")}');routeToast('Rota linki kopyalandı')">Linki kopyala</button>
-        </div>
-        <div class="routeVersion">v0521 iOS Firebase REST + konum düzeltmesi</div>
-      </div>`;
-    }
-    if(lowSocProblem) routeToast('Bu şarjla güvenli rota oluşturulamadı');
-    else routeToast('Rota hazır. Haritayı açmak için butona bas.');
-  }catch(err){
-    console.error(err);
-    routeToast('Rota oluşturulamadı');
-    const out=$('routeResult');
-    if(out) out.innerHTML='<div class="routeWarn">Rota oluşturulamadı. Lütfen hedefi listeden seçip tekrar dene.</div>';
   }
-}
-window.addEventListener('load',()=>{
-  setTimeout(addLocationButtons0521,800);
-});
+  function locateSort0604(){
+    try{ buildStations(); applyFilters(); }catch(e){}
+    safeStatus0604('Konum izni isteniyor...');
+    let finished=false;
+    const finish=(msg)=>{
+      if(finished) return; finished=true;
+      try{ buildStations(); applyFilters(); }catch(e){}
+      safeStatus0604(msg);
+    };
+    const soft=setTimeout(()=>{
+      if(!finished) safeStatus0604('iOS konum cevabı bekleniyor; liste son kayıtlı/varsayılan konuma göre açık kalacak.');
+    },4500);
+    getFreshLocation0604().then(p=>{
+      clearTimeout(soft);
+      userPos=p; savePos(p);
+      try{ localStorage.setItem('mv_pos_live_0604','1'); }catch(e){}
+      finish('Canlı konuma göre sıralandı'+(p.accuracy?' · hassasiyet ±'+p.accuracy+' m':''));
+    }).catch(err=>{
+      clearTimeout(soft);
+      const saved=loadPos&&loadPos();
+      if(saved && Number.isFinite(saved.lat) && Number.isFinite(saved.lon)) userPos=saved;
+      let msg='Konum alınamadı; son kayıtlı/varsayılan konuma göre sıralandı.';
+      if(err && (err.code===1 || /permission|izin/i.test(err.message||''))) msg='Konum izni verilmedi. iPhone’da Safari > site ayarları > Konum: İzin ver yapıp tekrar dene.';
+      if(err && /HTTPS/i.test(err.message||'')) msg=err.message;
+      finish(msg);
+    });
+  }
 
+  function install0604(){
+    try{ window.loadEpdk=adminLoadEpdk0604; loadEpdk=adminLoadEpdk0604; }catch(e){ window.loadEpdk=adminLoadEpdk0604; }
+    window.ensureEpdkData0604=ensureEpdkData0604;
+    window.loadFirebaseStations=async function(){
+      adminStatus0604('Firebase’den EPDK okunuyor...');
+      try{
+        let list=[];
+        try{ if(window.loadEpdkFromFirebase0604) list=await Promise.race([window.loadEpdkFromFirebase0604(),new Promise((_,rej)=>setTimeout(()=>rej(new Error('Firebase SDK zaman aşımı')),12000))]); }catch(e){ console.warn(PATCH,'SDK geçildi',e); }
+        if(!Array.isArray(list)||!list.length) list=await loadFirebaseRest0604();
+        if(!list.length) throw new Error('Firebase’de EPDK verisi yok');
+        commitStations0604(list);
+        adminStatus0604('Firebase’den yüklendi: '+list.length+' EPDK istasyonu');
+        alert('Firebase’den istasyonlar yüklendi: '+list.length);
+        return true;
+      }catch(err){ adminStatus0604('Firebase okuma hatası: '+err.message); alert('Firebase okuma hatası: '+err.message); return false; }
+    };
+    try{ locateSort=locateSort0604; window.locateSort=locateSort0604; }catch(e){ window.locateSort=locateSort0604; }
+    try{ ensureLocationReady0518=function(){ return getFreshLocation0604().then(p=>{userPos=p;savePos(p);return {ok:true,msg:'Konum alındı'};}).catch(err=>({ok:false,msg:err.message||'Konum alınamadı'})); }; }catch(e){}
+    try{ ensureRouteStationsReady0519=async function(){ return ensureEpdkData0604({forceRemote:false}); }; }catch(e){}
+    try{ useFallbackStations0519=function(reason){ console.warn(PATCH,'Sabit yedek veri kapalı:',reason); buildStations(); applyFilters(); return Array.isArray(stations)&&stations.length>0; }; }catch(e){}
+  }
+  install0604();
+  window.addEventListener('load',()=>{
+    setTimeout(()=>{ install0604(); ensureEpdkData0604({forceRemote:false}); },900);
+    setTimeout(()=>{ if(!document.body.classList.contains('admin-mode')) locateSort0604(); },1200);
+  });
+  ['click','touchstart'].forEach(ev=>document.addEventListener(ev,()=>{
+    try{ if(!localStorage.getItem('mv_pos_live_0604') && !document.body.classList.contains('admin-mode')) locateSort0604(); }catch(e){}
+  },{once:true,passive:true}));
+})();
 </script>
+
 </body>
 </html>
